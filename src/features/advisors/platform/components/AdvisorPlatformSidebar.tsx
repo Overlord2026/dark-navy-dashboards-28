@@ -28,6 +28,7 @@ const platformItems = [
 
 const settingsItems = [
   { title: "Platform Settings", url: "/pros/advisors/platform/settings", icon: Settings },
+  { title: "Social Settings", url: "/pros/advisors/platform/settings/social", icon: Settings },
 ]
 
 export function AdvisorPlatformSidebar() {

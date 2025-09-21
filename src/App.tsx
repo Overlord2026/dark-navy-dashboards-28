@@ -300,6 +300,7 @@ import ROITrackerPage from '@/features/advisors/platform/pages/ROITrackerPage';
 import InviteFamily from '@/pages/advisors/InviteFamily';
 import CalendarPage from '@/features/advisors/platform/pages/CalendarPage';
 import SettingsPage from '@/features/advisors/platform/pages/SettingsPage';
+import SocialSettingsPage from '@/features/advisors/platform/pages/SocialSettingsPage';
 const InvitePage = lazy(() => import('@/features/advisors/platform/pages/InvitePage'));
 const BillingPage = lazy(() => import('@/features/advisors/platform/pages/BillingPage'));
 
@@ -529,6 +530,7 @@ function App() {
               <Route path="roi" element={<ROITrackerPage />} />
               <Route path="calendar" element={<CalendarPage />} />
               <Route path="settings" element={<SettingsPage />} />
+              <Route path="settings/social" element={<SocialSettingsPage />} />
             </Route>
             <Route path="/pros/accountants/dashboard" element={
               <PersonaGuard allowedPersonas={['accountant']}>

@@ -253,3 +253,21 @@ QA:
 - [x] Signed-out users: /invite/DEMO123?persona=accountant → /auth then back.
 - [x] CTA token box works; dev link still OK in dev.
 - [x] Hubs gate dashboard button based on acceptance.
+
+## 2025-09-21 — feat(advisor): prospects MVP + social settings (temporary token)
+- Updated /pros/advisors/platform/prospects to read from Supabase leads table instead of mock data
+- Added /pros/advisors/platform/settings/social page for Facebook Page Access Token storage
+- Created credentials table with RLS for secure token storage
+- Updated advisor platform navigation to include social settings
+- Prospects table now shows: created_at, source, full_name, email, phone, status, campaign data
+
+Technical:
+- credentials table with user_id FK and RLS policies
+- Real-time Supabase integration for leads CRUD operations  
+- Temporary MVP approach for Facebook token (to be replaced with OAuth flow)
+
+QA:
+- [x] Prospects page loads leads from database
+- [x] Social settings page saves/deletes Facebook tokens
+- [x] Navigation includes both prospects and social settings
+- [x] RLS protects credentials per user

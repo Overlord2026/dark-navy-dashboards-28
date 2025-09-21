@@ -11620,6 +11620,42 @@ export type Database = {
         }
         Relationships: []
       }
+      credentials: {
+        Row: {
+          created_at: string
+          credential_name: string | null
+          credential_type: string
+          encrypted_token: string
+          expires_at: string | null
+          id: string
+          metadata: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credential_name?: string | null
+          credential_type: string
+          encrypted_token: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credential_name?: string | null
+          credential_type?: string
+          encrypted_token?: string
+          expires_at?: string | null
+          id?: string
+          metadata?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       credit_cards: {
         Row: {
           apr: number | null
@@ -20010,6 +20046,38 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "lead_enrichment_log_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: number
+          lead_id: string | null
+          payload: Json
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: number
+          lead_id?: string | null
+          payload?: Json
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: number
+          lead_id?: string | null
+          payload?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_events_lead_id_fkey"
             columns: ["lead_id"]
             isOneToOne: false
             referencedRelation: "leads"
@@ -55554,6 +55622,10 @@ export type Database = {
           persona_group: string
           target_path: string
         }[]
+      }
+      accept_invite_json: {
+        Args: { invite_token: string }
+        Returns: Json
       }
       activate_referral: {
         Args: { p_referee_id: string }

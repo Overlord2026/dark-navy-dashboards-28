@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,16 +7,54 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Users, Plus, Filter, Download, Search, Eye, Edit, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
-import { 
-  getMockProspects, 
-  getStatusStyle, 
-  getSourceStyle, 
-  statusOptions, 
-  sourceOptions, 
-  formatCurrency, 
-  formatDate,
-  type Prospect 
-} from '../state/prospects.mock';
+import { supabase } from '@/integrations/supabase/client';
+
+interface Lead {
+  id: string;
+  created_at: string;
+  lead_source: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  lead_status: string;
+  campaign_id?: string;
+}
+
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(amount);
+};
+
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+};
+
+const getStatusStyle = (status: string) => {
+  switch (status.toLowerCase()) {
+    case 'new': return 'bg-blue-100 text-blue-800';
+    case 'contacted': return 'bg-yellow-100 text-yellow-800';
+    case 'qualified': return 'bg-green-100 text-green-800';
+    case 'converted': return 'bg-purple-100 text-purple-800';
+    default: return 'bg-gray-100 text-gray-800';
+  }
+};
+
+const getSourceStyle = (source: string) => {
+  switch (source.toLowerCase()) {
+    case 'facebook': return 'text-blue-600 border-blue-200';
+    case 'google': return 'text-red-600 border-red-200';
+    case 'linkedin': return 'text-blue-700 border-blue-300';
+    case 'referral': return 'text-green-600 border-green-200';
+    default: return 'text-gray-600 border-gray-200';
+  }
+};
 
 const ITEMS_PER_PAGE = 8;
 
@@ -25,29 +63,50 @@ export default function ProspectsPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [sourceFilter, setSourceFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const prospects = getMockProspects();
+  useEffect(() => {
+    fetchLeads();
+  }, []);
+
+  const fetchLeads = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('leads')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      setLeads(data || []);
+    } catch (error) {
+      console.error('Error fetching leads:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Filter and search logic
-  const filteredProspects = useMemo(() => {
-    return prospects.filter(prospect => {
-      const matchesSearch = prospect.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           prospect.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           prospect.company?.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredLeads = useMemo(() => {
+    return leads.filter(lead => {
+      const fullName = `${lead.first_name} ${lead.last_name}`.toLowerCase();
+      const matchesSearch = fullName.includes(searchTerm.toLowerCase()) ||
+                           lead.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           lead.phone?.toLowerCase().includes(searchTerm.toLowerCase());
       
-      const matchesStatus = statusFilter === 'all' || prospect.status === statusFilter;
-      const matchesSource = sourceFilter === 'all' || prospect.source === sourceFilter;
+      const matchesStatus = statusFilter === 'all' || lead.lead_status === statusFilter;
+      const matchesSource = sourceFilter === 'all' || lead.lead_source === sourceFilter;
       
       return matchesSearch && matchesStatus && matchesSource;
     });
-  }, [prospects, searchTerm, statusFilter, sourceFilter]);
+  }, [leads, searchTerm, statusFilter, sourceFilter]);
 
   // Pagination logic
-  const totalPages = Math.ceil(filteredProspects.length / ITEMS_PER_PAGE);
-  const paginatedProspects = useMemo(() => {
+  const totalPages = Math.ceil(filteredLeads.length / ITEMS_PER_PAGE);
+  const paginatedLeads = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredProspects.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [filteredProspects, currentPage]);
+    return filteredLeads.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredLeads, currentPage]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -68,21 +127,47 @@ export default function ProspectsPage() {
     setCurrentPage(1);
   };
 
-  // Row actions - these would navigate to actual pages in a real implementation
-  const handleView = (prospect: Prospect) => {
-    console.log('View prospect:', prospect.id);
-    // TODO: Navigate to prospect detail page
+  // Row actions
+  const handleView = (lead: Lead) => {
+    console.log('View lead:', lead.id);
+    // TODO: Navigate to lead detail page
   };
 
-  const handleEdit = (prospect: Prospect) => {
-    console.log('Edit prospect:', prospect.id);
-    // TODO: Navigate to prospect edit page
+  const handleEdit = (lead: Lead) => {
+    console.log('Edit lead:', lead.id);
+    // TODO: Navigate to lead edit page
   };
 
-  const handleDelete = (prospect: Prospect) => {
-    console.log('Delete prospect:', prospect.id);
-    // TODO: Show confirmation dialog and delete prospect
+  const handleDelete = async (lead: Lead) => {
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .delete()
+        .eq('id', lead.id);
+      
+      if (error) throw error;
+      await fetchLeads(); // Refresh the list
+    } catch (error) {
+      console.error('Error deleting lead:', error);
+    }
   };
+
+  const statusOptions = [
+    { value: 'all', label: 'All Statuses' },
+    { value: 'new', label: 'New' },
+    { value: 'contacted', label: 'Contacted' },
+    { value: 'qualified', label: 'Qualified' },
+    { value: 'converted', label: 'Converted' }
+  ];
+
+  const sourceOptions = [
+    { value: 'all', label: 'All Sources' },
+    { value: 'facebook', label: 'Facebook' },
+    { value: 'google', label: 'Google' },
+    { value: 'linkedin', label: 'LinkedIn' },
+    { value: 'referral', label: 'Referral' },
+    { value: 'website', label: 'Website' }
+  ];
 
   return (
     <>
@@ -122,7 +207,7 @@ export default function ProspectsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Total Prospects</p>
-                  <p className="text-2xl font-bold text-foreground">{prospects.length}</p>
+                  <p className="text-2xl font-bold text-foreground">{loading ? '-' : leads.length}</p>
                 </div>
                 <Badge variant="secondary">All</Badge>
               </div>
@@ -134,7 +219,7 @@ export default function ProspectsPage() {
                 <div>
                   <p className="text-sm text-muted-foreground">Hot Leads</p>
                   <p className="text-2xl font-bold text-foreground">
-                    {prospects.filter(p => p.status === 'hot').length}
+                    {loading ? '-' : leads.filter(l => l.lead_status === 'new').length}
                   </p>
                 </div>
                 <Badge variant="destructive">Hot</Badge>
@@ -147,7 +232,7 @@ export default function ProspectsPage() {
                 <div>
                   <p className="text-sm text-muted-foreground">Qualified</p>
                   <p className="text-2xl font-bold text-foreground">
-                    {prospects.filter(p => p.status === 'qualified').length}
+                    {loading ? '-' : leads.filter(l => l.lead_status === 'qualified').length}
                   </p>
                 </div>
                 <Badge variant="default">Ready</Badge>
@@ -160,7 +245,7 @@ export default function ProspectsPage() {
                 <div>
                   <p className="text-sm text-muted-foreground">Converted</p>
                   <p className="text-2xl font-bold text-foreground">
-                    {prospects.filter(p => p.status === 'converted').length}
+                    {loading ? '-' : leads.filter(l => l.lead_status === 'converted').length}
                   </p>
                 </div>
                 <Badge variant="secondary" className="bg-green-100 text-green-800">Success</Badge>
@@ -222,9 +307,9 @@ export default function ProspectsPage() {
         <Card className="border-border bg-card">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-foreground">Prospects ({filteredProspects.length})</CardTitle>
+              <CardTitle className="text-foreground">Prospects ({filteredLeads.length})</CardTitle>
               <div className="text-sm text-muted-foreground">
-                Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredProspects.length)} of {filteredProspects.length}
+                Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredLeads.length)} of {filteredLeads.length}
               </div>
             </div>
           </CardHeader>
@@ -237,83 +322,85 @@ export default function ProspectsPage() {
                     <TableHead className="text-foreground font-semibold">Email</TableHead>
                     <TableHead className="text-foreground font-semibold">Status</TableHead>
                     <TableHead className="text-foreground font-semibold">Source</TableHead>
-                    <TableHead className="text-foreground font-semibold">HNW Score</TableHead>
-                    <TableHead className="text-foreground font-semibold">Next Meeting</TableHead>
+                    <TableHead className="text-foreground font-semibold">Phone</TableHead>
+                    <TableHead className="text-foreground font-semibold">Created</TableHead>
                     <TableHead className="text-foreground font-semibold">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {paginatedProspects.map((prospect) => (
-                    <TableRow key={prospect.id} className="hover:bg-muted/50">
-                      <TableCell>
-                        <div>
-                          <div className="font-medium text-foreground">{prospect.name}</div>
-                          <div className="text-sm text-muted-foreground">{prospect.company}</div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm text-foreground">{prospect.email}</div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={`${getStatusStyle(prospect.status)} border`}>
-                          {prospect.status.charAt(0).toUpperCase() + prospect.status.slice(1)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className={getSourceStyle(prospect.source)}>
-                          {prospect.source.charAt(0).toUpperCase() + prospect.source.slice(1)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <div className="text-sm font-medium text-foreground">{prospect.hnwScore}</div>
-                          <div className={`w-12 h-2 rounded-full ${
-                            prospect.hnwScore >= 90 ? 'bg-green-500' :
-                            prospect.hnwScore >= 80 ? 'bg-yellow-500' :
-                            'bg-red-500'
-                          }`} />
-                        </div>
-                        <div className="text-xs text-muted-foreground">{formatCurrency(prospect.estimatedAUM)}</div>
-                      </TableCell>
-                      <TableCell>
-                        {prospect.nextMeeting ? (
-                          <div className="text-sm text-foreground">
-                            {formatDate(prospect.nextMeeting)}
-                          </div>
-                        ) : (
-                          <div className="text-sm text-muted-foreground">Not scheduled</div>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleView(prospect)}
-                            className="h-8 w-8 p-0"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEdit(prospect)}
-                            className="h-8 w-8 p-0"
-                          >
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDelete(prospect)}
-                            className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
+                  {loading ? (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center py-8">
+                        <div className="text-muted-foreground">Loading prospects...</div>
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ) : paginatedLeads.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center py-8">
+                        <div className="text-muted-foreground">No prospects found</div>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    paginatedLeads.map((lead) => (
+                      <TableRow key={lead.id} className="hover:bg-muted/50">
+                        <TableCell>
+                          <div>
+                            <div className="font-medium text-foreground">{lead.first_name} {lead.last_name}</div>
+                            <div className="text-sm text-muted-foreground">{lead.phone || 'No phone'}</div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm text-foreground">{lead.email || 'No email'}</div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={`${getStatusStyle(lead.lead_status)} border`}>
+                            {lead.lead_status?.charAt(0).toUpperCase() + lead.lead_status?.slice(1)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className={getSourceStyle(lead.lead_source)}>
+                            {lead.lead_source?.charAt(0).toUpperCase() + lead.lead_source?.slice(1)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm text-muted-foreground">N/A</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm text-foreground">
+                            {formatDate(lead.created_at)}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleView(lead)}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleEdit(lead)}
+                              className="h-8 w-8 p-0"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDelete(lead)}
+                              className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </div>
