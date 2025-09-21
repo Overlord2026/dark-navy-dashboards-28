@@ -1,6 +1,13 @@
-import { ReactNode } from "react";
-import { Toaster } from "@/components/ui/toaster";
+import { useEffect, useState } from 'react';
+import { Toaster } from 'sonner';
 
-export default function SafeToastProvider({ children }: { children: ReactNode }) {
-  return <>{children}<Toaster /></>;
+export function SafeToastProvider({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return (
+    <>
+      {children}
+      {mounted && <Toaster richColors closeButton />}
+    </>
+  );
 }
