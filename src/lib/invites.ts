@@ -1,4 +1,4 @@
-export type InviteResult = { ok: boolean; persona?: string; error?: string };
+export type InviteResult = { ok: boolean; persona?: string; path?: string; error?: string };
 
 const personaToHub: Record<string, string> = {
   advisor: '/pros/advisors',
@@ -22,37 +22,40 @@ export async function acceptInvite(token: string, personaHint?: string): Promise
     supabase = (m as any).supabase || (m as any).default || m;
   } catch {}
 
-  const tryRPC = async (fn: string) => {
-    if (!supabase?.rpc) return { ok: false } as any;
-    try {
-      const { data, error } = await supabase.rpc(fn, { invite_token: token });
-      if (error) throw error;
-
-      // handle both shapes: jsonb object or text
-      let persona: string | undefined = personaHint;
-      if (data && typeof data === 'object' && 'persona' in data) {
-        persona = (data as any).persona as string;
-      } else if (typeof data === 'string') {
-        persona = data;
-      }
-      if (persona) {
-        try { localStorage.setItem(`invite.accepted.${persona}`, '1'); } catch {}
-      }
-      return { ok: true, persona } as InviteResult;
-    } catch {
-      return { ok: false } as any;
-    }
+  const saveLocal = (persona?: string) => {
+    if (!persona) return;
+    try { localStorage.setItem(`invite.accepted.${persona}`, '1'); } catch {}
   };
 
-  // Prefer the new JSON-returning RPC; then try legacy; then local fallback
-  for (const fn of ['accept_invite_json', 'accept_invite']) {
-    const res = await tryRPC(fn);
-    if (res.ok) return res;
+  // Try JSON wrapper first
+  if (supabase?.rpc) {
+    try {
+      const { data, error } = await supabase.rpc('accept_invite_json', { invite_token: token });
+      if (!error && data) {
+        const persona = (data as any).persona ?? personaHint;
+        const path = (data as any).target;
+        saveLocal(persona);
+        return { ok: true, persona, path };
+      }
+    } catch { /* continue */ }
+
+    // Try legacy function returning TABLE(persona_group, target_path)
+    try {
+      const { data, error } = await supabase.rpc('accept_invite', { raw_token: token });
+      if (!error && data) {
+        // Supabase returns array for set-returning functions
+        const row = Array.isArray(data) ? data[0] : data;
+        const persona = (row?.persona_group as string) ?? personaHint;
+        const path = (row?.target_path as string) ?? undefined;
+        saveLocal(persona);
+        return { ok: true, persona, path };
+      }
+    } catch { /* continue */ }
   }
 
-  // Local fallback for MVP demos
+  // Local fallback for demos
   const persona = personaHint || 'accountant';
-  try { localStorage.setItem(`invite.accepted.${persona}`, '1'); } catch {}
+  saveLocal(persona);
   return { ok: true, persona };
 }
 
