@@ -1,6 +1,9 @@
 import PersonaSideNav from '@/components/persona/PersonaSideNav';
+import { hasAcceptedPersona } from '@/lib/invites';
 
 export default function Accountants() {
+  const canEnter = hasAcceptedPersona('accountant');
+  
   return (
     <div className="container mx-auto px-4 py-6 text-white">
       <div className="grid lg:grid-cols-[240px_1fr] gap-6">
@@ -15,9 +18,15 @@ export default function Accountants() {
             <p className="text-white/70">Accountant practice management tools are in development.</p>
           </div>
           
-          <a href="/accountant-dashboard" className="inline-flex items-center gap-2 mt-6 rounded-lg border border-bfo-gold/30 px-4 py-2 text-bfo-gold hover:bg-bfo-gold hover:text-bfo-black transition">
-            Go to Accountant Dashboard
-          </a>
+          {canEnter ? (
+            <a href="/accountant-dashboard" className="inline-flex items-center gap-2 mt-6 rounded-lg border border-bfo-gold/30 px-4 py-2 text-bfo-gold hover:bg-bfo-gold hover:text-bfo-black transition">
+              Go to Accountant Dashboard
+            </a>
+          ) : (
+            <a href="/pros/accountants/access" className="inline-flex items-center gap-2 mt-6 rounded-lg border border-bfo-gold/30 px-4 py-2 text-bfo-gold/80 hover:bg-white/5 transition">
+              Accept your invite to continue
+            </a>
+          )}
         </main>
       </div>
     </div>
