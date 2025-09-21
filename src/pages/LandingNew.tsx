@@ -5,6 +5,7 @@ import { ArrowRight, Users, Search, BookOpen, Wrench, TrendingUp, DollarSign } f
 import { CatalogGrid } from '@/components/catalog/CatalogGrid';
 import { EduPreview } from '@/components/education/EduPreview';
 import { ToolsOverview } from '@/components/tools/ToolsOverview';
+import { PricingTable } from '@/components/pricing/PricingTable';
 
 export default function LandingNew() {
   return (
@@ -192,6 +193,9 @@ export default function LandingNew() {
           </div>
         </div>
       </section>
+
+      {/* Pricing Table Section */}
+      <PricingTable />
 
       {/* Pricing Section */}
       <section className="py-16 px-4 bg-muted/20">
