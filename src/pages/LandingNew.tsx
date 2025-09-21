@@ -5,7 +5,7 @@ import { ArrowRight, Users, Search, BookOpen, Wrench, TrendingUp, DollarSign } f
 import { CatalogGrid } from '@/components/catalog/CatalogGrid';
 import { EduPreview } from '@/components/education/EduPreview';
 import { ToolsOverview } from '@/components/tools/ToolsOverview';
-import { PricingTable } from '@/components/pricing/PricingTable';
+import PricingTable from '@/components/pricing/PricingTable';
 
 export default function LandingNew() {
   return (
