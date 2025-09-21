@@ -15,7 +15,6 @@ export interface PhaseBudgets {
 export interface RiskProfile {
   epsilonByPhase: Record<PhaseId, number>;   // chance-constraint tolerances per phase
   budgets: Record<PhaseId, PhaseBudgets>;    // hard caps per phase
-}
   maxDrawdown: number;                       // Maximum acceptable drawdown
   confidenceLevel: number;                   // Target confidence level (e.g., 0.95)
 }
