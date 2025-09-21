@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
+import { consumePendingInvite } from '@/lib/invites';
 
 export const AuthCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -42,7 +43,12 @@ export const AuthCallback: React.FC = () => {
             .eq('id', data.session.user.id)
             .single();
 
-          if (onboardingData) {
+          // Check for pending invite first
+          const pendingInvite = consumePendingInvite();
+          if (pendingInvite?.token) {
+            const inviteUrl = `/invite/${pendingInvite.token}${pendingInvite.persona ? `?persona=${pendingInvite.persona}` : ''}`;
+            navigate(inviteUrl, { replace: true });
+          } else if (onboardingData) {
             navigate('/families', { replace: true });
           } else {
             navigate('/onboarding?persona=family', { replace: true });

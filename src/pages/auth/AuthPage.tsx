@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,7 @@ import { ArrowLeft, Mail, Lock, User, Loader2 } from 'lucide-react';
 
 export function AuthPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -25,11 +26,12 @@ export function AuthPage() {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        navigate('/dashboard');
+        const redirectUrl = searchParams.get('redirect');
+        navigate(redirectUrl ? decodeURIComponent(redirectUrl) : '/dashboard');
       }
     };
     checkAuth();
-  }, [navigate]);
+  }, [navigate, searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,13 +59,18 @@ export function AuthPage() {
           duration: 3000
         });
 
-        // Redirect to transition page with user data
-        navigate('/welcome/transition', { 
-          state: { 
-            userName: formData.firstName,
-            isNewUser: true 
-          } 
-        });
+        // Check for redirect parameter or go to transition page
+        const redirectUrl = searchParams.get('redirect');
+        if (redirectUrl) {
+          navigate(decodeURIComponent(redirectUrl), { replace: true });
+        } else {
+          navigate('/welcome/transition', { 
+            state: { 
+              userName: formData.firstName,
+              isNewUser: true 
+            } 
+          });
+        }
 
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -86,12 +93,18 @@ export function AuthPage() {
           .eq('id', data.user?.id)
           .single();
 
-        navigate('/welcome/transition', { 
-          state: { 
-            userName: profile?.first_name || 'there',
-            isNewUser: false 
-          } 
-        });
+        // Check for redirect parameter or go to transition page
+        const redirectUrl = searchParams.get('redirect');
+        if (redirectUrl) {
+          navigate(decodeURIComponent(redirectUrl), { replace: true });
+        } else {
+          navigate('/welcome/transition', { 
+            state: { 
+              userName: profile?.first_name || 'there',
+              isNewUser: false 
+            } 
+          });
+        }
       }
     } catch (error: any) {
       console.error('Auth error:', error);

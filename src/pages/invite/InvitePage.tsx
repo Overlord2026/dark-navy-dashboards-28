@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { acceptInvite, hubForPersona } from '@/lib/invites';
+import { acceptInvite, hubForPersona, persistPendingInvite } from '@/lib/invites';
 
 export default function InvitePage() {
   const { token } = useParams<{ token: string }>();
@@ -11,10 +11,31 @@ export default function InvitePage() {
 
   useEffect(() => {
     const run = async () => {
-      if (!token) {
-        setStatus('error'); setMessage('Missing invite token.'); return;
-      }
+      if (!token) { setStatus('error'); setMessage('Missing invite token.'); return; }
       const personaHint = sp.get('persona') || undefined;
+
+      // Check auth session (defensive for v2)
+      let hasSession = false;
+      try {
+        const m = await import('@/integrations/supabase/client');
+        const sb = (m as any).supabase || (m as any).default || m;
+        if (sb?.auth?.getSession) {
+          const { data } = await sb.auth.getSession();
+          hasSession = !!data?.session;
+        } else if (sb?.auth?.user) {
+          hasSession = !!sb.auth.user();
+        }
+      } catch {}
+
+      if (!hasSession) {
+        // persist and bounce to auth with redirect back to invite
+        persistPendingInvite(token, personaHint);
+        const next = encodeURIComponent(`/invite/${token}${personaHint ? `?persona=${personaHint}` : ''}`);
+        navigate(`/auth?redirect=${next}`, { replace: true });
+        return;
+      }
+
+      // Accept + redirect
       const res = await acceptInvite(token, personaHint);
       if (res.ok) {
         const target = res.path || hubForPersona(res.persona || personaHint);

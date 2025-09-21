@@ -1,5 +1,18 @@
 export type InviteResult = { ok: boolean; persona?: string; path?: string; error?: string };
 
+export function persistPendingInvite(token: string, persona?: string) {
+  try { sessionStorage.setItem('pendingInvite', JSON.stringify({ token, persona, ts: Date.now() })); } catch {}
+}
+
+export function consumePendingInvite(): { token?: string; persona?: string; ts?: number } | null {
+  try {
+    const raw = sessionStorage.getItem('pendingInvite');
+    if (!raw) return null;
+    sessionStorage.removeItem('pendingInvite');
+    return JSON.parse(raw);
+  } catch { return null; }
+}
+
 const personaToHub: Record<string, string> = {
   advisor: '/pros/advisors',
   accountants: '/pros/accountants',
