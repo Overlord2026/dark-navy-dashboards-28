@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Users, Search, BookOpen, Wrench, TrendingUp, DollarSign } from 'lucide-react';
+import { CatalogGrid } from '@/components/catalog/CatalogGrid';
 
 export default function LandingNew() {
   return (
@@ -66,29 +67,7 @@ export default function LandingNew() {
       </section>
 
       {/* Catalog Grid Section */}
-      <section className="py-16 px-4 bg-muted/20">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">Solution Catalog</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { title: "Investment Management", description: "Portfolio optimization and wealth growth strategies", icon: TrendingUp },
-              { title: "Tax Planning", description: "Advanced tax strategies for high-net-worth families", icon: DollarSign },
-              { title: "Estate Planning", description: "Legacy preservation and succession planning", icon: Users },
-              { title: "Risk Management", description: "Insurance and risk mitigation solutions", icon: Wrench },
-              { title: "Family Governance", description: "Structure and decision-making frameworks", icon: BookOpen },
-              { title: "Concierge Services", description: "Lifestyle management and family support", icon: Search }
-            ].map((solution, index) => (
-              <Card key={index} className="border-border hover:border-brand-gold/50 transition-colors">
-                <CardHeader>
-                  <solution.icon className="h-8 w-8 text-brand-gold mb-2" />
-                  <CardTitle className="text-lg">{solution.title}</CardTitle>
-                  <CardDescription>{solution.description}</CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      <CatalogGrid />
 
       {/* Education Center Section */}
       <section className="py-16 px-4">
