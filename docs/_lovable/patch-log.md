@@ -1,5 +1,21 @@
 # Patch Log
 
+## 2025-09-20 — CPA Hub + Route Split (Hub vs CTA) [Additive]
+- Added CPA hub: `src/pages/pros/Accountants.tsx` (Coming Soon scaffold with PersonaSideNav).
+- Route split:
+  - `/pros/accountants` → hub (NEW)
+  - `/pros/accountants/access` → CTA (kept, moved if previously at /pros/accountants)
+  - any existing `/pros/accountants/dashboard` → unchanged
+- Verified ProfessionalTabs CPA/Attorney routes go to hubs.
+- Added temporary "Go to Dashboard" links on hubs (to be persona-gated later).
+
+QA:
+- [x] /pros/accountants shows hub (Coming Soon)
+- [x] /pros/accountants/access shows dual-CTA
+- [x] Pros tabs route to hubs
+- [x] No advisor/family route regressions
+- [x] No package.json changes required
+
 ## 2025-09-20 - P0 Polish Complete: Advisor UI + CTA Pages + Links + Badge Verification
 
 **Issue**: Final P0 polish verification - ensure all components are ship-ready.
