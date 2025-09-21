@@ -1,5 +1,17 @@
 # Patch Log
 
+## 2025-09-20 — Invite Flow (Token Handler + Persona Redirect) [Additive]
+- Added invite helper: `src/lib/invites.ts` (tries Supabase RPC `accept_invite`, graceful local fallback).
+- Added `src/pages/invite/InvitePage.tsx` to process `/invite/:token` + `?persona=…` and redirect to persona hubs.
+- Router: added `/invite/:token` route.
+- Optional dev-only demo links on CPA/Attorney CTAs.
+
+QA:
+- [x] /invite/DEMO123?persona=accountant → redirects to `/pros/accountants`
+- [x] /invite/DEMO123?persona=attorney → redirects to `/pros/attorneys`
+- [x] Production hides dev-only links
+- [x] No package.json changes
+
 ## 2025-09-20 — CPA Hub + Route Split (Hub vs CTA) [Additive]
 - Added CPA hub: `src/pages/pros/Accountants.tsx` (Coming Soon scaffold with PersonaSideNav).
 - Route split:
