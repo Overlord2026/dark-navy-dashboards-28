@@ -1,12 +1,19 @@
+export const FLAGS = {
+  __ENABLE_AGENT_AUTOMATIONS__: false,
+  __REQUIRE_APPROVAL_HIGH_RISK__: true,
+  // add more feature toggles here as needed
+} as const;
+
+// Legacy exports for backward compatibility
 export const DEMO_MODE = true;
 export const VOICE_ENABLED = false;
 export const HQ_BOOT = true;
 export const IP_LEDGER = true;
 export const PUBLISH_BATCH = true;
 
-// Agent automation flags
-export const __ENABLE_AGENT_AUTOMATIONS__ = false;
-export const __REQUIRE_APPROVAL_HIGH_RISK__ = true;
+// Agent automation flags (deprecated - use FLAGS instead)
+export const __ENABLE_AGENT_AUTOMATIONS__ = FLAGS.__ENABLE_AGENT_AUTOMATIONS__;
+export const __REQUIRE_APPROVAL_HIGH_RISK__ = FLAGS.__REQUIRE_APPROVAL_HIGH_RISK__;
 
 // Runtime configuration based on flags
 export const CONFIG = {
@@ -30,8 +37,5 @@ export const CONFIG = {
 
 export type FeatureFlags = typeof CONFIG;
 
-// Convenience export for direct flag access
-export const FLAGS = {
-  __ENABLE_AGENT_AUTOMATIONS__,
-  __REQUIRE_APPROVAL_HIGH_RISK__
-} as const;
+// keep default for code that may import default
+export default FLAGS;
