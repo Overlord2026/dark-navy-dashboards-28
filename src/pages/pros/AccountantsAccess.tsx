@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,8 @@ import { BFOHeader } from '@/components/site/BFOHeader';
 import { BrandedFooter } from '@/components/ui/BrandedFooter';
 
 export default function AccountantsPage() {
+  const [code, setCode] = useState('');
+  
   return (
     <div className="min-h-screen bg-background">
       <BFOHeader />
@@ -46,6 +48,21 @@ export default function AccountantsPage() {
                     <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
                     <span className="text-sm text-muted-foreground">Automated quarterly reporting</span>
                   </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    placeholder="Enter invite code"
+                    className="flex-1 rounded-md border px-3 py-2 bg-background"
+                  />
+                  <a
+                    href={code ? `/invite/${encodeURIComponent(code)}?persona=accountant` : '#'}
+                    aria-disabled={!code}
+                    className={`rounded-md px-3 py-2 border ${code ? 'hover:bg-muted' : 'opacity-50 cursor-not-allowed'}`}
+                  >
+                    Accept
+                  </a>
                 </div>
                 <Button asChild size="lg" className="w-full">
                   <Link to="/invite/:token">
