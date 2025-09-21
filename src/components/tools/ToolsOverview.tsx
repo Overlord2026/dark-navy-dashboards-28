@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Calculator, TrendingUp, Shield, DollarSign, FileText, PieChart, CreditCard, Building, Users, Briefcase, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { TIERS } from '@/config/tiers';
 
 const toolCategories = [
   {
@@ -154,6 +155,17 @@ const getBadgeColor = (badge: string) => {
   }
 };
 
+const getToolFootnotes = (badge: string) => {
+  switch (badge) {
+    case 'Premium':
+      return `Account aggregation limit: ${TIERS.PREMIUM.aggLimit} accounts`;
+    case 'Pro':
+      return `Account aggregation limit: ${TIERS.PRO.aggLimit} accounts`;
+    default:
+      return null;
+  }
+};
+
 export function ToolsOverview() {
   const navigate = useNavigate();
 
@@ -206,6 +218,11 @@ export function ToolsOverview() {
                         <CardDescription className="text-sm">
                           {tool.description}
                         </CardDescription>
+                        {getToolFootnotes(tool.badge) && (
+                          <p className="text-xs text-muted-foreground mt-2 italic">
+                            {getToolFootnotes(tool.badge)}
+                          </p>
+                        )}
                       </CardHeader>
                       <CardContent className="pt-0">
                         <Button 

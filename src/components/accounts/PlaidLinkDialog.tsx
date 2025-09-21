@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Shield, Zap, RefreshCw, AlertCircle } from "lucide-react";
+import { useCurrentTier } from "@/hooks/useCurrentTier";
+import { AggregationGate } from "@/components/ui/AggregationGate";
 
 interface PlaidLinkDialogProps {
   isOpen: boolean;
@@ -20,6 +22,7 @@ interface PlaidLinkDialogProps {
 
 export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogProps) {
   const { toast } = useToast();
+  const { tierConfig } = useCurrentTier();
   const [isConnecting, setIsConnecting] = useState(false);
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -154,92 +157,99 @@ export function PlaidLinkDialog({ isOpen, onClose, onSuccess }: PlaidLinkDialogP
           Connect your bank account securely using Plaid to automatically sync your financial data.
         </DialogDescription>
         <div className="relative p-8">
-          
-          <div className="text-center space-y-6">
-            {error ? (
-              // Error state
-              <div className="space-y-4">
-                <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
-                  <AlertCircle className="h-8 w-8 text-destructive" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-semibold text-foreground mb-2">Connection Error</h2>
-                  <p className="text-muted-foreground text-sm">{error}</p>
-                </div>
-              </div>
-            ) : (
-              // Normal state
-              <div className="space-y-3">
-                <h2 className="text-xl font-semibold text-foreground">
-                  <span className="font-bold">Advanced Wealth Management</span> uses <span className="font-bold">Plaid</span> to connect your account
-                </h2>
-              </div>
-            )}
-            
-            {!error && (
-              <div className="space-y-4 max-w-md mx-auto">
-                <div className="flex items-start gap-3 text-left">
-                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mt-0.5">
-                    <Zap className="h-4 w-4 text-primary" />
+          {!tierConfig.allowAggregation ? (
+            <AggregationGate fallbackMessage="Account aggregation requires Premium or Pro plan. Upgrade to connect your bank accounts automatically.">
+              <></>
+            </AggregationGate>
+          ) : (
+            <div className="text-center space-y-6">
+              {error ? (
+                // Error state
+                <div className="space-y-4">
+                  <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
+                    <AlertCircle className="h-8 w-8 text-destructive" />
                   </div>
                   <div>
-                    <h3 className="font-medium text-sm text-foreground">Connect in seconds</h3>
-                    <p className="text-muted-foreground text-sm">
-                      8000+ apps trust Plaid to quickly connect to financial institutions
-                    </p>
+                    <h2 className="text-xl font-semibold text-foreground mb-2">Connection Error</h2>
+                    <p className="text-muted-foreground text-sm">{error}</p>
                   </div>
                 </div>
-                
-                <div className="flex items-start gap-3 text-left">
-                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mt-0.5">
-                    <Shield className="h-4 w-4 text-primary" />
+              ) : (
+                // Normal state
+                <div className="space-y-3">
+                  <h2 className="text-xl font-semibold text-foreground">
+                    <span className="font-bold">Advanced Wealth Management</span> uses <span className="font-bold">Plaid</span> to connect your account
+                  </h2>
+                </div>
+              )}
+              
+              {!error && (
+                <div className="space-y-4 max-w-md mx-auto">
+                  <div className="flex items-start gap-3 text-left">
+                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mt-0.5">
+                      <Zap className="h-4 w-4 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-sm text-foreground">Connect in seconds</h3>
+                      <p className="text-muted-foreground text-sm">
+                        8000+ apps trust Plaid to quickly connect to financial institutions
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-medium text-sm text-foreground">Keep your data safe</h3>
-                    <p className="text-muted-foreground text-sm">
-                      Plaid uses best-in-class encryption to help protect your data
-                    </p>
+                  
+                  <div className="flex items-start gap-3 text-left">
+                    <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mt-0.5">
+                      <Shield className="h-4 w-4 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-sm text-foreground">Keep your data safe</h3>
+                      <p className="text-muted-foreground text-sm">
+                        Plaid uses best-in-class encryption to help protect your data
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-            
-            {!error && (
-              <div className="text-xs text-muted-foreground text-center max-w-md mx-auto bg-muted/30 rounded-lg p-3">
-                By continuing, you agree to Plaid's <a href="#" className="underline text-primary hover:text-primary/80">Privacy Policy</a> and to receiving updates on plaid.com
-              </div>
-            )}
-          </div>
+              )}
+              
+              {!error && (
+                <div className="text-xs text-muted-foreground text-center max-w-md mx-auto bg-muted/30 rounded-lg p-3">
+                  By continuing, you agree to Plaid's <a href="#" className="underline text-primary hover:text-primary/80">Privacy Policy</a> and to receiving updates on plaid.com
+                </div>
+              )}
+            </div>
+          )}
           
-          <div className="mt-8 space-y-3">
-            {error ? (
-              <Button 
-                onClick={() => fetchLinkToken(true)}
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-                disabled={isRetrying}
-              >
-                {isRetrying ? (
-                  <>
-                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                    Retrying...
-                  </>
-                ) : (
-                  <>
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Try Again
-                  </>
-                )}
-              </Button>
-            ) : (
-              <Button 
-                onClick={handleConnect}
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-                disabled={isConnecting || !linkToken}
-              >
-                {isConnecting ? "Connecting..." : linkToken ? "Continue with Plaid" : "Loading..."}
-              </Button>
-            )}
-          </div>
+          {tierConfig.allowAggregation && (
+            <div className="mt-8 space-y-3">
+              {error ? (
+                <Button 
+                  onClick={() => fetchLinkToken(true)}
+                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                  disabled={isRetrying}
+                >
+                  {isRetrying ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                      Retrying...
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Try Again
+                    </>
+                  )}
+                </Button>
+              ) : (
+                <Button 
+                  onClick={handleConnect}
+                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                  disabled={isConnecting || !linkToken}
+                >
+                  {isConnecting ? "Connecting..." : linkToken ? "Continue with Plaid" : "Loading..."}
+                </Button>
+              )}
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

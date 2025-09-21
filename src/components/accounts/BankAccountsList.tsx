@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Trash2, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StaggeredList, StaggeredItem } from '@/components/animations/StaggeredList';
+import { AggregationGate } from '@/components/ui/AggregationGate';
 
 export function BankAccountsList() {
   const { accounts, loading, saving, deleteAccount, syncPlaidAccount } = useBankAccounts();
@@ -84,16 +85,18 @@ export function BankAccountsList() {
                 </div>
                 <div className="flex items-center gap-2">
                   {account.is_plaid_linked && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => syncPlaidAccount(account.id)}
-                      disabled={saving}
-                      className="text-xs"
-                    >
-                      <RefreshCw className={cn("h-3 w-3 mr-1", saving && "animate-spin")} />
-                      Sync
-                    </Button>
+                    <AggregationGate>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => syncPlaidAccount(account.id)}
+                        disabled={saving}
+                        className="text-xs"
+                      >
+                        <RefreshCw className={cn("h-3 w-3 mr-1", saving && "animate-spin")} />
+                        Sync
+                      </Button>
+                    </AggregationGate>
                   )}
                   <Button
                     variant="outline"

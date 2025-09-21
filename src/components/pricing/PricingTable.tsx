@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { TIERS } from '@/config/tiers';
 
 export function PricingTable() {
   const navigate = useNavigate();
@@ -23,7 +24,9 @@ export function PricingTable() {
         'Educational resources',
         'Community access',
         'Basic reporting',
-        'Mobile app access'
+        'Mobile app access',
+        `Document vault: ${TIERS.FREE.vaultQuota.files} files, ${TIERS.FREE.vaultQuota.mb}MB`,
+        'No account aggregation'
       ],
       buttonText: 'Get Started',
       popular: false,
@@ -42,7 +45,9 @@ export function PricingTable() {
         'Portfolio modeling',
         'Priority support',
         'API access',
-        'Custom reports'
+        'Custom reports',
+        `Account aggregation (up to ${TIERS.PREMIUM.aggLimit} accounts)`,
+        `Document vault: ${TIERS.PREMIUM.vaultQuota.files} files, ${TIERS.PREMIUM.vaultQuota.mb}MB`
       ],
       buttonText: 'Choose Premium',
       popular: true,
@@ -59,9 +64,10 @@ export function PricingTable() {
         'Dedicated advisor access',
         'White-label options',
         'Family office services',
-        'Unlimited storage',
         'Custom integrations',
-        '24/7 concierge support'
+        '24/7 concierge support',
+        `Account aggregation (up to ${TIERS.PRO.aggLimit} accounts)`,
+        `Document vault: ${TIERS.PRO.vaultQuota.files} files, ${TIERS.PRO.vaultQuota.mb/1024}GB`
       ],
       buttonText: 'Choose Pro',
       popular: false,
