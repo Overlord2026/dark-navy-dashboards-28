@@ -6,6 +6,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { EntitlementsProvider } from '@/context/EntitlementsContext';
 import { ToolsProvider } from '@/contexts/ToolsContext';
 import { SafeToastProvider } from '@/providers/SafeToastProvider';
+import { ErrorBoundary } from '@/components/system/ErrorBoundary';
 import emailjs from '@emailjs/browser';
 import { initializeAnalytics } from './lib/analytics';
 import { registerServiceWorker, promptInstallPWA } from './lib/pwa';
@@ -63,7 +64,9 @@ createRoot(el).render(
         <AuthProvider>
           <EntitlementsProvider>
             <ToolsProvider>
-              <App />
+              <ErrorBoundary>
+                <App />
+              </ErrorBoundary>
             </ToolsProvider>
           </EntitlementsProvider>
         </AuthProvider>
