@@ -1,3 +1,95 @@
+// SWAG™ Tool Tiers and Pricing Configuration
+export interface SWAGToolTier {
+  id: 'family_premium' | 'professional_basic' | 'professional_premium' | 'enterprise';
+  name: string;
+  description: string;
+  monthlyPrice: number;
+  annualPrice: number;
+  clientLimit?: number;
+  features: string[];
+  tools: string[];
+}
+
+export const SWAG_TOOL_TIERS: Record<string, SWAGToolTier> = {
+  family_premium: {
+    id: 'family_premium',
+    name: 'Family Premium',
+    description: 'SWAG™ tools for individual families',
+    monthlyPrice: 29,
+    annualPrice: 290,
+    clientLimit: 1,
+    features: [
+      'swag_retirement_roadmap',
+      'swag_legacy_planning',
+      'basic_analytics',
+      'document_vault',
+      'professional_collaboration'
+    ],
+    tools: ['swag-retirement-roadmap', 'estate-planning']
+  },
+  professional_basic: {
+    id: 'professional_basic',
+    name: 'Professional Basic',
+    description: 'SWAG™ tools for growing practices',
+    monthlyPrice: 99,
+    annualPrice: 990,
+    clientLimit: 10,
+    features: [
+      'swag_retirement_roadmap',
+      'swag_legacy_planning',
+      'advanced_analytics',
+      'document_vault',
+      'professional_collaboration',
+      'client_management',
+      'basic_branding'
+    ],
+    tools: ['swag-retirement-roadmap', 'estate-planning']
+  },
+  professional_premium: {
+    id: 'professional_premium',
+    name: 'Professional Premium',
+    description: 'Advanced SWAG™ tools with white-label features',
+    monthlyPrice: 199,
+    annualPrice: 1990,
+    clientLimit: 50,
+    features: [
+      'swag_retirement_roadmap',
+      'swag_legacy_planning',
+      'advanced_analytics',
+      'document_vault',
+      'professional_collaboration',
+      'client_management',
+      'white_label_branding',
+      'advanced_reporting',
+      'api_access',
+      'priority_support'
+    ],
+    tools: ['swag-retirement-roadmap', 'estate-planning']
+  },
+  enterprise: {
+    id: 'enterprise',
+    name: 'Enterprise',
+    description: 'Unlimited SWAG™ tools with custom features',
+    monthlyPrice: 299,
+    annualPrice: 2990,
+    features: [
+      'swag_retirement_roadmap',
+      'swag_legacy_planning',
+      'advanced_analytics',
+      'document_vault',
+      'professional_collaboration',
+      'client_management',
+      'custom_branding',
+      'advanced_reporting',
+      'full_api_access',
+      'dedicated_support',
+      'custom_integrations',
+      'team_management'
+    ],
+    tools: ['swag-retirement-roadmap', 'estate-planning']
+  }
+};
+
 export interface ProfessionalFeature {
   id: string;
   name: string;
@@ -212,8 +304,27 @@ export const PROFESSIONAL_SEGMENTS = [
   { id: 'influencer', name: 'Influencer', icon: 'megaphone' }
 ];
 
+// Utility functions
+export const getSWAGToolTier = (tierId: string): SWAGToolTier | null => {
+  return SWAG_TOOL_TIERS[tierId] || null;
+};
+
+export const canAccessSWAGTool = (userTier: string, toolKey: string): boolean => {
+  const tier = getSWAGToolTier(userTier);
+  return tier ? tier.tools.includes(toolKey) : false;
+};
+
+export const getClientLimit = (tierId: string): number | null => {
+  const tier = getSWAGToolTier(tierId);
+  return tier?.clientLimit || null;
+};
+
 export default {
   features: PROFESSIONAL_FEATURES,
   plans: PROFESSIONAL_PLANS,
-  segments: PROFESSIONAL_SEGMENTS
+  segments: PROFESSIONAL_SEGMENTS,
+  swagTiers: SWAG_TOOL_TIERS,
+  getSWAGToolTier,
+  canAccessSWAGTool,
+  getClientLimit
 };

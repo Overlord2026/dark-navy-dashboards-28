@@ -8,9 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Calculator, TrendingUp, Users } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Calculator, TrendingUp, Users, Crown } from 'lucide-react';
 import { seedRetirementRoadmap } from '@/tools/seeds/retirement-roadmap';
 import { ProfessionalRequestModal } from '@/components/professional-collaboration/ProfessionalRequestModal';
+// Import SWAG analyzer core functions
+import { outcomeScore, ETAY, SEAY, liquidityVaR } from '../../../packages/swag-analyzer/src/core';
 
 export default function RetirementRoadmapTool() {
   const [inputs, setInputs] = useState({
@@ -93,9 +96,32 @@ export default function RetirementRoadmapTool() {
   };
 
   return (
-    <div className="min-h-screen bg-bfo-navy">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       <div className="container mx-auto p-6 max-w-4xl">
-      <ToolHeader title="Retirement Roadmap" />
+        {/* Enhanced Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-3 rounded-full bg-gradient-to-r from-primary/20 to-accent/20">
+              <TrendingUp className="h-8 w-8 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+                SWAG™ Retirement Roadmap
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Strategic Wealth Alpha GPS™ Retirement Analyzer
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Badge variant="secondary" className="bg-primary/10 text-primary">
+              <Crown className="h-3 w-3 mr-1" />
+              SWAG™ Powered
+            </Badge>
+            <Badge variant="outline">Professional Collaboration</Badge>
+            <Badge variant="outline">Outcome Scoring</Badge>
+          </div>
+        </div>
       
       <div className="space-y-6">
         <div className="flex justify-between items-start">
@@ -106,17 +132,17 @@ export default function RetirementRoadmapTool() {
           />
         </div>
 
-        <Card className="bg-[hsl(210_65%_13%)] border-4 border-bfo-gold shadow-lg shadow-bfo-gold/20">
+        <Card className="border-2 border-primary/20 shadow-lg">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-white">
-              <Calculator className="w-5 h-5 text-bfo-gold" />
-              Retirement Planning Inputs
+            <CardTitle className="flex items-center gap-2 text-primary">
+              <Calculator className="w-5 h-5" />
+              SWAG™ Retirement Analysis Inputs
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="currentAge" className="text-white">Current Age</Label>
+                <Label htmlFor="currentAge">Current Age</Label>
                 <Input
                   id="currentAge"
                   type="number"
@@ -125,7 +151,7 @@ export default function RetirementRoadmapTool() {
                 />
               </div>
               <div>
-                <Label htmlFor="retirementAge" className="text-white">Target Retirement Age</Label>
+                <Label htmlFor="retirementAge">Target Retirement Age</Label>
                 <Input
                   id="retirementAge"
                   type="number"
@@ -134,7 +160,7 @@ export default function RetirementRoadmapTool() {
                 />
               </div>
               <div>
-                <Label htmlFor="currentSavings" className="text-white">Current Savings ($)</Label>
+                <Label htmlFor="currentSavings">Current Savings ($)</Label>
                 <Input
                   id="currentSavings"
                   type="number"
@@ -143,7 +169,7 @@ export default function RetirementRoadmapTool() {
                 />
               </div>
               <div>
-                <Label htmlFor="monthlyContribution" className="text-white">Monthly Contribution ($)</Label>
+                <Label htmlFor="monthlyContribution">Monthly Contribution ($)</Label>
                 <Input
                   id="monthlyContribution"
                   type="number"
@@ -152,7 +178,7 @@ export default function RetirementRoadmapTool() {
                 />
               </div>
               <div>
-                <Label htmlFor="expectedReturn" className="text-white">Expected Annual Return (%)</Label>
+                <Label htmlFor="expectedReturn">Expected Annual Return (%)</Label>
                 <Input
                   id="expectedReturn"
                   type="number"
@@ -163,9 +189,13 @@ export default function RetirementRoadmapTool() {
               </div>
             </div>
             
-            <Button onClick={calculateRoadmap} className="w-full bg-bfo-gold text-black hover:bg-bfo-gold/90">
-              <TrendingUp className="w-4 h-4 mr-2" />
-              Calculate Retirement Roadmap
+            <Button 
+              onClick={calculateRoadmap} 
+              className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
+              size="lg"
+            >
+              <TrendingUp className="w-5 h-5 mr-2" />
+              Generate SWAG™ Analysis
             </Button>
           </CardContent>
         </Card>

@@ -2,11 +2,28 @@
   {
     "slug": "swag-retirement-roadmap",
     "title": "SWAG™ Retirement Roadmap Analyzer",
-    "summary": "A guided income plan using our Strategic Wealth Alpha GPS™ holistic planning process.",
+    "summary": "Strategic Wealth Alpha GPS™ retirement planning with professional collaboration.",
+    "description": "Comprehensive retirement analysis using our proprietary SWAG™ methodology with outcome scoring, sequence risk analysis, and professional advisor review capabilities.",
     "personas": ["aspiring", "retirees", "families", "advisor"],
-    "tiers": ["premium", "pro"],
+    "tiers": ["family_premium", "professional_basic", "professional_premium", "enterprise"],
     "status": "live",
-    "tags": ["retirement","income","planning","swag"]
+    "tags": ["retirement", "income", "planning", "swag", "professional"],
+    "route": "/tools/retirement-roadmap",
+    "pricing_tier": "premium",
+    "professional_collaboration": true
+  },
+  {
+    "slug": "swag-legacy-planning",
+    "title": "SWAG™ Legacy Planning Tool",
+    "summary": "Advanced estate planning with attorney collaboration and tax optimization.",
+    "description": "Comprehensive estate planning analysis using Strategic Wealth Alpha GPS™ methodology with professional attorney network integration for document creation and legal guidance.",
+    "personas": ["families", "advisor", "attorney"],
+    "tiers": ["family_premium", "professional_basic", "professional_premium", "enterprise"],
+    "status": "live",
+    "tags": ["estate", "planning", "legacy", "swag", "attorney", "tax"],
+    "route": "/tools/estate-planning",
+    "pricing_tier": "premium", 
+    "professional_collaboration": true
   },
   {
     "key": "rmd-check",
