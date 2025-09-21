@@ -16,33 +16,43 @@ export function hubForPersona(persona?: string): string {
 }
 
 export async function acceptInvite(token: string, personaHint?: string): Promise<InviteResult> {
-  // Try existing supabase client if project has it
   let supabase: any = null;
   try {
-    const m = await import('@/lib/supabase'); // use actual supabase client path
+    const m = await import('@/lib/supabase');
     supabase = (m as any).supabase || (m as any).default || m;
-  } catch {
-    // no-op
-  }
-
-  // 1) Preferred: call RPC if available
-  if (supabase?.rpc) {
-    try {
-      const { data, error } = await supabase.rpc('accept_invite', { invite_token: token });
-      if (error) throw error;
-      const persona = (data?.persona as string) || personaHint;
-      if (persona) localStorage.setItem(`invite.accepted.${persona}`, '1');
-      return { ok: true, persona };
-    } catch (e: any) {
-      // fall through to local mode
-    }
-  }
-
-  // 2) Fallback: store acceptance locally so flows demo in MVP
-  const persona = personaHint || 'accountant'; // sensible default for CPA invites
-  try {
-    localStorage.setItem(`invite.accepted.${persona}`, '1');
   } catch {}
+
+  const tryRPC = async (fn: string) => {
+    if (!supabase?.rpc) return { ok: false } as any;
+    try {
+      const { data, error } = await supabase.rpc(fn, { invite_token: token });
+      if (error) throw error;
+
+      // handle both shapes: jsonb object or text
+      let persona: string | undefined = personaHint;
+      if (data && typeof data === 'object' && 'persona' in data) {
+        persona = (data as any).persona as string;
+      } else if (typeof data === 'string') {
+        persona = data;
+      }
+      if (persona) {
+        try { localStorage.setItem(`invite.accepted.${persona}`, '1'); } catch {}
+      }
+      return { ok: true, persona } as InviteResult;
+    } catch {
+      return { ok: false } as any;
+    }
+  };
+
+  // Prefer the new JSON-returning RPC; then try legacy; then local fallback
+  for (const fn of ['accept_invite_json', 'accept_invite']) {
+    const res = await tryRPC(fn);
+    if (res.ok) return res;
+  }
+
+  // Local fallback for MVP demos
+  const persona = personaHint || 'accountant';
+  try { localStorage.setItem(`invite.accepted.${persona}`, '1'); } catch {}
   return { ok: true, persona };
 }
 
