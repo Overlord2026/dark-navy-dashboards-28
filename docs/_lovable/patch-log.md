@@ -15,6 +15,7 @@ QA:
 - [x] Pros tabs route to hubs
 - [x] No advisor/family route regressions
 - [x] No package.json changes required
+- [x] Routes confirmed live; tabs verified; dashboard links added to hubs.
 
 ## 2025-09-20 - P0 Polish Complete: Advisor UI + CTA Pages + Links + Badge Verification
 
