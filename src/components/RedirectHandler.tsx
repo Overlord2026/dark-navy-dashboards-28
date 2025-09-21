@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-export default function RedirectHandler() {
+function RedirectHandler() {
   const nav = useNavigate();
   const loc = useLocation();
 
@@ -14,3 +14,5 @@ export default function RedirectHandler() {
 
   return null; // headless router helper
 }
+
+export default RedirectHandler;
