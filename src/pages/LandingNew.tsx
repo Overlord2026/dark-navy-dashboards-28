@@ -7,7 +7,8 @@ export default function LandingNew() {
     <main className="min-h-screen bg-bfo-navy">
       <Hero />
       <CatalogGrid />
-      {/* Optional: insert ToolsOverview + HowItWorks sections here */}
+      {/* TODO: ToolsOverview */}
+      {/* TODO: HowItWorks */}
       <PricingTable />
     </main>
   );
