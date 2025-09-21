@@ -15,4 +15,4 @@ function RedirectHandler() {
   return null; // headless router helper
 }
 
-export default RedirectHandler;
+export { RedirectHandler };
