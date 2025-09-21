@@ -242,6 +242,11 @@ QA:
 
 **Impact**: Ensures consistent React resolution across all dependencies. Build stability improved.
 
+## 2025-09-21 — New Landing (Hero → Catalog → Pricing) + routing cleanup
+- Root "/" now renders LandingNew.
+- Catalog buttons route to /solutions/:slug.
+- Pricing copy standardized (benefit-led; internal cost strategy not surfaced).
+
 ## 2025-09-21 — Invite UX: Auth-aware + Token Entry + Gated Hubs [Additive]
 - Auth-aware invite handler: persists token, redirects to /auth when signed out, returns to /invite/:token.
 - CTA pages now accept a pasted invite code (navigates to /invite/<code>?persona=…).
