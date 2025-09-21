@@ -2,7 +2,7 @@ import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './AppWrapper';
 import { AuthProvider } from '@/context/AuthContext';
-import { SafeToastProvider } from '@/providers/SafeToastProvider';
+import SafeToastProvider from '@/providers/SafeToastProvider';
 import emailjs from '@emailjs/browser';
 import { initializeAnalytics } from './lib/analytics';
 import { registerServiceWorker, promptInstallPWA } from './lib/pwa';
