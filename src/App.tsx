@@ -41,6 +41,7 @@ import SearchPage from '@/pages/SearchPage';
 import { HowItWorks } from '@/pages/HowItWorks';
 import SolutionsPage from '@/pages/SolutionsPage';
 import SolutionCategoryPage from '@/pages/solutions/SolutionCategoryPage';
+const SolutionsDetailPage = lazy(() => import('@/pages/solutions/SolutionsPage'));
 import { Annuities } from '@/pages/solutions/Annuities';
 import { SolutionsInvestmentsPage } from '@/pages/solutions/SolutionsInvestmentsPage';
 import { SolutionsInsurancePage } from '@/pages/solutions/SolutionsInsurancePage';
@@ -655,6 +656,11 @@ function App() {
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/lending" element={<SolutionsLendingPage />} />}
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/tax" element={<SolutionsTaxPage />} />}
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/estate" element={<SolutionsEstatePage />} />}
+            <Route path="/solutions/:slug" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <SolutionsDetailPage />
+              </Suspense>
+            } />
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/:solutionKey" element={<SolutionCategoryPage />} />}
             
             
