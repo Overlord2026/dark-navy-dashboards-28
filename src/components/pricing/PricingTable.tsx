@@ -70,7 +70,7 @@ export default function PricingTable() {
       <div className="container mx-auto px-4 py-16">
         <header className="mb-8 text-center">
           <h2 className="text-2xl md:text-3xl font-extrabold">Pricing</h2>
-          <p className="mt-2 text-white/70">Free plan has <b>no vendor costs</b>: no account aggregation or paid APIs.</p>
+          <p className="mt-2 text-white/70">Start free. Upgrade anytime for connected data and advanced planning tools.</p>
         </header>
 
         <div className="grid gap-4 md:grid-cols-3">
@@ -111,7 +111,7 @@ export default function PricingTable() {
 
               {p.key === "free" && (
                 <p className="mt-3 text-xs text-white/60">
-                  Free excludes variable-cost features (e.g., bank/transactions sync). Upgrade to enable connections.
+                  Free focuses on education, organization, and self-service tools. Premium adds connected data and advanced planning.
                 </p>
               )}
             </div>
