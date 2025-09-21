@@ -59,6 +59,13 @@ export const router = createBrowserRouter([
     }),
   },
   {
+    path: "/old-home",
+    element: React.createElement(() => {
+      const C = require("./pages/TabPages").HomePage;
+      return React.createElement(C);
+    }),
+  },
+  {
     path: "/start/families",
     element: React.createElement(() => {
       const { FamilyOnboarding } = require('./pages/family/FamilyOnboarding');
