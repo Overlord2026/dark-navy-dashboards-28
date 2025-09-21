@@ -10,7 +10,8 @@ interface FamilyOnboardingWelcomeProps {
   onAuthChoice: (provider: string) => void;
 }
 
-export const FamilyOnboardingWelcome: React.FC<FamilyOnboardingWelcomeProps> = ({ onAuthChoice }) => {
+export function FamilyOnboardingWelcome(props: FamilyOnboardingWelcomeProps) {
+  const { onAuthChoice } = props;
   const [hasPlayedWelcome, setHasPlayedWelcome] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
 
