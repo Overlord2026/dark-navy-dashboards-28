@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Calculator, FileText, BookOpen, TrendingUp, Users, DollarSign, Clock, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { FLAGS } from '@/config/flags';
+import AssistedBadge from '@/components/badges/AssistedBadge';
 
 export default function AccountantDashboard() {
   const metrics = {
@@ -34,7 +36,10 @@ export default function AccountantDashboard() {
         <main className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="space-y-4">
-              <h1 className="text-3xl font-bold text-bfo-gold">Accountant Dashboard</h1>
+              <div className="flex items-center gap-3">
+                <h1 className="text-3xl font-bold text-bfo-gold">Accountant Dashboard</h1>
+                {FLAGS.__ENABLE_AGENT_AUTOMATIONS__ && <AssistedBadge />}
+              </div>
               <p className="text-white/80">Manage tax services, bookkeeping, and financial reporting</p>
             </div>
             <Button className="gap-2 bg-bfo-gold text-bfo-black hover:bg-bfo-gold/90">

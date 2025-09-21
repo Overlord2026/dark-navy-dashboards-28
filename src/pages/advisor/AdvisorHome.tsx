@@ -10,6 +10,8 @@ import { ReceiptsStripSkeleton } from '@/components/ui/skeletons';
 import { useFamilyAnalytics } from '@/lib/familyAnalytics';
 import { AdvisorBenchmarkWidget } from '@/components/advisor/AdvisorBenchmarkWidget';
 import { getFlag } from '@/lib/flags';
+import { FLAGS } from '@/config/flags';
+import AssistedBadge from '@/components/badges/AssistedBadge';
 import { 
   Users, 
   UserPlus, 
@@ -187,7 +189,10 @@ export default function AdvisorHome() {
               <Briefcase className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Advisor Hub</h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-bold">Advisor Hub</h1>
+                {FLAGS.__ENABLE_AGENT_AUTOMATIONS__ && <AssistedBadge />}
+              </div>
               <Badge variant="outline" className="mt-1">
                 Professional Dashboard
               </Badge>

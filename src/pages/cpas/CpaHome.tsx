@@ -4,6 +4,8 @@ import React from 'react';
 import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Calculator, Users, BookOpen } from 'lucide-react';
+import { FLAGS } from '@/config/flags';
+import AssistedBadge from '@/components/badges/AssistedBadge';
 
 export default function CpaHome() {
   return (
@@ -16,7 +18,10 @@ export default function CpaHome() {
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-6">
           <section className="bfo-card p-6">
-            <h1 className="text-3xl font-bold mb-4">CPA Command Center</h1>
+            <div className="flex items-center gap-3 mb-4">
+              <h1 className="text-3xl font-bold">CPA Command Center</h1>
+              {FLAGS.__ENABLE_AGENT_AUTOMATIONS__ && <AssistedBadge />}
+            </div>
             <p className="text-muted-foreground mb-6">
               Welcome to your comprehensive tax professional workspace
             </p>

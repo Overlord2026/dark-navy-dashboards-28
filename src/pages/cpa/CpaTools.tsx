@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calculator, FileText, Users, BookOpen, PieChart, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { FLAGS } from '@/config/flags';
+import AssistedBadge from '@/components/badges/AssistedBadge';
 
 export default function CpaTools() {
   const tools = [
@@ -58,7 +60,12 @@ export default function CpaTools() {
       <div className="container mx-auto px-4 py-8">
         <div className="space-y-6">
           <section className="bfo-card p-6">
-            <h1 className="text-3xl font-bold mb-4">CPA Professional Tools</h1>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h1 className="text-3xl font-bold">CPA Professional Tools</h1>
+                {FLAGS.__ENABLE_AGENT_AUTOMATIONS__ && <AssistedBadge />}
+              </div>
+            </div>
             <p className="text-muted-foreground mb-6">
               Comprehensive suite of tax planning, client management, and professional development tools
             </p>
