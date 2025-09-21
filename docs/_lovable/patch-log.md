@@ -271,3 +271,9 @@ QA:
 - [x] Social settings page saves/deletes Facebook tokens
 - [x] Navigation includes both prospects and social settings
 - [x] RLS protects credentials per user
+
+## 2025-09-21 — Assisted automation flags + CheckPack gate + ExplainPack export
+- Added feature flags and Assisted badge (off by default).
+- Added CheckPack gating function for any automated action.
+- Added ExplainPack export & ProofSlip hooks on job pages.
+- No package.json changes.
