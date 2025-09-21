@@ -634,6 +634,14 @@ export const router = createBrowserRouter([
       </AdminRoute>
     )
   },
+  // Solutions routes
+  {
+    path: "/solutions/:slug",
+    element: React.createElement(() => {
+      const C = require("@/pages/solutions/SolutionsPage").default;
+      return React.createElement(C);
+    })
+  },
   // Legal routes
   {
     path: "/legal/privacy-policy",
