@@ -277,3 +277,6 @@ QA:
 - Added CheckPack gating function for any automated action.
 - Added ExplainPack export & ProofSlip hooks on job pages.
 - No package.json changes.
+
+## 2025-09-21 — New educational landing + tier gating system
+- New educational landing (catalog-first), persona entry pages, solutions explainers, pricing with zero-variable-cost Free; tier gating wiring (TIERS).
