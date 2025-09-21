@@ -1,5 +1,4 @@
 import React from 'react';
-import { Hero } from '@/components/landing/Hero';
 import { ToolsGrid } from '@/components/landing/ToolsGrid';
 import { BookOpen, Video, Users, Award, MessageSquare, Lightbulb } from 'lucide-react';
 
@@ -50,11 +49,18 @@ export default function LearnIndex() {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--bfo-black))]">
-      <Hero
-        title="Learning & Development"
-        subtitle="Expand your knowledge with comprehensive educational resources and professional development"
-        onCtaClick={handleDemoClick}
-      />
+      <section className="relative overflow-hidden bg-bfo-navy text-bfo-ivory">
+        <div className="container mx-auto px-4 py-16 md:py-24">
+          <div className="max-w-3xl">
+            <h1 className="text-3xl md:text-5xl font-extrabold leading-tight">
+              Learning & Development
+            </h1>
+            <p className="mt-4 text-lg md:text-xl text-white/80">
+              Expand your knowledge with comprehensive educational resources and professional development
+            </p>
+          </div>
+        </div>
+      </section>
 
       <ToolsGrid
         tools={learningTools}

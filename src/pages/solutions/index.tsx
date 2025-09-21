@@ -1,5 +1,4 @@
 import React from 'react';
-import { Hero } from '@/components/landing/Hero';
 import { ToolsGrid } from '@/components/landing/ToolsGrid';
 import { Lightbulb, TrendingUp, Shield, Building, Zap, Users } from 'lucide-react';
 
@@ -50,11 +49,18 @@ export default function SolutionsIndex() {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--bfo-black))]">
-      <Hero
-        title="Wealth Solutions Marketplace"
-        subtitle="Discover and implement sophisticated wealth management solutions tailored to your needs"
-        onCtaClick={handleDemoClick}
-      />
+      <section className="relative overflow-hidden bg-bfo-navy text-bfo-ivory">
+        <div className="container mx-auto px-4 py-16 md:py-24">
+          <div className="max-w-3xl">
+            <h1 className="text-3xl md:text-5xl font-extrabold leading-tight">
+              Wealth Solutions Marketplace
+            </h1>
+            <p className="mt-4 text-lg md:text-xl text-white/80">
+              Discover and implement sophisticated wealth management solutions tailored to your needs
+            </p>
+          </div>
+        </div>
+      </section>
 
       <ToolsGrid
         tools={solutionTools}

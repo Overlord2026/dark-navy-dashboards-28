@@ -1,50 +1,56 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
+import { Link } from "react-router-dom";
 
-interface HeroProps {
-  title: string;
-  subtitle?: string;
-  ctaText?: string;
-  ctaHref?: string;
-  onCtaClick?: () => void;
-  className?: string;
-}
-
-export function Hero({ 
-  title, 
-  subtitle, 
-  ctaText = "Watch 60-sec demo", 
-  ctaHref = "#", 
-  onCtaClick,
-  className 
-}: HeroProps) {
+export default function Hero() {
   return (
-    <section className={cn("py-16 px-4 text-center", className)}>
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-          {title}
-        </h1>
-        
-        {subtitle && (
-          <p className="text-xl md:text-2xl text-white/80 mb-8 max-w-2xl mx-auto">
-            {subtitle}
+    <section className="relative overflow-hidden bg-bfo-navy text-bfo-ivory">
+      <div className="container mx-auto px-4 py-16 md:py-24">
+        <div className="max-w-3xl">
+          <h1 className="text-3xl md:text-5xl font-extrabold leading-tight">
+            Your Boutique Family Office —
+            <span className="text-bfo-gold"> plan better, learn faster,</span> work with trusted pros.
+          </h1>
+          <p className="mt-4 text-lg md:text-xl text-white/80">
+            Explore our free catalog, take pro-led courses, and upgrade anytime to unlock advanced tools for
+            families and service professionals.
           </p>
-        )}
-        
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <button
-            onClick={onCtaClick}
-            className="bfo-cta text-lg px-8 py-4"
-          >
-            {ctaText}
-          </button>
-          
-          <a
-            href="#tools"
-            className="bfo-cta-secondary text-lg px-8 py-4"
-          >
-            Explore tools
-          </a>
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              to="/catalog"
+              className="inline-flex items-center rounded-lg bg-bfo-gold text-bfo-black px-5 py-3 font-medium hover:bg-bfo-gold/90"
+            >
+              Explore the Catalog
+            </Link>
+            <Link
+              to="/pricing"
+              className="inline-flex items-center rounded-lg border border-bfo-gold/40 px-5 py-3 font-medium hover:bg-white/5"
+            >
+              See Plans
+            </Link>
+            <Link
+              to="/learn"
+              className="inline-flex items-center rounded-lg border border-white/15 px-5 py-3 font-medium hover:bg-white/5"
+            >
+              Education Center
+            </Link>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Link
+              to="/families"
+              className="rounded-xl border border-white/10 bg-white/5 px-5 py-4 hover:bg-white/10"
+            >
+              <div className="text-sm uppercase tracking-widest opacity-60">For Families</div>
+              <div className="text-lg font-semibold">Choose your path: Aspiring or Retirees →</div>
+            </Link>
+            <Link
+              to="/pros"
+              className="rounded-xl border border-white/10 bg-white/5 px-5 py-4 hover:bg-white/10"
+            >
+              <div className="text-sm uppercase tracking-widest opacity-60">For Service Professionals</div>
+              <div className="text-lg font-semibold">Advisors, CPAs, Attorneys →</div>
+            </Link>
+          </div>
         </div>
       </div>
     </section>
