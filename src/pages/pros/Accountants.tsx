@@ -14,6 +14,10 @@ export default function Accountants() {
             <h2 className="text-xl font-semibold mb-4">Coming Soon</h2>
             <p className="text-white/70">Accountant practice management tools are in development.</p>
           </div>
+          
+          <a href="/pros/accountants/dashboard" className="inline-flex items-center gap-2 mt-6 rounded-lg border border-bfo-gold/30 px-4 py-2 text-bfo-gold hover:bg-bfo-gold hover:text-bfo-black transition">
+            Go to Accountant Dashboard
+          </a>
         </main>
       </div>
     </div>
