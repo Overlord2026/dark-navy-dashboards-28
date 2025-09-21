@@ -2,12 +2,50 @@ import React from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calculator, FileText, Users, BookOpen, PieChart, Settings } from 'lucide-react';
+import { Calculator, FileText, Users, BookOpen, PieChart, Settings, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { FLAGS } from '@/config/flags';
 import AssistedBadge from '@/components/badges/AssistedBadge';
+import { createProof } from '@/lib/proofs';
+import { buildExplainPack, downloadExplainPack } from '@/lib/explainpack';
+import { toast } from '@/hooks/use-toast';
 
 export default function CpaTools() {
+  const handleLogCheckPassed = async () => {
+    const mockJobId = `job-${Date.now()}`;
+    const proof = await createProof(mockJobId, 'check_passed', 'CheckPack passed', { sandbox: 'content' });
+    if (proof) {
+      toast({
+        title: "ProofSlip Logged",
+        description: `Check passed proof logged for job ${mockJobId}`,
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to log proof slip",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleExportExplainPack = async () => {
+    const mockJobId = `job-${Date.now()}`;
+    const explainPack = await buildExplainPack(mockJobId);
+    if (explainPack) {
+      downloadExplainPack(explainPack);
+      toast({
+        title: "ExplainPack Exported",
+        description: `Policy version ${explainPack.policy_version} with ${explainPack.proof_slips.length} proof slips`,
+      });
+    } else {
+      toast({
+        title: "Error", 
+        description: "Failed to build explain pack",
+        variant: "destructive",
+      });
+    }
+  };
+
   const tools = [
     {
       title: 'Tax Projection Tool',
@@ -110,7 +148,29 @@ export default function CpaTools() {
           </div>
           
           <section className="bfo-card p-6">
-            <h2 className="text-xl font-semibold mb-4">Featured Workflows</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold">Featured Workflows</h2>
+              <div className="flex gap-2">
+                <Button 
+                  onClick={handleLogCheckPassed} 
+                  variant="outline" 
+                  size="sm"
+                  className="gap-2"
+                >
+                  <CheckCircle className="h-4 w-4" />
+                  Log Check Passed
+                </Button>
+                <Button 
+                  onClick={handleExportExplainPack} 
+                  variant="outline" 
+                  size="sm"
+                  className="gap-2"
+                >
+                  <FileText className="h-4 w-4" />
+                  Export ExplainPack
+                </Button>
+              </div>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="border rounded-lg p-4">
                 <h3 className="font-semibold mb-2">Individual Tax Planning</h3>

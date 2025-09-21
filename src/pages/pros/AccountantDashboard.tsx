@@ -5,8 +5,46 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { FLAGS } from '@/config/flags';
 import AssistedBadge from '@/components/badges/AssistedBadge';
+import { createProof } from '@/lib/proofs';
+import { buildExplainPack, downloadExplainPack } from '@/lib/explainpack';
+import { toast } from '@/hooks/use-toast';
 
 export default function AccountantDashboard() {
+  const handleLogCheckPassed = async () => {
+    const mockJobId = `job-${Date.now()}`;
+    const proof = await createProof(mockJobId, 'check_passed', 'CheckPack passed', { sandbox: 'content' });
+    if (proof) {
+      toast({
+        title: "ProofSlip Logged",
+        description: `Check passed proof logged for job ${mockJobId}`,
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to log proof slip",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleExportExplainPack = async () => {
+    const mockJobId = `job-${Date.now()}`;
+    const explainPack = await buildExplainPack(mockJobId);
+    if (explainPack) {
+      downloadExplainPack(explainPack);
+      toast({
+        title: "ExplainPack Exported",
+        description: `Policy version ${explainPack.policy_version} with ${explainPack.proof_slips.length} proof slips`,
+      });
+    } else {
+      toast({
+        title: "Error", 
+        description: "Failed to build explain pack",
+        variant: "destructive",
+      });
+    }
+  };
+
   const metrics = {
     totalClients: 85,
     activeTaxReturns: 23,
@@ -42,10 +80,30 @@ export default function AccountantDashboard() {
               </div>
               <p className="text-white/80">Manage tax services, bookkeeping, and financial reporting</p>
             </div>
-            <Button className="gap-2 bg-bfo-gold text-bfo-black hover:bg-bfo-gold/90">
-              <FileText className="h-4 w-4" />
-              New Tax Return
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                onClick={handleLogCheckPassed}
+                variant="outline" 
+                size="sm" 
+                className="gap-2 border-bfo-gold/40 text-white hover:bg-bfo-gold/10"
+              >
+                <CheckCircle className="h-4 w-4" />
+                Log Check Passed
+              </Button>
+              <Button 
+                onClick={handleExportExplainPack}
+                variant="outline" 
+                size="sm" 
+                className="gap-2 border-bfo-gold/40 text-white hover:bg-bfo-gold/10"
+              >
+                <FileText className="h-4 w-4" />
+                Export ExplainPack
+              </Button>
+              <Button className="gap-2 bg-bfo-gold text-bfo-black hover:bg-bfo-gold/90">
+                <FileText className="h-4 w-4" />
+                New Tax Return
+              </Button>
+            </div>
           </div>
 
           {/* Key Metrics */}
