@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,20 +12,29 @@ import { FileDown, FileUp, Trash2, Database, Bug } from 'lucide-react';
 
 type Profile = 'coach' | 'mom';
 
-// Only show in development
-const DevPanelProd = () => null;
-
-function DevPanelDev() {
+export function DevPanelDev() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState<Profile>('coach');
   const [snapshotData, setSnapshotData] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
-  
+  const [info, setInfo] = useState<any>(null);
+
   const receiptsCount = getReceiptsCount();
   const decisionCount = getReceiptsByType('Decision-RDS').length;
   const consentCount = getReceiptsByType('Consent-RDS').length;
   const settlementCount = getReceiptsByType('Settlement-RDS').length;
   const deltaCount = getReceiptsByType('Delta-RDS').length;
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const m = await import('@/integrations/supabase/client').catch(() => null);
+        setInfo(m ? 'supabase:ready' : 'supabase:shim');
+      } catch { setInfo('noop'); }
+    })();
+  }, []);
+
+  if (import.meta.env.MODE === 'production') return null;
 
   const handleLoadFixtures = async () => {
     setIsLoading(true);
@@ -203,7 +212,7 @@ function DevPanelDev() {
           </div>
 
           <div className="text-xs text-muted-foreground">
-            Development only - hidden in production
+            Development only - hidden in production (info: {String(info)})
           </div>
         </CardContent>
       </Card>
@@ -211,4 +220,4 @@ function DevPanelDev() {
   );
 }
 
-export default import.meta.env.PROD ? DevPanelProd : DevPanelDev;
+export default DevPanelDev;
