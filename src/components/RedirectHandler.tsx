@@ -1,20 +1,16 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { applyRedirect } from '@/utils/redirects';
 
-/**
- * Component that handles automatic redirects based on IA_V2 flag
- * Should be placed at the root of the app to catch all navigation
- */
-export function RedirectHandler() {
-  const location = useLocation();
-  const navigate = useNavigate();
+export default function RedirectHandler() {
+  const nav = useNavigate();
+  const loc = useLocation();
 
   useEffect(() => {
-    // Apply redirect if needed
-    applyRedirect(location.pathname, navigate);
-  }, [location.pathname, navigate]);
+    // Example logic: read ?redirect=... and navigate
+    const p = new URLSearchParams(loc.search);
+    const next = p.get('redirect');
+    if (next) nav(next, { replace: true });
+  }, [loc.search, nav]);
 
-  // This component doesn't render anything
-  return null;
+  return null; // headless router helper
 }

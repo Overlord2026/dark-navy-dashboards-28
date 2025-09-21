@@ -6,7 +6,7 @@ import '@/styles/brand.css';
 import { TopBanner } from '@/components/layout/TopBanner';
 import BrandHeader from '@/components/layout/BrandHeader';
 import { ConditionalMegaMenu } from '@/components/nav/ConditionalMegaMenu';
-import { RedirectHandler } from '@/components/RedirectHandler';
+import RedirectHandler from '@/components/RedirectHandler';
 import { Toaster } from '@/components/ui/toaster';
 
 // Ensure React is properly initialized before using hooks
