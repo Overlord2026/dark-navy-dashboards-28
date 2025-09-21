@@ -53,6 +53,11 @@ export default function AccountantsPage() {
                     Accept Invite
                   </Link>
                 </Button>
+                {import.meta.env.MODE !== 'production' && (
+                  <a href="/invite/DEMO123?persona=accountant" className="text-xs underline opacity-70">
+                    Dev: Accept demo invite
+                  </a>
+                )}
               </CardContent>
             </Card>
 
