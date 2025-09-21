@@ -53,7 +53,10 @@ import { QAPlaybookPage } from "./pages/qa/QAPlaybookPage";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
+    element: React.createElement(() => {
+      const C = require("@/pages/LandingNew").default;
+      return React.createElement(C);
+    }),
   },
   {
     path: "/start/families",
