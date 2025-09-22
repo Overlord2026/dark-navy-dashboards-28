@@ -152,7 +152,83 @@ const AdvisorPersonaDashboard = () => {
           </div>
         </div>
 
-        {/* Start Workspace CTA */}
+        {/* Tools Section */}
+        <div className="mb-12">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-4">Professional Advisor Tools</h2>
+            <p className="text-muted-foreground">
+              Essential planning tools to serve your clients better
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <TrendingUp className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Retirement Roadmap</CardTitle>
+                    <Badge variant="secondary" className="text-xs mt-1">Planning</Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="mb-4">
+                  Comprehensive retirement planning and analysis for client portfolios
+                </CardDescription>
+                <Button asChild variant="outline" className="w-full">
+                  <Link to="/advisors/tools/retirement">Launch Tool</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <FileText className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Estate Planning</CardTitle>
+                    <Badge variant="secondary" className="text-xs mt-1">Legal</Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="mb-4">
+                  Estate planning strategies and document generation tools
+                </CardDescription>
+                <Button asChild variant="outline" className="w-full">
+                  <Link to="/advisors/tools/estate">Launch Tool</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <Calculator className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">Tax Planning</CardTitle>
+                    <Badge variant="secondary" className="text-xs mt-1">Analysis</Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="mb-4">
+                  Advanced tax scenarios and optimization strategies
+                </CardDescription>
+                <Button asChild variant="outline" className="w-full">
+                  <Link to="/tools/tax">Launch Tool</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
         <div className="text-center">
           <Card className="max-w-2xl mx-auto border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10">
             <CardContent className="p-8">

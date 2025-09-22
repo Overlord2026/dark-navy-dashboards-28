@@ -34,9 +34,9 @@ const AccountantPersonaDashboard = () => {
     },
     {
       title: 'Retirement Analysis',
-      description: 'IRA, 401(k), and pension planning',
+      description: 'IRA, 401(k), and pension planning for clients',
       icon: <TrendingUp className="h-6 w-6" />,
-      href: '/family/tools/retirement',
+      href: '/accountants/tools/retirement',
       category: 'Retirement'
     }
   ];

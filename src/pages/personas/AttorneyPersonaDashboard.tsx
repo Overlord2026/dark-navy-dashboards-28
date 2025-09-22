@@ -33,10 +33,10 @@ const AttorneyPersonaDashboard = () => {
       category: 'Client Services'
     },
     {
-      title: 'Document Templates',
-      description: 'Legal document automation and generation',
+      title: 'Document Vault',
+      description: 'Secure client document management and storage',
       icon: <FileText className="h-6 w-6" />,
-      href: '/estate/diy',
+      href: '/attorneys/tools/vault',
       category: 'Documentation'
     }
   ];

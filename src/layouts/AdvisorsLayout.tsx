@@ -57,7 +57,7 @@ const advisorTabs = [
     label: 'Tools',
     icon: Wrench,
     path: '/advisors/tools',
-    description: 'Advisor-specific tools and calculators'
+    description: 'Retirement analyzer, estate planning & calculators'
   }
 ];
 

@@ -611,6 +611,8 @@ function App() {
             {/* Professional Dashboard Routes */}
             <Route path="/cpa" element={<CPADashboardPage />} />
             <Route path="/attorney" element={<EstateAttorneyDashboardPage />} />
+            <Route path="/accountant" element={<Navigate to="/personas/accountant" replace />} />
+            <Route path="/advisor" element={<Navigate to="/advisors/home" replace />} />
             
             <Route path="/cpas/home" element={<Suspense fallback={<div>Loading...</div>}><CpaHome /></Suspense>} />
             <Route path="/marketplace/cpas" element={<Suspense fallback={<div>Loading...</div>}><CpaMarketplace /></Suspense>} />
@@ -721,32 +723,35 @@ function App() {
             {/* Persona Dashboard Routes */}
             <Route path="/personas/advisors" element={
               <PersonaGuard allowedPersonas={['advisor']}>
-                <PersonaDashboard personaId="advisors" />
+                <AdvisorPersonaDashboard />
               </PersonaGuard>
             } />
+            <Route path="/personas/advisor" element={<AdvisorPersonaDashboard />} />
+            <Route path="/personas/accountant" element={<AccountantPersonaDashboard />} />
+            <Route path="/personas/attorney" element={<AttorneyPersonaDashboard />} />
             <Route path="/personas/insurance" element={
               <PersonaGuard allowedPersonas={['advisor']}>
-                <PersonaDashboard personaId="insurance" />
+                <InsurancePersonaDashboard />
               </PersonaGuard>
             } />
             <Route path="/personas/insurance/:subPersonaId" element={
               <PersonaGuard allowedPersonas={['advisor']}>
-                <PersonaDashboard personaId="insurance" />
+                <InsurancePersonaDashboard />
               </PersonaGuard>
             } />
             <Route path="/personas/attorney" element={
               <PersonaGuard allowedPersonas={['attorney']}>
-                <PersonaDashboard personaId="attorney" />
+                <AttorneyPersonaDashboard />
               </PersonaGuard>
             } />
             <Route path="/personas/attorney/:subPersonaId" element={
               <PersonaGuard allowedPersonas={['attorney']}>
-                <PersonaDashboard personaId="attorney" />
+                <AttorneyPersonaDashboard />
               </PersonaGuard>
             } />
             <Route path="/personas/cpa" element={
               <PersonaGuard allowedPersonas={['accountant']}>
-                <PersonaDashboard personaId="cpa" />
+                <AccountantPersonaDashboard />
               </PersonaGuard>
             } />
             <Route path="/personas/healthcare" element={
@@ -881,6 +886,14 @@ function App() {
             <Route path="/tools/estate" element={<EstateToolPage />} />
             <Route path="/tools/tax" element={<TaxToolPage />} />
             <Route path="/tools/vault" element={<VaultPage />} />
+            
+            {/* Persona-Specific Tool Routes */}
+            <Route path="/advisors/tools/retirement" element={<RetirementRoadmapTool />} />
+            <Route path="/advisors/tools/estate" element={<EstateToolPage />} />
+            <Route path="/accountants/tools/retirement" element={<RetirementRoadmapTool />} />
+            <Route path="/accountants/tools/tax" element={<TaxToolPage />} />
+            <Route path="/attorneys/tools/estate" element={<EstateToolPage />} />
+            <Route path="/attorneys/tools/vault" element={<VaultPage />} />
             
             {/* Tax Planning Routes */}
             <Route path="/tax" element={<TaxShell />}>
