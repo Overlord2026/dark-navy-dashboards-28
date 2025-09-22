@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import * as Canonical from "@/lib/canonical";
+import { sha256Hex, canonicalizeObject } from "@/lib/canonical";
 import { TaxRuleBundle, TaxRuleContent, TaxRuleOrchestration, ValidationResult } from "@/types/tax-orchestration";
 
 export type PolicyBundle = {
@@ -56,7 +56,7 @@ export async function publishMockUpdate(domain: string, jurisdiction: string) {
     ],
     meta: { domain, jurisdiction, issued_at: now }
   };
-  const content_hash = await Canonical.sha256Hex(JSON.stringify(content));
+  const content_hash = await sha256Hex(JSON.stringify(content));
   const bundle_id = `rs://${domain}@${version}`;
   
   // This would need to be implemented with actual policy_bundles table if it exists
@@ -102,7 +102,8 @@ export class TaxRulesOrchestrator implements TaxRuleOrchestration {
     const tenant_id = await ensureTenant();
     const now = new Date().toISOString();
     const version = `${rules.tax_year}-${now}`;
-    const content_hash = await Canonical.generateContentHash(rules);
+    const canonical = canonicalizeObject(rules);
+    const content_hash = await sha256Hex(JSON.stringify(canonical));
     const bundle_id = `rs://tax-${domain}@${version}`;
     
     const taxBundle: TaxRuleBundle = {
