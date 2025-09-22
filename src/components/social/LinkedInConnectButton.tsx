@@ -27,8 +27,32 @@ export const LinkedInConnectButton: React.FC<LinkedInConnectButtonProps> = ({
     trackFeatureUsed('linkedin_connect_attempt');
 
     try {
-      // In a real implementation, this would initiate LinkedIn OAuth
-      // For demo purposes, we'll simulate the connection
+      // Try real LinkedIn OAuth first, fallback to simulation
+      const useRealOAuth = false; // Set to true when LinkedIn app is configured
+      
+      if (useRealOAuth) {
+        // Generate LinkedIn OAuth URL
+        const clientId = '78c9g8au2ddoil';
+        const redirectUri = `${window.location.origin}/linkedin-callback`;
+        const scope = 'r_liteprofile r_emailaddress w_member_social';
+        const state = crypto.randomUUID();
+        
+        // Store state for security
+        sessionStorage.setItem('linkedin_oauth_state', state);
+        
+        const authUrl = `https://www.linkedin.com/oauth/v2/authorization?` +
+          `response_type=code&` +
+          `client_id=${clientId}&` +
+          `redirect_uri=${encodeURIComponent(redirectUri)}&` +
+          `state=${state}&` +
+          `scope=${encodeURIComponent(scope)}`;
+        
+        // Redirect to LinkedIn OAuth
+        window.location.href = authUrl;
+        return;
+      }
+      
+      // Fallback: simulate the connection for demo
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       setIsConnected(true);

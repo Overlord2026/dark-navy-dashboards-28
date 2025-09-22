@@ -50,6 +50,7 @@ import { SolutionsTaxPage } from '@/pages/solutions/SolutionsTaxPage';
 import { SolutionsEstatePage } from '@/pages/solutions/SolutionsEstatePage';
 import { OnboardingPage } from '@/pages/onboarding/OnboardingPage';
 import { AuthCallback } from '@/pages/auth/AuthCallback';
+import LinkedInCallback from '@/pages/LinkedInCallback';
 import { FamilyOnboardingWelcome } from '@/pages/onboarding/FamilyOnboardingWelcome';
 import MainPageOnboarding from '@/pages/onboarding/MainPageOnboarding';
 import { FamilyDashboard } from '@/pages/families/FamilyDashboard';
@@ -428,6 +429,9 @@ function App() {
             
             {/* Invite Route */}
             <Route path="/invite/:token" element={<InviteTokenPage />} />
+            
+            {/* LinkedIn OAuth Callback */}
+            <Route path="/linkedin-callback" element={<LinkedInCallback />} />
             
             {/* Family Routes */}
             <Route path="/families" element={
