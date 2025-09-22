@@ -6,32 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import { Mail, Clock, Users, TrendingUp, Edit, Save, X } from 'lucide-react';
-
-interface EmailSequence {
-  id: string;
-  persona: string;
-  sequence_type: string;
-  subject_template: string;
-  content_template: string;
-  is_active: boolean;
-  created_at: string;
-}
-
-interface EmailLog {
-  id: string;
-  user_id: string;
-  persona: string;
-  sequence_type: string;
-  email_sent_at: string;
-  status: string;
-  user_email?: string;
-}
+import { useEmailSequences } from '@/hooks/useEmailSequences';
+import { Mail, Clock, Users, TrendingUp, Edit, Save, X, Send, TestTube } from 'lucide-react';
 
 export const EmailSequenceManager = () => {
-  const [sequences, setSequences] = useState<EmailSequence[]>([]);
-  const [emailLogs, setEmailLogs] = useState<EmailLog[]>([]);
   const [editingSequence, setEditingSequence] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     persona: '',
@@ -39,99 +17,48 @@ export const EmailSequenceManager = () => {
     subject_template: '',
     content_template: ''
   });
+  const [testEmail, setTestEmail] = useState('');
   const { toast } = useToast();
+  
+  const {
+    sequences,
+    emailLogs,
+    loading,
+    createSequence,
+    updateSequence,
+    triggerSequence,
+    enrollUserInSequence
+  } = useEmailSequences();
 
   const personas = ['advisor', 'cpa', 'attorney', 'coach', 'insurance', 'industry_org', 'compliance', 'vip_partner'];
   const sequenceTypes = ['welcome', 'day2', 'day3', 'day7'];
 
-  useEffect(() => {
-    fetchSequences();
-    fetchEmailLogs();
-  }, []);
-
-  const fetchSequences = async () => {
-    try {
-      // Load from localStorage for now since database types aren't updated yet
-      const stored = localStorage.getItem('email_sequences');
-      if (stored) {
-        setSequences(JSON.parse(stored));
-      } else {
-        // Default sequences
-        const defaultSequences = [
-          {
-            id: '1',
-            persona: 'advisor',
-            sequence_type: 'welcome',
-            subject_template: '🚀 Welcome to the Future of Family Office Advisory',
-            content_template: '<h2>Welcome {{userName}}!</h2><p>Elite Advisory Network awaits...</p>',
-            is_active: true,
-            created_at: new Date().toISOString()
-          }
-        ];
-        setSequences(defaultSequences);
-        localStorage.setItem('email_sequences', JSON.stringify(defaultSequences));
-      }
-    } catch (error) {
-      console.error('Error fetching sequences:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load email sequences",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const fetchEmailLogs = async () => {
-    try {
-      // Load from localStorage for now
-      const stored = localStorage.getItem('email_logs');
-      if (stored) {
-        setEmailLogs(JSON.parse(stored));
-      }
-    } catch (error) {
-      console.error('Error fetching email logs:', error);
-    }
-  };
-
   const handleSaveSequence = async () => {
-    try {
-      const newSequence = {
-        id: editingSequence || Date.now().toString(),
-        ...formData,
-        is_active: true,
-        created_at: new Date().toISOString()
-      };
-
-      let updatedSequences;
-      if (editingSequence) {
-        updatedSequences = sequences.map(seq => 
-          seq.id === editingSequence ? newSequence : seq
-        );
-      } else {
-        updatedSequences = [...sequences, newSequence];
-      }
-
-      setSequences(updatedSequences);
-      localStorage.setItem('email_sequences', JSON.stringify(updatedSequences));
-
-      toast({
-        title: "Success",
-        description: "Email sequence saved successfully",
-      });
-
-      setEditingSequence(null);
-      setFormData({ persona: '', sequence_type: '', subject_template: '', content_template: '' });
-    } catch (error) {
-      console.error('Error saving sequence:', error);
-      toast({
-        title: "Error",
-        description: "Failed to save email sequence",
-        variant: "destructive",
-      });
+    if (editingSequence) {
+      await updateSequence(editingSequence, formData);
+    } else {
+      await createSequence(formData);
     }
+    
+    setEditingSequence(null);
+    setFormData({ persona: '', sequence_type: '', subject_template: '', content_template: '' });
   };
 
-  const startEditing = (sequence: EmailSequence) => {
+  const handleTestSequence = async () => {
+    if (!testEmail || !formData.persona || !formData.sequence_type) {
+      toast({
+        title: "Missing Information",
+        description: "Please provide test email and select persona/sequence type",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    await triggerSequence(testEmail, formData.persona, formData.sequence_type);
+    setTestEmail('');
+  };
+
+  const startEditing = (sequence: any) => {
     setEditingSequence(sequence.id);
     setFormData({
       persona: sequence.persona,
@@ -215,10 +142,20 @@ export const EmailSequenceManager = () => {
             </div>
 
             <div className="flex gap-2 mt-4">
-              <Button onClick={handleSaveSequence}>
+              <Button onClick={handleSaveSequence} disabled={loading}>
                 <Save className="h-4 w-4 mr-2" />
                 {editingSequence ? 'Update' : 'Create'} Sequence
               </Button>
+              
+              <Button 
+                variant="outline" 
+                onClick={handleTestSequence}
+                disabled={loading || !formData.persona || !formData.sequence_type}
+              >
+                <TestTube className="h-4 w-4 mr-2" />
+                Test Email
+              </Button>
+              
               {editingSequence && (
                 <Button
                   variant="outline"
@@ -231,6 +168,17 @@ export const EmailSequenceManager = () => {
                   Cancel
                 </Button>
               )}
+            </div>
+            
+            {/* Test Email Input */}
+            <div className="mt-4">
+              <Input
+                placeholder="Test email address"
+                value={testEmail}
+                onChange={(e) => setTestEmail(e.target.value)}
+                type="email"
+                className="max-w-xs"
+              />
             </div>
           </div>
 
@@ -288,6 +236,10 @@ export const EmailSequenceManager = () => {
                   }%
                 </p>
               </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Active Sequences</p>
+                <p className="text-2xl font-bold">{sequences.filter(seq => seq.is_active).length}</p>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -304,9 +256,9 @@ export const EmailSequenceManager = () => {
               {emailLogs.map((log) => (
                 <div key={log.id} className="flex items-center justify-between py-2 border-b">
                   <div>
-                    <p className="font-medium">{log.persona} - {log.sequence_type}</p>
+                    <p className="font-medium">{log.recipient_email}</p>
                     <p className="text-sm text-muted-foreground">
-                      {new Date(log.email_sent_at).toLocaleString()}
+                      {log.sent_at ? new Date(log.sent_at).toLocaleString() : 'Pending'}
                     </p>
                   </div>
                   <Badge className={getStatusColor(log.status)}>
