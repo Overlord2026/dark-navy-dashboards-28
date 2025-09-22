@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useUser } from '@/context/UserContext';
 import { useEventTracking } from '@/hooks/useEventTracking';
+import { AdvancedEmailManager } from '@/components/automation/AdvancedEmailManager';
 import { 
   DollarSign, 
   TrendingUp, 
@@ -11,7 +13,8 @@ import {
   Settings,
   BarChart3,
   AlertTriangle,
-  FileCheck
+  FileCheck,
+  Mail
 } from 'lucide-react';
 
 const adminTiles = [
@@ -107,68 +110,99 @@ export default function AdminHome() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sortedTiles.map((tile) => {
-          const IconComponent = tile.icon;
-          return (
-            <Card
-              key={tile.id}
-              className="group cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 border-0 bg-card/50 backdrop-blur-sm"
-              onClick={() => handleTileClick(tile)}
-            >
-              <CardHeader className="pb-4">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                    <IconComponent className="h-6 w-6 text-primary" />
-                  </div>
-                  <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                    {tile.title}
-                  </CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">{tile.description}</p>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="email-automation">Email Automation</TabsTrigger>
+          <TabsTrigger value="marketing">Marketing</TabsTrigger>
+          <TabsTrigger value="system">System</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sortedTiles.map((tile) => {
+              const IconComponent = tile.icon;
+              return (
+                <Card
+                  key={tile.id}
+                  className="group cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 border-0 bg-card/50 backdrop-blur-sm"
+                  onClick={() => handleTileClick(tile)}
+                >
+                  <CardHeader className="pb-4">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                        <IconComponent className="h-6 w-6 text-primary" />
+                      </div>
+                      <CardTitle className="text-xl group-hover:text-primary transition-colors">
+                        {tile.title}
+                      </CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">{tile.description}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </TabsContent>
 
-      {/* System Status */}
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold text-foreground mb-6">System Status</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="bg-green-50 border-green-200">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="font-medium">Database</span>
-                <span className="ml-auto text-green-700 text-sm">Healthy</span>
-              </div>
+        <TabsContent value="email-automation">
+          <AdvancedEmailManager />
+        </TabsContent>
+
+        <TabsContent value="marketing" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5" />
+                Marketing Hub
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">Marketing automation and campaign management tools coming soon.</p>
             </CardContent>
           </Card>
-          
-          <Card className="bg-green-50 border-green-200">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="font-medium">API Services</span>
-                <span className="ml-auto text-green-700 text-sm">Operational</span>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-yellow-50 border-yellow-200">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <AlertTriangle className="w-4 h-4 text-yellow-600" />
-                <span className="font-medium">Security Scan</span>
-                <span className="ml-auto text-yellow-700 text-sm">9 Warnings</span>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+        </TabsContent>
+
+        <TabsContent value="system" className="space-y-6">
+          {/* System Status */}
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-6">System Status</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Card className="bg-green-50 border-green-200">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span className="font-medium">Database</span>
+                    <span className="ml-auto text-green-700 text-sm">Healthy</span>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-green-50 border-green-200">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span className="font-medium">API Services</span>
+                    <span className="ml-auto text-green-700 text-sm">Operational</span>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-yellow-50 border-yellow-200">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <AlertTriangle className="w-4 h-4 text-yellow-600" />
+                    <span className="font-medium">Security Scan</span>
+                    <span className="ml-auto text-yellow-700 text-sm">9 Warnings</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

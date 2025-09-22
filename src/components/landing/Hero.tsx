@@ -48,7 +48,8 @@ export default function Hero() {
               className="rounded-xl border border-white/10 bg-white/5 px-5 py-4 hover:bg-white/10"
             >
               <div className="text-sm uppercase tracking-widest opacity-60">For Service Professionals</div>
-              <div className="text-lg font-semibold">Advisors, CPAs, Attorneys →</div>
+              <div className="text-lg font-semibold">Advisors →</div>
+              <div className="text-sm text-white/70 mt-1">Marketplace: Realtors, Insurance, Healthcare & More</div>
             </Link>
           </div>
         </div>

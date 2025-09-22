@@ -97,6 +97,12 @@ export const wealthManagementNavItems: NavItem[] = [
 // Professional Dashboard Navigation
 export const professionalDashboardNavItems: NavItem[] = [
   {
+    title: "Advisor Dashboard",
+    href: "/advisor-dashboard",
+    icon: BriefcaseIcon,
+    label: "Comprehensive practice management with client insights"
+  },
+  {
     title: "CPA Dashboard",
     href: "/cpa",
     icon: BriefcaseIcon,

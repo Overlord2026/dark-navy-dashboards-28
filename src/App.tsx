@@ -8,6 +8,7 @@ import BrandHeader from '@/components/layout/BrandHeader';
 import { ConditionalMegaMenu } from '@/components/nav/ConditionalMegaMenu';
 import { RedirectHandler } from '@/components/RedirectHandler';
 import { Toaster } from '@/components/ui/toaster';
+import { BehaviorTracker } from '@/components/automation/BehaviorTracker';
 
 // Ensure React is properly initialized before using hooks
 if (!React || typeof React.useState !== 'function') {
@@ -684,6 +685,7 @@ function App() {
             {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/discover" element={<Discover />} />}
             {getFlag('PUBLIC_DISCOVER_ENABLED') && <Route path="/search" element={<SearchPage />} />}
             <Route path="/how-it-works" element={<HowItWorks />} />
+            <Route path="/solutions" element={<SolutionsPage />} />
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/annuities" element={<Annuities />} />}
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/investments" element={<SolutionsInvestmentsPage />} />}
             {getFlag('SOLUTIONS_ENABLED') && <Route path="/solutions/insurance" element={<SolutionsInsurancePage />} />}
@@ -1156,9 +1158,14 @@ function App() {
           <DevPanel />
           <AutoLoadDemo />
           
-          
-           {/* Show CTA bar on public pages only - Flag Protected */}
-           {!isAuthenticated && getFlag('PUBLIC_CTA_BAR') && <CTAStickyBar />}
+           
+            {/* Show CTA bar on public pages only - Flag Protected */}
+            {!isAuthenticated && getFlag('PUBLIC_CTA_BAR') && <CTAStickyBar />}
+            
+            <BehaviorTracker>
+              <div /> {/* Empty children since tracker runs in background */}
+            </BehaviorTracker>
+            <Toaster />
            </div>
           </div>
         </ThemeProvider>

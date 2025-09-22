@@ -66,7 +66,20 @@ export const AdvancedEmailManager = () => {
 
   const handleCreateTrigger = async () => {
     try {
-      await createTrigger(triggerForm);
+      // Ensure trigger_type is one of the valid enum values
+      if (!triggerTypes.some(type => type.value === triggerForm.trigger_type)) {
+        toast({
+          title: "Error",
+          description: "Please select a valid trigger type",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      await createTrigger({
+        ...triggerForm,
+        trigger_type: triggerForm.trigger_type as 'tool_usage' | 'page_visit' | 'time_delay' | 'engagement_score' | 'profile_completion' | 'inactivity'
+      });
       setTriggerForm({
         name: '',
         trigger_type: '',
