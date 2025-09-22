@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { ToolGate } from '@/components/tools/ToolGate';
+import { motion } from 'framer-motion';
 import { 
   Scale, 
   FileText, 
@@ -25,8 +26,15 @@ import {
   Settings,
   Download,
   Upload,
-  Eye
+  Eye,
+  Trophy,
+  DollarSign,
+  UserPlus,
+  Sparkles
 } from 'lucide-react';
+import { UnifiedClientInvitationModal } from '@/components/shared/UnifiedClientInvitationModal';
+import { useUnifiedClientInvitation } from '@/hooks/useUnifiedClientInvitation';
+import { EnhancedCalculatorChart } from '@/components/calculators/EnhancedCalculatorChart';
 
 interface Case {
   id: string;
@@ -59,6 +67,33 @@ interface ComplianceItem {
 
 export const AttorneyDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [chartData, setChartData] = useState([]);
+  const { invitations, fetchInvitations } = useUnifiedClientInvitation();
+
+  useEffect(() => {
+    // Generate mock revenue data for chart
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    const revenueData = months.map((month, index) => ({
+      month,
+      revenue: 195000 + (index * 8000) + (Math.random() * 12000)
+    }));
+    setChartData(revenueData);
+    
+    // Fetch invitations on component mount
+    fetchInvitations();
+  }, []);
+
+  // Enhanced attorney metrics
+  const metrics = {
+    activeCases: 12,
+    pendingDeadlines: 5,
+    totalDocuments: 47,
+    newLeads: 8,
+    monthlyRevenue: '$289,500',
+    clientsRequiringAction: 3,
+    billableHours: 210,
+    complianceItems: 2
+  };
   
   // Mock data
   const cases: Case[] = [
@@ -467,25 +502,60 @@ export const AttorneyDashboard: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b bg-card">
-        <div className="flex h-16 items-center px-6">
-          <Scale className="w-8 h-8 text-primary mr-3" />
-          <div className="flex-1">
-            <h1 className="text-xl font-semibold">Legal Practice Hub</h1>
-            <p className="text-sm text-muted-foreground">Comprehensive legal practice management</p>
+    <motion.div
+      className="min-h-screen bg-background"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
+      {/* Enhanced Header */}
+      <Card className="relative overflow-hidden bg-gradient-to-r from-primary via-primary to-primary-foreground text-white mb-6">
+        <div className="absolute inset-0 bg-black/10" />
+        <CardContent className="relative z-10 p-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-3 bg-white/20 rounded-lg">
+                  <Scale className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-4xl font-bold tracking-tight">Legal Practice Hub</h1>
+                  <p className="text-white/90 text-lg">Complete estate planning and legal practice management</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold">{metrics.activeCases}</div>
+                  <div className="text-white/80 text-sm">Active Cases</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold">{metrics.totalDocuments}</div>
+                  <div className="text-white/80 text-sm">Documents</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold">{metrics.newLeads}</div>
+                  <div className="text-white/80 text-sm">New Leads</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold">{metrics.billableHours}</div>
+                  <div className="text-white/80 text-sm">Billable Hours</div>
+                </div>
+              </div>
+            </div>
+            <div className="hidden lg:flex flex-col gap-2">
+              <UnifiedClientInvitationModal 
+                professionalType="attorney"
+                trigger={
+                  <Button variant="secondary" className="gap-2">
+                    <UserPlus className="h-4 w-4" />
+                    Invite Client
+                  </Button>
+                }
+              />
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm">
-              <Bell className="w-4 h-4" />
-            </Button>
-            <Button variant="outline" size="sm">
-              <Settings className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Main Content */}
       <div className="p-6">
@@ -575,6 +645,6 @@ export const AttorneyDashboard: React.FC = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </motion.div>
   );
 };

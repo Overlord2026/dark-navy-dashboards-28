@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ToolGate } from '@/components/tools/ToolGate';
+import { motion } from 'framer-motion';
 import { 
   Calculator, 
   Users, 
@@ -29,95 +30,222 @@ import {
   BarChart3,
   Archive,
   Video,
-  MessageSquare
+  MessageSquare,
+  Trophy,
+  DollarSign,
+  Plus,
+  Target,
+  Sparkles
 } from 'lucide-react';
 import { useUser } from '@/context/UserContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { UnifiedClientInvitationModal } from '@/components/shared/UnifiedClientInvitationModal';
+import { useUnifiedClientInvitation } from '@/hooks/useUnifiedClientInvitation';
+import { EnhancedCalculatorChart } from '@/components/calculators/EnhancedCalculatorChart';
 
 export const CPADashboard = () => {
   const { userProfile } = useUser();
   const [activeTab, setActiveTab] = useState('overview');
+  const [chartData, setChartData] = useState([]);
+  const { invitations, fetchInvitations } = useUnifiedClientInvitation();
+
+  useEffect(() => {
+    // Generate mock revenue data for chart
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    const revenueData = months.map((month, index) => ({
+      month,
+      revenue: 85000 + (index * 4000) + (Math.random() * 8000)
+    }));
+    setChartData(revenueData);
+    
+    // Fetch invitations on component mount
+    fetchInvitations();
+  }, []);
+
+  // Enhanced CPA metrics
+  const metrics = {
+    totalClients: 48,
+    returnsCompleted: 127,
+    upcomingDeadlines: 7,
+    monthlyRevenue: '$124,500',
+    ceProgress: 80, // 32/40 credits
+    clientsRequiringAction: 5,
+    billableHours: 156,
+    complianceAlerts: 3
+  };
+
+  const recentActivity = [
+    { id: 1, client: 'Johnson Family', action: 'Tax return filed successfully', time: '2 hours ago', status: 'completed', type: '1040' },
+    { id: 2, client: 'Smith LLC', action: 'Quarterly documents uploaded', time: '4 hours ago', status: 'pending', type: 'Business' },
+    { id: 3, client: 'Williams Trust', action: 'K-1 preparation completed', time: '1 day ago', status: 'completed', type: 'Trust' },
+    { id: 4, client: 'Davis Corp', action: 'Extension filed - needs follow-up', time: '2 days ago', status: 'action_required', type: 'Corporate' }
+  ];
+
+  const upcomingTasks = [
+    { client: 'Johnson Family', task: 'Final tax review meeting', due: 'Tomorrow', priority: 'high', type: 'Meeting' },
+    { client: 'Tech Startup LLC', task: 'Quarterly tax estimates', due: 'Jan 15', priority: 'high', type: 'Filing' },
+    { client: 'Williams Trust', task: 'Beneficiary reporting', due: 'Jan 20', priority: 'medium', type: 'Compliance' },
+    { client: 'Davis Corp', task: '1099 preparation review', due: 'Jan 31', priority: 'medium', type: 'Preparation' }
+  ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        duration: 0.6,
+        when: "beforeChildren",
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
 
   return (
-    <div className="space-y-6">
-      {/* Dashboard Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-            BFO Tax Experience™
-          </h1>
-          <p className="text-muted-foreground">
-            Welcome back, {userProfile?.displayName}! Manage your practice with next-gen tools.
-          </p>
+    <motion.div
+      className="space-y-6"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {/* Enhanced Dashboard Header */}
+      <motion.div variants={itemVariants}>
+        <Card className="relative overflow-hidden bg-gradient-to-r from-primary via-primary to-primary-foreground text-white">
+          <div className="absolute inset-0 bg-black/10" />
+          <CardContent className="relative z-10 p-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 bg-white/20 rounded-lg">
+                    <Calculator className="h-8 w-8 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-4xl font-bold tracking-tight">CPA Practice Hub</h1>
+                    <p className="text-white/90 text-lg">
+                      Complete tax and accounting practice management suite
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold">{metrics.totalClients}</div>
+                    <div className="text-white/80 text-sm">Active Clients</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold">{metrics.returnsCompleted}</div>
+                    <div className="text-white/80 text-sm">Returns Filed</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold">{metrics.upcomingDeadlines}</div>
+                    <div className="text-white/80 text-sm">Deadlines</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold">{metrics.billableHours}</div>
+                    <div className="text-white/80 text-sm">Billable Hours</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-green-300">{metrics.ceProgress}%</div>
+                    <div className="text-white/80 text-sm">CE Progress</div>
+                  </div>
+                </div>
+              </div>
+              <div className="hidden lg:flex flex-col gap-2">
+                <UnifiedClientInvitationModal 
+                  professionalType="cpa"
+                  trigger={
+                    <Button variant="secondary" className="gap-2">
+                      <UserPlus className="h-4 w-4" />
+                      Invite Client
+                    </Button>
+                  }
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Enhanced KPI Cards */}
+      <motion.div variants={itemVariants}>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card className="relative overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Active Clients</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{metrics.totalClients}</div>
+              <p className="text-xs text-muted-foreground">+12% this month</p>
+              <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tl from-blue-500/10 to-transparent" />
+            </CardContent>
+          </Card>
+
+          <Card className="relative overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Action Required</CardTitle>
+              <AlertTriangle className="h-4 w-4 text-amber-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-amber-600">{metrics.clientsRequiringAction}</div>
+              <p className="text-xs text-muted-foreground">Clients need attention</p>
+              <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tl from-amber-500/10 to-transparent" />
+            </CardContent>
+          </Card>
+
+          <Card className="relative overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Monthly Revenue</CardTitle>
+              <DollarSign className="h-4 w-4 text-green-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">{metrics.monthlyRevenue}</div>
+              <p className="text-xs text-muted-foreground">+18% from last month</p>
+              <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tl from-green-500/10 to-transparent" />
+            </CardContent>
+          </Card>
+
+          <Card className="relative overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">CE Progress</CardTitle>
+              <Trophy className="h-4 w-4 text-purple-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-purple-600">{metrics.ceProgress}%</div>
+              <p className="text-xs text-muted-foreground">32/40 credits earned</p>
+              <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tl from-purple-500/10 to-transparent" />
+            </CardContent>
+          </Card>
         </div>
-        
-        <div className="flex items-center space-x-3">
-          <Badge className="bg-green-100 text-green-800 border-green-300">
-            <Shield className="w-3 h-3 mr-1" />
-            Fiduciary Tax Partner
-          </Badge>
-          <Button>
-            <UserPlus className="w-4 h-4 mr-2" />
-            Invite Client
-          </Button>
-        </div>
-      </div>
+      </motion.div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Revenue Chart */}
+      <motion.div variants={itemVariants}>
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Active Clients</p>
-                <p className="text-2xl font-bold">48</p>
-                <p className="text-xs text-green-600">+12% this month</p>
-              </div>
-              <Users className="w-8 h-8 text-primary" />
-            </div>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-primary" />
+              Practice Revenue
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <EnhancedCalculatorChart
+              data={chartData}
+              type="area"
+              xKey="month"
+              yKey="revenue"
+              title=""
+              color="#10b981"
+              animated={true}
+              height={300}
+            />
           </CardContent>
         </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Returns Filed</p>
-                <p className="text-2xl font-bold">127</p>
-                <p className="text-xs text-blue-600">2024 tax season</p>
-              </div>
-              <FileText className="w-8 h-8 text-primary" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Upcoming Deadlines</p>
-                <p className="text-2xl font-bold">7</p>
-                <p className="text-xs text-amber-600">Next 30 days</p>
-              </div>
-              <Calendar className="w-8 h-8 text-primary" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">CE Credits</p>
-                <p className="text-2xl font-bold">32/40</p>
-                <p className="text-xs text-green-600">On track for renewal</p>
-              </div>
-              <TrendingUp className="w-8 h-8 text-primary" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      </motion.div>
 
       {/* Main Dashboard Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -432,6 +560,6 @@ export const CPADashboard = () => {
           </div>
         </TabsContent>
       </Tabs>
-    </div>
+    </motion.div>
   );
 };
