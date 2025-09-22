@@ -11,6 +11,8 @@ import { RetirementAnalysisInput, RetirementAnalysisResults } from '@/types/reti
 import { ScenarioBuilder } from './ScenarioBuilder';
 import { RetirementPDFExport } from './RetirementPDFExport';
 import { ResponsiveChart } from '@/components/ui/responsive-chart';
+import { SWAGAnalyticsDashboard } from './SWAGAnalyticsDashboard';
+import { SWAGEnhancedResults } from '@/lib/swag/swagIntegration';
 
 interface RetirementCalculatorEngineProps {
   inputs: RetirementAnalysisInput;
@@ -21,7 +23,7 @@ export const RetirementCalculatorEngine: React.FC<RetirementCalculatorEngineProp
   inputs,
   onInputsChange
 }) => {
-  const [results, setResults] = useState<RetirementAnalysisResults | null>(null);
+  const [results, setResults] = useState<SWAGEnhancedResults | null>(null);
   const { calculateRetirement, loading, error } = useRetirementCalculator();
 
   const handleCalculate = async () => {
@@ -96,14 +98,22 @@ export const RetirementCalculatorEngine: React.FC<RetirementCalculatorEngineProp
       {/* Results Dashboard */}
       {results && (
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 md:grid-cols-6">
+          <TabsList className="grid w-full grid-cols-4 md:grid-cols-7">
             <TabsTrigger value="overview" className="text-xs sm:text-sm">Overview</TabsTrigger>
+            <TabsTrigger value="swag" className="text-xs sm:text-sm">SWAG™</TabsTrigger>
             <TabsTrigger value="scenarios" className="text-xs sm:text-sm">Scenarios</TabsTrigger>
             <TabsTrigger value="cashflow" className="text-xs sm:text-sm">Cash Flow</TabsTrigger>
             <TabsTrigger value="montecarlo" className="text-xs sm:text-sm">Monte Carlo</TabsTrigger>
             <TabsTrigger value="recommendations" className="text-xs sm:text-sm">Recommendations</TabsTrigger>
             <TabsTrigger value="stress" className="text-xs sm:text-sm">Stress Test</TabsTrigger>
           </TabsList>
+
+          {/* SWAG Analytics Tab */}
+          <TabsContent value="swag" className="space-y-6">
+            {'swagAnalytics' in results && (
+              <SWAGAnalyticsDashboard results={results as SWAGEnhancedResults} />
+            )}
+          </TabsContent>
 
           {/* Scenarios Tab */}
           <TabsContent value="scenarios" className="space-y-6">
@@ -134,7 +144,7 @@ export const RetirementCalculatorEngine: React.FC<RetirementCalculatorEngineProp
                     </div>
                     <Progress value={results.monteCarlo.swagScore} className="h-3" />
                     <p className="text-xs text-muted-foreground text-center">
-                      Confidence in retirement readiness
+                      {'swagAnalytics' in results ? 'Advanced SWAG™ Score' : 'Basic confidence score'}
                     </p>
                   </div>
                 </CardContent>

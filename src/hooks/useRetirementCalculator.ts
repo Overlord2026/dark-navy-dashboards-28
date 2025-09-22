@@ -9,6 +9,12 @@ import {
   ExpenseCategory
 } from '@/types/retirement';
 import { useTaxRules } from './useTaxRules';
+import { 
+  calculateSWAGMetrics, 
+  generatePhaseRecommendations,
+  calculateAdvancedTaxEfficiency,
+  SWAGEnhancedResults
+} from '@/lib/swag/swagIntegration';
 
 export const useRetirementCalculator = () => {
   const [loading, setLoading] = useState(false);
@@ -340,7 +346,7 @@ export const useRetirementCalculator = () => {
   // Main calculation function
   const calculateRetirement = useCallback(async (
     inputs: RetirementAnalysisInput
-  ): Promise<RetirementAnalysisResults> => {
+  ): Promise<SWAGEnhancedResults> => {
     setLoading(true);
     setError(null);
 
@@ -384,7 +390,8 @@ export const useRetirementCalculator = () => {
       // Generate recommendations
       const recommendations = generateRecommendations(inputs, projectedCashFlow, monteCarlo);
 
-      const results: RetirementAnalysisResults = {
+      // Base results
+      const baseResults: RetirementAnalysisResults = {
         readinessScore,
         monthlyIncomeGap,
         projectedCashFlow,
@@ -393,7 +400,43 @@ export const useRetirementCalculator = () => {
         scenarioComparisons: [] // Would be populated with scenario analysis
       };
 
-      return results;
+      // Calculate SWAG analytics
+      const swagPhaseMetrics = calculateSWAGMetrics(inputs, baseResults, projectedCashFlow);
+      const phaseRecommendations = generatePhaseRecommendations(swagPhaseMetrics, inputs);
+      const taxEfficiency = calculateAdvancedTaxEfficiency(inputs, projectedCashFlow);
+
+      // Calculate overall SWAG score
+      const overallScore = Object.values(swagPhaseMetrics).reduce((sum, metrics) => 
+        sum + metrics.OS * 25, 0); // Average of 4 phases
+
+      // Enhanced results with SWAG analytics
+      const enhancedResults: SWAGEnhancedResults = {
+        ...baseResults,
+        swagAnalytics: {
+          overallScore,
+          phaseMetrics: swagPhaseMetrics,
+          riskAnalysis: {
+            primaryRisks: [
+              monteCarlo.successProbability < 70 ? 'Low success probability in Monte Carlo simulation' : '',
+              swagPhaseMetrics.INCOME_NOW.DGBP > 0.3 ? 'High drawdown risk in early retirement' : '',
+              swagPhaseMetrics.INCOME_LATER.LCR < 1.0 ? 'Insufficient longevity coverage' : '',
+              taxEfficiency.taxOptimizationPotential > 0.1 ? 'Significant tax optimization opportunity' : '',
+              swagPhaseMetrics.LEGACY.LCI < 0.5 ? 'Legacy goals may not be achievable' : ''
+            ].filter(Boolean),
+            mitigationStrategies: [
+              'Implement dynamic withdrawal strategies with guardrails',
+              'Optimize asset allocation across retirement phases',
+              'Enhance tax-efficient withdrawal sequencing',
+              'Consider longevity insurance for late-life coverage',
+              'Develop flexible spending priorities for market volatility'
+            ],
+            confidenceLevel: Math.min(95, monteCarlo.successProbability + 10)
+          },
+          phaseRecommendations
+        }
+      };
+
+      return enhancedResults;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to calculate retirement analysis';
       setError(errorMessage);
