@@ -8,6 +8,7 @@ import { RetirementAnalysisInput } from '@/types/retirement';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SequenceRiskAnalyzer } from '@/components/retirement/SequenceRiskAnalyzer';
 import { LTCStressAnalyzer } from '@/components/retirement/LTCStressAnalyzer';
+import { MultiPhaseAnalyzer } from '@/components/retirement/MultiPhaseAnalyzer';
 
 export default function RetirementAnalyzerDemo() {
   const [inputs, setInputs] = useState<RetirementAnalysisInput>({
@@ -162,10 +163,11 @@ export default function RetirementAnalyzerDemo() {
 
           {/* Main Content */}
           <Tabs defaultValue="analyzer" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="analyzer">Retirement Analyzer</TabsTrigger>
               <TabsTrigger value="sequence-risk">Sequence Risk</TabsTrigger>
               <TabsTrigger value="ltc-stress">LTC Stress Test</TabsTrigger>
+              <TabsTrigger value="multi-phase">Multi-Phase</TabsTrigger>
               <TabsTrigger value="advisor">Advisor Dashboard</TabsTrigger>
               <TabsTrigger value="imports">Plan Imports</TabsTrigger>
             </TabsList>
@@ -185,6 +187,10 @@ export default function RetirementAnalyzerDemo() {
             
             <TabsContent value="ltc-stress" className="mt-8">
               <LTCStressAnalyzer />
+            </TabsContent>
+            
+            <TabsContent value="multi-phase" className="mt-8">
+              <MultiPhaseAnalyzer />
             </TabsContent>
             
             <TabsContent value="advisor" className="mt-8">
