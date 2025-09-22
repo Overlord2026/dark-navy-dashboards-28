@@ -55,16 +55,12 @@ export const useEmailSequences = () => {
 
   const fetchEmailLogs = async () => {
     try {
-      const { data, error } = await supabase
-        .from('email_automation_logs')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(100);
-
-      if (error) throw error;
-      setEmailLogs(data || []);
+      // Use localStorage as fallback since email_automation_logs table doesn't exist
+      const logs = JSON.parse(localStorage.getItem('email_logs') || '[]') as EmailLog[];
+      setEmailLogs(logs.slice(0, 100));
     } catch (error) {
       console.error('Error fetching email logs:', error);
+      setEmailLogs([]);
     }
   };
 
@@ -76,10 +72,7 @@ export const useEmailSequences = () => {
 
       const { data, error } = await supabase
         .from('email_sequences')
-        .insert({
-          ...sequenceData,
-          created_by: user.id
-        })
+        .insert(sequenceData)
         .select()
         .single();
 
@@ -180,6 +173,19 @@ export const useEmailSequences = () => {
         description: `${sequenceType} email sent to ${recipientEmail}`,
       });
 
+      // Log the email to localStorage
+      const newLog: EmailLog = {
+        id: crypto.randomUUID(),
+        user_id: '0', // We'll need actual user ID
+        sequence_id: sequence.id,
+        status: 'sent',
+        sent_at: new Date().toISOString(),
+        recipient_email: recipientEmail
+      };
+      
+      const existingLogs = JSON.parse(localStorage.getItem('email_logs') || '[]');
+      localStorage.setItem('email_logs', JSON.stringify([newLog, ...existingLogs].slice(0, 100)));
+      
       // Refresh logs
       await fetchEmailLogs();
 

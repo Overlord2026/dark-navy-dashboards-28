@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { analytics } from '@/lib/analytics';
 
@@ -27,7 +26,9 @@ interface ReferralMetrics {
   referral_success_rate: number;
 }
 
-export const useViralGrowth = () => {
+const STORAGE_KEY = 'viral_growth_data';
+
+export const useViralGrowthSimple = () => {
   const [socialShares, setSocialShares] = useState<SocialShareData[]>([]);
   const [metrics, setMetrics] = useState<ReferralMetrics | null>(null);
   const [loading, setLoading] = useState(false);
@@ -40,132 +41,79 @@ export const useViralGrowth = () => {
     persona: string
   ) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const shareData = {
-        user_id: user.id,
+      const shareData: SocialShareData = {
+        id: crypto.randomUUID(),
+        user_id: 'current-user', // Fallback user ID
         platform,
         message,
         shared_url: sharedUrl,
         persona,
+        created_at: new Date().toISOString(),
         engagement_metrics: { clicks: 0, impressions: 0, conversions: 0 }
       };
 
-      const { data, error } = await supabase
-        .from('social_shares')
-        .insert(shareData)
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      setSocialShares(prev => [data, ...prev]);
+      // Store in localStorage
+      const existingShares = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      const updatedShares = [shareData, ...existingShares];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedShares));
+      
+      setSocialShares(updatedShares);
+      updateMetrics(updatedShares);
 
       // Track analytics
-      analytics.trackViralShare(platform, {
+      analytics.track('viral_share_tracked', {
+        platform,
         persona,
-        userId: user.id,
         message: message.substring(0, 100),
         sharedUrl
       });
-
-      // Track in viral growth system
-      await updateViralCoefficient(user.id);
 
       toast({
         title: "Share Tracked",
         description: `Your ${platform} share has been recorded for analytics`,
       });
 
-      return data;
+      return shareData;
     } catch (error) {
       console.error('Error tracking social share:', error);
       return null;
     }
   };
 
-  const updateViralCoefficient = async (userId: string) => {
-    try {
-      // Calculate viral coefficient: (New users from referrals / Total active users) * 100
-      const { data: userShares } = await supabase
-        .from('social_shares')
-        .select('*')
-        .eq('user_id', userId);
+  const updateMetrics = (shares: SocialShareData[]) => {
+    const totalShares = shares.length;
+    const totalClicks = shares.reduce((sum, share) => 
+      sum + (share.engagement_metrics?.clicks || 0), 0);
+    const totalConversions = shares.reduce((sum, share) => 
+      sum + (share.engagement_metrics?.conversions || 0), 0);
+    
+    const platformPerformance = shares.reduce((acc, share) => {
+      acc[share.platform] = (acc[share.platform] || 0) + (share.engagement_metrics?.clicks || 0);
+      return acc;
+    }, {} as Record<string, number>);
 
-      const { data: referralConversions } = await supabase
-        .from('referral_tracking')
-        .select('*')
-        .eq('referrer_id', userId);
+    const topPlatform = Object.entries(platformPerformance)
+      .sort(([,a], [,b]) => b - a)[0]?.[0] || 'linkedin';
 
-      if (userShares && referralConversions) {
-        const totalShares = userShares.length;
-        const totalConversions = referralConversions.length;
-        const viralCoefficient = totalShares > 0 ? (totalConversions / totalShares) * 100 : 0;
+    const viralCoefficient = totalShares > 0 ? (totalConversions / totalShares) * 100 : 0;
+    const referralSuccessRate = totalShares > 0 ? (totalConversions / totalShares) * 100 : 0;
 
-        await supabase
-          .from('viral_metrics')
-          .upsert({
-            user_id: userId,
-            total_shares: totalShares,
-            total_conversions: totalConversions,
-            viral_coefficient: viralCoefficient,
-            updated_at: new Date().toISOString()
-          });
-      }
-    } catch (error) {
-      console.error('Error updating viral coefficient:', error);
-    }
+    setMetrics({
+      total_shares: totalShares,
+      total_clicks: totalClicks,
+      total_conversions: totalConversions,
+      viral_coefficient: viralCoefficient,
+      top_performing_platform: topPlatform,
+      referral_success_rate: referralSuccessRate
+    });
   };
 
   const getShareAnalytics = async () => {
     setLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      // Get user's shares
-      const { data: shares, error: sharesError } = await supabase
-        .from('social_shares')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (sharesError) throw sharesError;
-      setSocialShares(shares || []);
-
-      // Get aggregated metrics
-      const { data: metricsData, error: metricsError } = await supabase
-        .from('viral_metrics')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-
-      if (metricsError && metricsError.code !== 'PGRST116') {
-        throw metricsError;
-      }
-
-      if (metricsData) {
-        // Calculate additional metrics
-        const platformPerformance = shares?.reduce((acc, share) => {
-          acc[share.platform] = (acc[share.platform] || 0) + (share.engagement_metrics?.clicks || 0);
-          return acc;
-        }, {} as Record<string, number>) || {};
-
-        const topPlatform = Object.entries(platformPerformance)
-          .sort(([,a], [,b]) => b - a)[0]?.[0] || 'linkedin';
-
-        setMetrics({
-          total_shares: metricsData.total_shares || 0,
-          total_clicks: shares?.reduce((sum, share) => sum + (share.engagement_metrics?.clicks || 0), 0) || 0,
-          total_conversions: metricsData.total_conversions || 0,
-          viral_coefficient: metricsData.viral_coefficient || 0,
-          top_performing_platform: topPlatform,
-          referral_success_rate: metricsData.total_shares > 0 
-            ? (metricsData.total_conversions / metricsData.total_shares) * 100 
-            : 0
-        });
-      }
+      const shares = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]') as SocialShareData[];
+      setSocialShares(shares);
+      updateMetrics(shares);
     } catch (error) {
       console.error('Error fetching share analytics:', error);
     } finally {
@@ -242,7 +190,6 @@ Best regards`,
     trackSocialShare,
     getShareAnalytics,
     generateReferralLink,
-    getOptimizedMessage,
-    updateViralCoefficient
+    getOptimizedMessage
   };
 };

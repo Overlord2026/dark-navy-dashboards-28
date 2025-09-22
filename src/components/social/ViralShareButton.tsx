@@ -11,6 +11,7 @@ import { analytics } from '@/lib/analytics';
 import { abTesting } from '@/lib/abTesting';
 import { usePersona } from '@/context/PersonaContext';
 import { useUser } from '@/context/UserContext';
+import { useViralGrowthSimple } from '@/hooks/useViralGrowthSimple';
 
 interface ViralShareButtonProps {
   variant?: 'button' | 'card' | 'inline';
@@ -34,6 +35,7 @@ const ViralShareButton: React.FC<ViralShareButtonProps> = ({
   const { toast } = useToast();
   const { currentPersona } = usePersona();
   const { userProfile } = useUser();
+  const { trackSocialShare, generateReferralLink, getOptimizedMessage } = useViralGrowthSimple();
 
   // A/B test the button text
   const buttonVariant = abTesting.getVariantConfig(
@@ -42,12 +44,13 @@ const ViralShareButton: React.FC<ViralShareButtonProps> = ({
     { buttonText: 'Share on LinkedIn', description: 'Share your professional network access' }
   );
 
-  const defaultMessage = `I just joined the Family Office Marketplace™—the new home for fiduciary professionals and families. Import your LinkedIn profile and join me: ${landingPageUrl} #FamilyOfficeMarketplace #WealthManagement #FutureOfFinance`;
+  const shareUrl = generateReferralLink(currentPersona || 'professional', 'linkedin');
+  const shareMessage = customMessage || getOptimizedMessage('linkedin', currentPersona || 'professional');
 
-  const shareMessage = customMessage || defaultMessage;
-
-  const handleLinkedInShare = () => {
-    // Track viral share analytics
+  const handleLinkedInShare = async () => {
+    // Track viral share analytics with both systems
+    await trackSocialShare('linkedin', shareMessage, shareUrl, currentPersona || 'professional');
+    
     if (userProfile) {
       analytics.trackViralShare('linkedin', { persona: currentPersona, userId: userProfile.id });
       
@@ -58,7 +61,7 @@ const ViralShareButton: React.FC<ViralShareButtonProps> = ({
       }
     }
 
-    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(landingPageUrl)}&title=${encodeURIComponent('Join the Family Office Marketplace™')}&summary=${encodeURIComponent(shareMessage)}`;
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent('Join the Family Office Marketplace™')}&summary=${encodeURIComponent(shareMessage)}`;
     window.open(linkedInUrl, '_blank', 'width=550,height=550');
     
     toast({
@@ -72,6 +75,9 @@ const ViralShareButton: React.FC<ViralShareButtonProps> = ({
       await navigator.clipboard.writeText(shareMessage);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      
+      // Track copy action
+      await trackSocialShare('copy', shareMessage, shareUrl, currentPersona || 'professional');
       
       toast({
         title: "Message copied",

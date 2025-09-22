@@ -15,7 +15,8 @@ export const EmailSequenceManager = () => {
     persona: '',
     sequence_type: '',
     subject_template: '',
-    content_template: ''
+    content_template: '',
+    is_active: true
   });
   const [testEmail, setTestEmail] = useState('');
   const { toast } = useToast();
@@ -41,7 +42,7 @@ export const EmailSequenceManager = () => {
     }
     
     setEditingSequence(null);
-    setFormData({ persona: '', sequence_type: '', subject_template: '', content_template: '' });
+    setFormData({ persona: '', sequence_type: '', subject_template: '', content_template: '', is_active: true });
   };
 
   const handleTestSequence = async () => {
@@ -64,7 +65,8 @@ export const EmailSequenceManager = () => {
       persona: sequence.persona,
       sequence_type: sequence.sequence_type,
       subject_template: sequence.subject_template,
-      content_template: sequence.content_template
+      content_template: sequence.content_template,
+      is_active: sequence.is_active
     });
   };
 
@@ -161,7 +163,7 @@ export const EmailSequenceManager = () => {
                   variant="outline"
                   onClick={() => {
                     setEditingSequence(null);
-                    setFormData({ persona: '', sequence_type: '', subject_template: '', content_template: '' });
+                    setFormData({ persona: '', sequence_type: '', subject_template: '', content_template: '', is_active: true });
                   }}
                 >
                   <X className="h-4 w-4 mr-2" />
