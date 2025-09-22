@@ -1,4 +1,6 @@
 import { BeneficiaryDesignation, BeneficiaryGap, BeneficiaryAnalysis, AdvancedEstateStrategy, StateEstateTaxRule } from '@/types/beneficiary-management';
+import { secureActOptimizer } from './secureActOptimizer';
+import { professionalCoordination } from './professionalCoordination';
 
 export class BeneficiaryAnalyzer {
   private stateEstateTaxRules: Record<string, StateEstateTaxRule> = {
@@ -219,3 +221,29 @@ export class BeneficiaryAnalyzer {
 }
 
 export const beneficiaryAnalyzer = new BeneficiaryAnalyzer();
+
+// Convenience function for gap analysis
+export async function analyzeBeneficiaryGaps(
+  accountBeneficiaries: Array<{
+    id: string;
+    account_id: string;
+    account_name: string;
+    account_type: string;
+    account_value: number;
+    primary_beneficiaries: BeneficiaryDesignation[];
+    contingent_beneficiaries: BeneficiaryDesignation[];
+  }>
+): Promise<BeneficiaryGap[]> {
+  const accounts = accountBeneficiaries.map(ab => ({
+    id: ab.account_id,
+    name: ab.account_name,
+    type: ab.account_type,
+    balance: ab.account_value
+  }));
+
+  const allBeneficiaries = accountBeneficiaries.flatMap(ab => 
+    [...ab.primary_beneficiaries, ...ab.contingent_beneficiaries]
+  );
+
+  return beneficiaryAnalyzer.analyzeAccountBeneficiaries(accounts, allBeneficiaries);
+}

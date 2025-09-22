@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { sha256Hex, canonicalizeObject } from "@/lib/canonical";
+import { sha256Hex, canonicalize } from "@/lib/canonical";
 import { TaxRuleBundle, TaxRuleContent, TaxRuleOrchestration, ValidationResult } from "@/types/tax-orchestration";
 
 export type PolicyBundle = {
@@ -102,8 +102,8 @@ export class TaxRulesOrchestrator implements TaxRuleOrchestration {
     const tenant_id = await ensureTenant();
     const now = new Date().toISOString();
     const version = `${rules.tax_year}-${now}`;
-    const canonical = canonicalizeObject(rules);
-    const content_hash = await sha256Hex(JSON.stringify(canonical));
+    const canonical = canonicalize(rules);
+    const content_hash = await sha256Hex(canonical);
     const bundle_id = `rs://tax-${domain}@${version}`;
     
     const taxBundle: TaxRuleBundle = {
