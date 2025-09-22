@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ThreeColumnLayout } from "@/components/layout/ThreeColumnLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,10 +12,35 @@ import {
   CheckCircle,
   AlertCircle,
   Plus,
-  ExternalLink
+  ExternalLink,
+  RefreshCw,
+  Code,
+  Zap,
+  Activity,
+  Globe
 } from "lucide-react";
+import { useProjectIntegrations } from "@/hooks/useProjectIntegrations";
 
 const ProjectIntegration: React.FC = () => {
+  const { 
+    connections, 
+    apiIntegrations, 
+    loading,
+    connectProject,
+    testApiIntegration,
+    refresh
+  } = useProjectIntegrations();
+
+  if (loading) {
+    return (
+      <ThreeColumnLayout title="Project Integration">
+        <div className="flex items-center justify-center h-64">
+          <RefreshCw className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </ThreeColumnLayout>
+    );
+  }
+
   return (
     <ThreeColumnLayout title="Project Integration">
       <div className="space-y-6">
@@ -61,82 +85,63 @@ const ProjectIntegration: React.FC = () => {
 
               <TabsContent value="projects" className="space-y-4">
                 <div className="grid gap-4">
-                  <Card>
+                  {connections.map((connection) => (
+                    <Card key={connection.id}>
+                      <CardContent className="pt-6">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                              <Link className="h-5 w-5 text-blue-600" />
+                            </div>
+                            <div>
+                              <h4 className="font-semibold">{connection.name}</h4>
+                              <p className="text-sm text-muted-foreground">
+                                {connection.description}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Badge 
+                              variant="outline" 
+                              className={
+                                connection.status === 'active' 
+                                  ? "text-green-600 border-green-600" 
+                                  : connection.status === 'connecting'
+                                  ? "text-yellow-600 border-yellow-600"
+                                  : "text-red-600 border-red-600"
+                              }
+                            >
+                              {connection.status === 'active' ? 'Active' : 
+                               connection.status === 'connecting' ? 'Connecting' : 'Error'}
+                            </Badge>
+                            <Button variant="outline" size="sm">
+                              <ExternalLink className="h-4 w-4 mr-1" />
+                              View
+                            </Button>
+                          </div>
+                        </div>
+                        {connection.lastSync && (
+                          <p className="text-xs text-muted-foreground mt-2">
+                            Last sync: {connection.lastSync.toLocaleString()}
+                          </p>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                  
+                  {/* Add New Connection Card */}
+                  <Card className="border-dashed">
                     <CardContent className="pt-6">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                            <Link className="h-5 w-5 text-blue-600" />
-                          </div>
-                          <div>
-                            <h4 className="font-semibold">Family Office Dashboard</h4>
-                            <p className="text-sm text-muted-foreground">
-                              Main administrative interface
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Badge variant="outline" className="text-green-600 border-green-600">
-                            Active
-                          </Badge>
-                          <Button variant="outline" size="sm">
-                            <ExternalLink className="h-4 w-4 mr-1" />
-                            View
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className="h-10 w-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                            <Network className="h-5 w-5 text-purple-600" />
-                          </div>
-                          <div>
-                            <h4 className="font-semibold">Advisory Portal</h4>
-                            <p className="text-sm text-muted-foreground">
-                              Professional advisor interface
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Badge variant="outline" className="text-green-600 border-green-600">
-                            Active
-                          </Badge>
-                          <Button variant="outline" size="sm">
-                            <ExternalLink className="h-4 w-4 mr-1" />
-                            View
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className="h-10 w-10 rounded-lg bg-orange-100 flex items-center justify-center">
-                            <Settings className="h-5 w-5 text-orange-600" />
-                          </div>
-                          <div>
-                            <h4 className="font-semibold">Compliance Engine</h4>
-                            <p className="text-sm text-muted-foreground">
-                              Regulatory compliance monitoring
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Badge variant="outline" className="text-yellow-600 border-yellow-600">
-                            Pending
-                          </Badge>
-                          <Button variant="outline" size="sm">
-                            Configure
-                          </Button>
-                        </div>
+                      <div className="text-center">
+                        <Plus className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+                        <h4 className="font-medium mb-2">Add New Connection</h4>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Connect another project or platform to your ecosystem
+                        </p>
+                        <Button onClick={() => connectProject('new')}>
+                          <Plus className="h-4 w-4 mr-2" />
+                          Connect Project
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -174,50 +179,79 @@ const ProjectIntegration: React.FC = () => {
               <TabsContent value="api" className="space-y-4">
                 <div className="grid gap-4">
                   <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex items-center justify-between mb-4">
-                        <h4 className="font-semibold">Active API Integrations</h4>
-                        <Button size="sm">
-                          <Plus className="h-4 w-4 mr-1" />
-                          Add Integration
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between">
+                        <span>Active API Integrations</span>
+                        <Button size="sm" onClick={refresh}>
+                          <RefreshCw className="h-4 w-4 mr-1" />
+                          Refresh
                         </Button>
-                      </div>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
                       <div className="space-y-3">
-                        <div className="flex items-center justify-between p-3 border rounded-lg">
-                          <div className="flex items-center space-x-3">
-                            <CheckCircle className="h-5 w-5 text-green-500" />
-                            <div>
-                              <span className="font-medium">Supabase Auth</span>
-                              <p className="text-sm text-muted-foreground">Authentication & user management</p>
+                        {apiIntegrations.map((integration) => (
+                          <div key={integration.id} className="flex items-center justify-between p-3 border rounded-lg">
+                            <div className="flex items-center space-x-3">
+                              <div className={`p-2 rounded ${
+                                integration.status === 'healthy' ? 'bg-green-50' :
+                                integration.status === 'degraded' ? 'bg-yellow-50' : 'bg-red-50'
+                              }`}>
+                                {integration.status === 'healthy' ? 
+                                  <CheckCircle className="h-5 w-5 text-green-500" /> :
+                                integration.status === 'degraded' ? 
+                                  <AlertCircle className="h-5 w-5 text-yellow-500" /> :
+                                  <AlertCircle className="h-5 w-5 text-red-500" />
+                                }
+                              </div>
+                              <div>
+                                <span className="font-medium">{integration.name}</span>
+                                <p className="text-sm text-muted-foreground">{integration.endpoint}</p>
+                                {integration.usage && (
+                                  <p className="text-xs text-muted-foreground">
+                                    {integration.usage.requests} requests {integration.usage.period}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Badge 
+                                variant="outline" 
+                                className={
+                                  integration.status === 'healthy' 
+                                    ? "text-green-600 border-green-600" 
+                                    : integration.status === 'degraded'
+                                    ? "text-yellow-600 border-yellow-600"
+                                    : "text-red-600 border-red-600"
+                                }
+                              >
+                                {integration.status}
+                              </Badge>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                onClick={() => testApiIntegration(integration.id)}
+                              >
+                                <Activity className="h-4 w-4 mr-1" />
+                                Test
+                              </Button>
                             </div>
                           </div>
-                          <Badge variant="outline" className="text-green-600 border-green-600">
-                            Connected
-                          </Badge>
-                        </div>
-                        <div className="flex items-center justify-between p-3 border rounded-lg">
+                        ))}
+                        
+                        {/* Add New Integration */}
+                        <div className="flex items-center justify-between p-3 border-dashed border-2 rounded-lg">
                           <div className="flex items-center space-x-3">
-                            <CheckCircle className="h-5 w-5 text-green-500" />
+                            <Plus className="h-8 w-8 text-muted-foreground" />
                             <div>
-                              <span className="font-medium">Supabase Database</span>
-                              <p className="text-sm text-muted-foreground">Data storage & real-time sync</p>
+                              <span className="font-medium">Add New Integration</span>
+                              <p className="text-sm text-muted-foreground">Connect to external APIs</p>
                             </div>
                           </div>
-                          <Badge variant="outline" className="text-green-600 border-green-600">
-                            Connected
-                          </Badge>
-                        </div>
-                        <div className="flex items-center justify-between p-3 border rounded-lg">
-                          <div className="flex items-center space-x-3">
-                            <AlertCircle className="h-5 w-5 text-yellow-500" />
-                            <div>
-                              <span className="font-medium">Market Data API</span>
-                              <p className="text-sm text-muted-foreground">Real-time financial data</p>
-                            </div>
-                          </div>
-                          <Badge variant="outline" className="text-yellow-600 border-yellow-600">
-                            Configuring
-                          </Badge>
+                          <Button size="sm">
+                            <Plus className="h-4 w-4 mr-1" />
+                            Add Integration
+                          </Button>
                         </div>
                       </div>
                     </CardContent>

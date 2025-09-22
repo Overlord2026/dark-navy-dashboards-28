@@ -11,6 +11,7 @@ import { collaborationNavItems } from "./tabs/CollaborationTab";
 import { settingsNavItems } from "./tabs/SettingsTab";
 import { clientToolsNavItems } from "./WealthManagementRegistry";
 import { NavCategory } from "@/types/navigation";
+import { Network } from "lucide-react";
 
 // Define navigation categories
 export const navigationCategories: NavCategory[] = [
@@ -69,6 +70,20 @@ export const navigationCategories: NavCategory[] = [
     title: "COLLABORATION & SHARING",
     label: "COLLABORATION & SHARING",
     items: collaborationNavItems,
+    defaultExpanded: true
+  },
+  {
+    id: "integration",
+    title: "PROJECT INTEGRATION",
+    label: "PROJECT INTEGRATION", 
+    items: [
+      {
+        title: "Integration Hub",
+        href: "/integration",
+        icon: Network,
+        label: "Manage project integrations and connections"
+      }
+    ],
     defaultExpanded: true
   }
 ];

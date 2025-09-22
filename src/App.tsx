@@ -259,6 +259,7 @@ import MeetingsPage from '@/pages/advisors/MeetingsPage';
 import CampaignsPage from '@/pages/advisors/CampaignsPage';
 import PipelinePage from '@/pages/advisors/PipelinePage';
 import AdvisorTools from '@/pages/advisors/AdvisorTools';
+import ProjectIntegration from '@/pages/ProjectIntegration';
 
 // Contact pages
 const ContactSchedulePage = lazy(() => import('@/pages/contact/schedule'));
@@ -553,6 +554,9 @@ function App() {
             
             {/* Family Routes */}
             <Route path="/family/roadmap" element={<FamilyRoadmap />} />
+            
+            {/* Integration Routes */}
+            <Route path="/integration" element={<ProjectIntegration />} />
             
             {/* Route Redirects */}
             <Route path="/family" element={<Navigate to="/family/home" replace />} />
