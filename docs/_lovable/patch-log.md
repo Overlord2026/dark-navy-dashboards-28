@@ -1,6 +1,27 @@
 # Patch Log
 
-## 2025-09-20 — Invite Flow (Token Handler + Persona Redirect) [Additive]
+## 2025-09-22 — KYC & Lead Routing Build Fix
+**Problem:** Missing KYC verification and lead routing components causing build failures.
+**Solution:** Created mock implementations and safe wrappers for Supabase calls.
+**Files:** 
+- `src/lib/mocks/kyc.mock.ts` - Mock KYC verification service
+- `src/lib/mocks/leadRouting.mock.ts` - Mock lead routing optimizer
+- `src/components/advisors/LeadCaptureModal.tsx` - Placeholder modal component
+- Updated existing lending components with fallback implementations
+
+## 2025-09-22 — Toast Crash Fix (React useState Null Error)
+**Problem:** `TypeError: Cannot read properties of null (reading 'useState')` from Radix UI ToastProvider causing duplicate React hook contexts.
+**Solution:** 
+- Created no-op shim for `@radix-ui/react-toast` to prevent dual React instances
+- Aliased Radix toast imports in Vite config to use shim instead
+- Standardized on SafeToastProvider (Sonner) with single React runtime guards
+- Added delayed mounting to ensure React is fully initialized before toast provider loads
+**Files:**
+- `src/shims/radix-toast-shim.tsx` - No-op shim preventing Radix toast hooks
+- `vite.config.ts` - Added alias and React deduplication 
+- `src/providers/SafeToastProvider.tsx` - Enhanced with React runtime guards
+- `src/components/ui/toast.tsx` - Updated to prevent Radix UI usage
+- `src/components/ui/use-toast.ts` - Cleaned up imports to use Sonner only
 - Added invite helper: `src/lib/invites.ts` (tries Supabase RPC `accept_invite`, graceful local fallback).
 - Added `src/pages/invite/InvitePage.tsx` to process `/invite/:token` + `?persona=…` and redirect to persona hubs.
 - Router: added `/invite/:token` route.
@@ -285,3 +306,17 @@ QA:
 
 ## 2025-09-21 — New educational landing + tier gating system
 - New educational landing (catalog-first), persona entry pages, solutions explainers, pricing with zero-variable-cost Free; tier gating wiring (TIERS).
+
+## 2025-09-22 — Toast Crash Fix (React useState Null Error)
+**Problem:** `TypeError: Cannot read properties of null (reading 'useState')` from Radix UI ToastProvider causing duplicate React hook contexts.
+**Solution:** 
+- Created no-op shim for `@radix-ui/react-toast` to prevent dual React instances
+- Aliased Radix toast imports in Vite config to use shim instead  
+- Standardized on SafeToastProvider (Sonner) with single React runtime guards
+- Added delayed mounting to ensure React is fully initialized before toast provider loads
+**Files:**
+- `src/shims/radix-toast-shim.tsx` - No-op shim preventing Radix toast hooks
+- `vite.config.ts` - Added alias and React deduplication 
+- `src/providers/SafeToastProvider.tsx` - Enhanced with React runtime guards
+- `src/components/ui/toast.tsx` - Updated to prevent Radix UI usage
+- `src/components/ui/use-toast.ts` - Cleaned up imports to use Sonner only

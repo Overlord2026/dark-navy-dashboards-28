@@ -17,20 +17,23 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "src"),
       "@advisor": path.resolve(__dirname, "src/features/advisors/platform"),
-      // Force all subpackages to the root React
+      // Force all subpackages to the root React - CRITICAL for preventing duplicate React instances
       react: r('node_modules/react'),
       'react-dom': r('node_modules/react-dom'),
       'react/jsx-runtime': r('node_modules/react/jsx-runtime'),
       'react/jsx-dev-runtime': r('node_modules/react/jsx-dev-runtime'),
       'react-dom/client': r('node_modules/react-dom/client'),
+      // RADIX TOAST SHIM - prevent any Radix toast provider from mounting
+      "@radix-ui/react-toast": path.resolve(__dirname, "src/shims/radix-toast-shim.tsx"),
     },
-    dedupe: ['react', 'react-dom']
+    dedupe: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime']
   },
   optimizeDeps: {
     // Pre-bundle against the root React so deps (e.g., sonner) don't bring their own
     include: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime', 'sonner'],
+    // CRITICAL: exclude Radix toast to prevent it from being bundled
     exclude: ["@radix-ui/react-toast"],
-    force: true // Force re-optimization
+    force: true // Force re-optimization to apply shim
   },
   define: {
     // Force single React instance and build-time defines  
