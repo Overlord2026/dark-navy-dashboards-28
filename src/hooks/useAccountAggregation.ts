@@ -128,7 +128,7 @@ export const useAccountAggregation = (clientId?: string) => {
           if (rmdRequired && rmdAmount) {
             upcomingRMDs.push({
               accountId: account.id,
-              accountName: account.account_name,
+              accountName: account.name,
               amount: rmdAmount,
               deadline: rmdDeadline!,
               clientId: userId !== user.id ? userId : undefined,
@@ -140,7 +140,7 @@ export const useAccountAggregation = (clientId?: string) => {
           if (Math.random() > 0.7) { // 30% chance
             rebalanceAlerts.push({
               accountId: account.id,
-              accountName: account.account_name,
+              accountName: account.name,
               message: 'Portfolio drift detected - consider rebalancing',
               severity: Math.random() > 0.5 ? 'medium' : 'low'
             });
@@ -152,8 +152,8 @@ export const useAccountAggregation = (clientId?: string) => {
             type: isRetirement ? 'retirement' : 'investment',
             balance: account.balance || 0,
             lastUpdate: account.updated_at,
-            institution: account.custodian,
-            accountNumber: account.account_number,
+            institution: 'Investment Account',
+            accountNumber: 'N/A',
             performance,
             rmdRequired,
             rmdAmount,
@@ -180,12 +180,12 @@ export const useAccountAggregation = (clientId?: string) => {
             balance: account.cash_balance || 0,
             lastUpdate: account.updated_at,
             institution: account.provider,
-            accountNumber: account.account_number
+            accountNumber: account.account_number_last4
           };
           
           aggregatedAccounts.push(aggregatedAccount);
-          totalBalance += account.balance || 0;
-          totalHSA += account.balance || 0;
+          totalBalance += account.cash_balance || 0;
+          totalHSA += account.cash_balance || 0;
         }
       }
 

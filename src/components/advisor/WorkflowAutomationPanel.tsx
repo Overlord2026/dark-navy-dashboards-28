@@ -22,7 +22,7 @@ interface WorkflowAutomation {
   id: string;
   trigger_type: string;
   action_type: string;
-  status: 'active' | 'paused' | 'error';
+  status: string;
   trigger_data: any;
   action_data: any;
   processed_at?: string;

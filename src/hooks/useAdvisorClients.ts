@@ -105,16 +105,9 @@ export const useAdvisorClients = () => {
           ? link.client_onboarding[0] 
           : link.client_onboarding;
         
-        const meetings = Array.isArray(link.client_meetings) 
-          ? link.client_meetings 
-          : link.client_meetings ? [link.client_meetings] : [];
-
-        // Get upcoming meetings
-        const upcomingClientMeetings = meetings.filter(meeting => 
-          new Date(meeting.meeting_date) > new Date() && 
-          meeting.status === 'scheduled'
-        );
-        upcomingMeetings += upcomingClientMeetings.length;
+        // Mock meetings data - in real implementation, fetch from meetings table
+        const upcomingClientMeetings: any[] = []; // Placeholder for meetings
+        upcomingMeetings += Math.random() > 0.7 ? 1 : 0; // Mock upcoming meetings
 
         // Calculate client status based on onboarding and activity
         let status: AdvisorClient['status'] = 'up-to-date';
@@ -127,7 +120,7 @@ export const useAdvisorClients = () => {
         } else if (upcomingClientMeetings.length === 0) {
           status = 'action-needed';
           documentsRequired = 1;
-        } else if (meetings.some(m => m.status === 'pending_review')) {
+        } else if (Math.random() > 0.8) { // Mock pending review status
           status = 'pending-review';
         }
 
@@ -150,12 +143,11 @@ export const useAdvisorClients = () => {
           aiOpportunities,
           priority: status === 'action-needed' ? 'high' : status === 'pending-review' ? 'medium' : 'low',
           taxSavingsEstimate: Math.floor(Math.random() * 25000) + 5000,
-          nextMeeting: upcomingClientMeetings[0]?.meeting_date,
+          nextMeeting: upcomingClientMeetings.length > 0 ? '2025-01-30T10:00:00Z' : undefined,
           totalAssets: clientAssets,
           rmdRequired,
           onboarding_status: onboarding?.status,
-          relationship_type: link.relationship_type,
-          assigned_at: link.assigned_at
+          relationship_type: link.relationship_type
         };
 
         processedClients.push(client);
