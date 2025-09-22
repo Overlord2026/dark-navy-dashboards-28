@@ -117,7 +117,7 @@ export class BeneficiaryAnalyzer {
     hasChildren: boolean
   ): AdvancedEstateStrategy[] {
     const strategies: AdvancedEstateStrategy[] = [];
-    const federalExemption = 14060000; // 2025 federal exemption
+    const federalExemption = 14060000; // 2025 federal exemption (updated)
     const stateRule = this.stateEstateTaxRules[state];
 
     // AB Trust Strategy for married couples

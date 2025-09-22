@@ -412,7 +412,7 @@ export function EstateEducationHub() {
               },
               {
                 question: 'Are estate taxes something I need to worry about?',
-                answer: 'For 2024, federal estate tax only applies to estates over $13.61 million. However, some states have lower thresholds, so consult with a professional.'
+                answer: 'For 2025, federal estate tax only applies to estates over $14.06 million. However, some states have lower thresholds, so consult with a professional.'
               }
             ].map((faq, i) => (
               <Card key={i}>

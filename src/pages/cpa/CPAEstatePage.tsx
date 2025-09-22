@@ -20,7 +20,7 @@ const CPAEstatePage = () => {
   const [activeTab, setActiveTab] = useState('snapshot');
   const [loading, setLoading] = useState(false);
   const [snapshotData, setSnapshotData] = useState({
-    federalExemption: 13610000, // 2024 exemption
+    federalExemption: 14060000, // 2025 exemption (updated)
     stateExemption: 0, // Varies by state
     currentEstate: 2500000,
     portabilityAvailable: true

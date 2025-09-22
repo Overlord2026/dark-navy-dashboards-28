@@ -59,8 +59,8 @@ export function AdvancedEstateCalculators() {
       return;
     }
 
-    // 2024 federal estate tax exemption
-    const exemption = maritalStatus === 'married' ? 27220000 : 13610000; // $13.61M single, $27.22M married
+    // 2025 federal estate tax exemption (updated)
+    const exemption = maritalStatus === 'married' ? 28120000 : 14060000; // $14.06M single, $28.12M married
     const taxableEstate = Math.max(0, value - exemption);
     const estateTax = taxableEstate * 0.40; // 40% federal rate
 
