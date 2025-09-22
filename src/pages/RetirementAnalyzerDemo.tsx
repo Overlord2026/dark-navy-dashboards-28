@@ -6,6 +6,7 @@ import { PlanImportDashboard } from '@/components/retirement/PlanImportDashboard
 import { AdvisorClientDashboard } from '@/components/retirement/AdvisorClientDashboard';
 import { RetirementAnalysisInput } from '@/types/retirement';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { SequenceRiskAnalyzer } from '@/components/retirement/SequenceRiskAnalyzer';
 
 export default function RetirementAnalyzerDemo() {
   const [inputs, setInputs] = useState<RetirementAnalysisInput>({
@@ -160,8 +161,9 @@ export default function RetirementAnalyzerDemo() {
 
           {/* Main Content */}
           <Tabs defaultValue="analyzer" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="analyzer">Retirement Analyzer</TabsTrigger>
+              <TabsTrigger value="sequence-risk">Sequence Risk</TabsTrigger>
               <TabsTrigger value="advisor">Advisor Dashboard</TabsTrigger>
               <TabsTrigger value="imports">Plan Imports</TabsTrigger>
             </TabsList>
@@ -173,6 +175,10 @@ export default function RetirementAnalyzerDemo() {
                   onInputsChange={setInputs}
                 />
               </RetirementErrorBoundary>
+            </TabsContent>
+            
+            <TabsContent value="sequence-risk" className="mt-8">
+              <SequenceRiskAnalyzer />
             </TabsContent>
             
             <TabsContent value="advisor" className="mt-8">
