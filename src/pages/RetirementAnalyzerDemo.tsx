@@ -12,6 +12,10 @@ import { MultiPhaseAnalyzer } from '@/components/retirement/MultiPhaseAnalyzer';
 import { SurvivingSpouseModule } from '@/components/shared/SurvivingSpouseModule';
 import { TaxPlanningModal } from '@/components/calculators/TaxPlanningModal';
 import { ClientRiskProfileQuiz } from '@/components/portfolio/ClientRiskProfileQuiz';
+import { EstateRetirementIntegrationProvider } from '@/contexts/EstateRetirementIntegrationContext';
+import { SECUREActAnalyzer } from '@/components/estate-retirement/SECUREActAnalyzer';
+import { EstateSettlementAnalyzer } from '@/components/estate-retirement/EstateSettlementAnalyzer';
+import { BeneficiaryManager } from '@/components/estate-retirement/BeneficiaryManager';
 
 export default function RetirementAnalyzerDemo() {
   const [showTaxPlanningModal, setShowTaxPlanningModal] = useState(false);
