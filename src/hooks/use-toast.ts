@@ -1,97 +1,83 @@
-import { toast as sonnerToast } from "sonner";
+import { toast as sonner } from "sonner";
 import * as React from "react";
 
-// Ensure React is properly initialized
-if (!React || typeof React.createElement !== 'function') {
-  throw new Error('React runtime not properly initialized in use-toast');
-}
-
-export type ToastObject = {
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  duration?: number;
+type ToastOptions = {
+  title?: string;
+  description?: string;
   variant?: "default" | "destructive";
-  action?: React.ReactNode; // NEW: keep legacy call sites compiling
+  duration?: number;
+  action?: React.ReactElement;
 };
 
-export type ToastInput = string | React.ReactNode | ToastObject;
-
-export type ToastHandle = { id?: string | number; dismiss: () => void; update: () => void };
-
-type ToastAPI = ((input: ToastInput) => ToastHandle) & {
-  success: (input: ToastInput, opts?: { duration?: number }) => ToastHandle;
-  error:   (input: ToastInput, opts?: { duration?: number }) => ToastHandle;
-  info:    (input: ToastInput, opts?: { duration?: number }) => ToastHandle;
-  loading: (message: string) => string | number;
-  dismiss: (id?: string | number) => void;
-  promise: <T>(
-    p: Promise<T>,
-    msgs: { loading: string; success: string; error: string }
-  ) => string | number;
-};
-
-function composeNode(obj: ToastObject): React.ReactNode {
-  const { title, description, action } = obj || {};
-  return React.createElement(
-    'div',
-    { className: 'space-y-2' },
-    title ? React.createElement('div', {}, React.createElement('strong', {}, title)) : null,
-    typeof description === "string" ? React.createElement('div', {}, description) : description,
-    action ? React.createElement('div', {}, action) : null
-  );
-}
-
-function show(input: ToastInput, kind: "base" | "success" | "error" | "info", duration?: number): ToastHandle {
-  // If a ReactNode was passed directly, render it as-is
+/**
+ * Provider-free toast API that handles both object and direct Sonner formats
+ */
+function createToast(input: string | React.ReactElement | ToastOptions, options?: any) {
+  // Handle React element format: toast(<Element />)
   if (React.isValidElement(input)) {
-    const node = input as React.ReactNode;
-    if (kind === "success") sonnerToast.success(node, { duration });
-    else if (kind === "error") sonnerToast.error(node, { duration });
-    else if (kind === "info") sonnerToast.message(node, { duration });
-    else sonnerToast(node, { duration });
-    return { dismiss: () => {}, update: () => {} };
+    return sonner(input, options);
   }
-
-  // If string, handle directly
-  if (typeof input === "string") {
-    if (kind === "success") sonnerToast.success(input, { duration });
-    else if (kind === "error") sonnerToast.error(input, { duration });
-    else if (kind === "info") sonnerToast.message(input, { duration });
-    else sonnerToast(input, { duration });
-    return { dismiss: () => {}, update: () => {} };
+  
+  // Handle object format: toast({ title: "...", description: "...", variant: "..." })
+  if (typeof input === "object" && input !== null) {
+    const { title, description, variant, duration, action } = input as ToastOptions;
+    const message = title && description ? `${title}: ${description}` : title || description || "Notification";
+    
+    const toastOptions = { 
+      duration,
+      action // Pass action directly as ReactElement
+    };
+    
+    if (variant === "destructive") {
+      return sonner.error(message, toastOptions);
+    } else {
+      return sonner.success(message, toastOptions);
+    }
   }
-
-  // Must be ToastObject at this point
-  const obj = input as ToastObject;
-  const node = composeNode(obj);
-  const dur = obj?.duration ?? duration;
-  if (obj?.variant === "destructive" || kind === "error") {
-    sonnerToast.error(node, { duration: dur });
-  } else if (kind === "success") {
-    sonnerToast.success(node, { duration: dur });
-  } else if (kind === "info") {
-    sonnerToast.message(node, { duration: dur });
-  } else {
-    sonnerToast(node, { duration: dur });
-  }
-  return { dismiss: () => {}, update: () => {} };
+  
+  // Handle string format: toast("message")
+  return sonner(input as string, options);
 }
 
-export const toast: ToastAPI = Object.assign(
-  (input: ToastInput) => show(input, "base"),
-  {
-    success: (input: ToastInput, opts?: { duration?: number }) => show(input, "success", opts?.duration),
-    error:   (input: ToastInput, opts?: { duration?: number }) => show(input, "error",   opts?.duration),
-    info:    (input: ToastInput, opts?: { duration?: number }) => show(input, "info",    opts?.duration),
-    loading: (message: string) => sonnerToast.loading(message),
-    dismiss: (id?: string | number) => sonnerToast.dismiss(id),
-    promise: <T,>(p: Promise<T>, msgs: { loading: string; success: string; error: string }) =>
-      sonnerToast.promise(p, { loading: msgs.loading, success: msgs.success, error: msgs.error })
-  }
-);
+// Create enhanced toast object with all Sonner methods
+const toast = Object.assign(createToast, {
+  success: (message: string | ToastOptions | React.ReactElement, options?: any) => {
+    if (React.isValidElement(message)) {
+      return sonner.success(message, options);
+    }
+    if (typeof message === "object") {
+      const { title, description, duration, action } = message as ToastOptions;
+      const msg = title && description ? `${title}: ${description}` : title || description || "Success";
+      return sonner.success(msg, { duration, action, ...options });
+    }
+    return sonner.success(message, options);
+  },
+  error: (message: string | ToastOptions | React.ReactElement, options?: any) => {
+    if (React.isValidElement(message)) {
+      return sonner.error(message, options);
+    }
+    if (typeof message === "object") {
+      const { title, description, duration, action } = message as ToastOptions;
+      const msg = title && description ? `${title}: ${description}` : title || description || "Error";
+      return sonner.error(msg, { duration, action, ...options });
+    }
+    return sonner.error(message, options);
+  },
+  info: sonner.info || sonner.message || sonner,
+  loading: sonner.loading,
+  dismiss: sonner.dismiss,
+  promise: sonner.promise
+});
 
+/**
+ * Hook that returns toast functions for backward compatibility
+ */
 export function useToast() {
   return { toast };
 }
 
-export default toast;
+// Export toast for direct imports
+export { toast };
+
+// Default export for flexibility
+export default useToast;
