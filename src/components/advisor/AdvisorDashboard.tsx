@@ -40,18 +40,12 @@ import { VoiceMicButton } from '@/components/voice/VoiceMicButton';
 import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
 import { AdvisorBenchmarkWidget } from './AdvisorBenchmarkWidget';
 import { getFlag } from '@/lib/flags';
+import { useAdvisorClients } from '@/hooks/useAdvisorClients';
+import { ClientProfileCard } from './ClientProfileCard';
+import { AccountAggregationPanel } from './AccountAggregationPanel';
+import { WorkflowAutomationPanel } from './WorkflowAutomationPanel';
 
-interface Client {
-  id: string;
-  name: string;
-  email: string;
-  status: 'action-needed' | 'pending-review' | 'up-to-date';
-  lastActivity: string;
-  documentsRequired: number;
-  aiOpportunities: number;
-  priority: 'high' | 'medium' | 'low';
-  taxSavingsEstimate: number;
-}
+// Removed - now using AdvisorClient from useAdvisorClients hook
 
 export function AdvisorDashboard() {
   const navigate = useNavigate();
@@ -61,85 +55,20 @@ export function AdvisorDashboard() {
   const [showPlanImport, setShowPlanImport] = useState(false);
   const [showOnboardingBanner, setShowOnboardingBanner] = useState(true);
   const [voiceOpen, setVoiceOpen] = useState(false);
-  const [clients, setClients] = useState<Client[]>([]);
-  const [metrics, setMetrics] = useState({
-    totalClients: 0,
-    clientsRequiringAction: 0,
-    pendingDocReviews: 0,
-    monthlyRevenue: '$0',
-    aiFlaggedOpportunities: 0,
-    totalTaxSavings: 0,
-    completionRate: 0
-  });
-  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'overview' | 'clients' | 'accounts' | 'automation'>('overview');
+  
+  // Use the new comprehensive client management hook
+  const { clients, metrics, loading } = useAdvisorClients();
 
   useEffect(() => {
-    loadDashboardData();
+    // Generate mock revenue data
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    const projectionData = months.map((month, index) => ({
+      month,
+      revenue: 95000 + (index * 5000) + (Math.random() * 10000)
+    }));
+    setChartData(projectionData);
   }, []);
-
-  const loadDashboardData = async () => {
-    try {
-      // Use mock data for now until database tables are created
-      const mockClients: Client[] = [
-        {
-          id: '1',
-          name: 'John Smith',
-          email: 'john.smith@email.com',
-          status: 'action-needed',
-          lastActivity: '3 days ago',
-          documentsRequired: 2,
-          aiOpportunities: 3,
-          priority: 'high',
-          taxSavingsEstimate: 15000
-        },
-        {
-          id: '2',
-          name: 'Sarah Johnson',
-          email: 'sarah.johnson@email.com',
-          status: 'pending-review',
-          lastActivity: '1 day ago',
-          documentsRequired: 0,
-          aiOpportunities: 1,
-          priority: 'medium',
-          taxSavingsEstimate: 8500
-        },
-        {
-          id: '3',
-          name: 'Michael Brown',
-          email: 'michael.brown@email.com',
-          status: 'up-to-date',
-          lastActivity: 'Today',
-          documentsRequired: 0,
-          aiOpportunities: 2,
-          priority: 'low',
-          taxSavingsEstimate: 12000
-        }
-      ];
-      
-      setClients(mockClients);
-      setMetrics({
-        totalClients: mockClients.length,
-        clientsRequiringAction: mockClients.filter(c => c.status === 'action-needed').length,
-        pendingDocReviews: mockClients.filter(c => c.status === 'pending-review').length,
-        monthlyRevenue: '$125,400',
-        aiFlaggedOpportunities: mockClients.reduce((sum, c) => sum + c.aiOpportunities, 0),
-        totalTaxSavings: mockClients.reduce((sum, c) => sum + c.taxSavingsEstimate, 0),
-        completionRate: Math.round((mockClients.filter(c => c.status === 'up-to-date').length / mockClients.length) * 100)
-      });
-
-      // Mock revenue data
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-      const projectionData = months.map((month, index) => ({
-        month,
-        revenue: 95000 + (index * 5000) + (Math.random() * 10000)
-      }));
-      setChartData(projectionData);
-    } catch (error) {
-      console.error('Error loading dashboard data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const recentActivity = [
     { id: 1, client: 'John Smith', action: 'Tax optimization completed', time: '2 hours ago', status: 'completed', savings: '$15,000' },
@@ -245,40 +174,69 @@ export function AdvisorDashboard() {
                   <div>
                     <h1 className="text-4xl font-bold tracking-tight">Advisor Command Center</h1>
                     <p className="text-white/90 text-lg">
-                      Streamline your practice and maximize client value
+                      Complete practice management with real-time client insights
                     </p>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6">
                   <div className="text-center">
                     <div className="text-3xl font-bold">{metrics.totalClients}</div>
                     <div className="text-white/80 text-sm">Total Clients</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold">92</div>
-                    <div className="text-white/80 text-sm">Avg SWAG Score™</div>
-                    <div className="text-xs text-yellow-300">Got SWAG? 🌟</div>
+                    <div className="text-3xl font-bold">${(metrics.totalAUM / 1000000).toFixed(1)}M</div>
+                    <div className="text-white/80 text-sm">Total AUM</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold">{metrics.completionRate}%</div>
-                    <div className="text-white/80 text-sm">Conversion Rate</div>
+                    <div className="text-3xl font-bold">{metrics.upcomingMeetings}</div>
+                    <div className="text-white/80 text-sm">This Week</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-orange-300">{metrics.upcomingRMDs}</div>
+                    <div className="text-white/80 text-sm">RMDs Due</div>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold">{metrics.aiFlaggedOpportunities}</div>
-                    <div className="text-white/80 text-sm">SWAG Opportunities</div>
+                    <div className="text-white/80 text-sm">Opportunities</div>
                   </div>
                 </div>
               </div>
               <div className="hidden lg:flex flex-col gap-2">
                 <VoiceMicButton onClick={() => setVoiceOpen(true)} />
-                <Button 
-                  variant="secondary"
-                  className="gap-2"
-                  onClick={handleImportPlans}
-                >
-                  <Upload className="h-4 w-4" />
-                  Import Existing Plans
-                </Button>
+                <div className="flex gap-2">
+                  <Button 
+                    variant={activeTab === 'overview' ? 'secondary' : 'outline'}
+                    size="sm"
+                    className={activeTab === 'overview' ? '' : 'text-white border-white/30 hover:bg-white/10'}
+                    onClick={() => setActiveTab('overview')}
+                  >
+                    Overview
+                  </Button>
+                  <Button 
+                    variant={activeTab === 'clients' ? 'secondary' : 'outline'}
+                    size="sm"
+                    className={activeTab === 'clients' ? '' : 'text-white border-white/30 hover:bg-white/10'}
+                    onClick={() => setActiveTab('clients')}
+                  >
+                    Clients
+                  </Button>
+                  <Button 
+                    variant={activeTab === 'accounts' ? 'secondary' : 'outline'}
+                    size="sm"
+                    className={activeTab === 'accounts' ? '' : 'text-white border-white/30 hover:bg-white/10'}
+                    onClick={() => setActiveTab('accounts')}
+                  >
+                    Accounts
+                  </Button>
+                  <Button 
+                    variant={activeTab === 'automation' ? 'secondary' : 'outline'}
+                    size="sm"
+                    className={activeTab === 'automation' ? '' : 'text-white border-white/30 hover:bg-white/10'}
+                    onClick={() => setActiveTab('automation')}
+                  >
+                    Automation
+                  </Button>
+                </div>
                 <Button 
                   variant="secondary"
                   className="gap-2"
@@ -286,14 +244,6 @@ export function AdvisorDashboard() {
                 >
                   <Plus className="h-4 w-4" />
                   Add Client
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="gap-2 text-white border-white/30 hover:bg-white/10"
-                  onClick={handleExportReport}
-                >
-                  <Download className="h-4 w-4" />
-                  Export Report
                 </Button>
               </div>
             </div>
