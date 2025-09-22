@@ -18,11 +18,7 @@ import './styles/brand.css';
 import './styles/chartColors.css';
 import './styles/accessibility.css';
 
-// CRITICAL: Ensure React runtime is properly initialized
-import React from 'react';
-if (!React || typeof React.useState !== 'function' || typeof React.createElement !== 'function') {
-  throw new Error(`React runtime initialization failed. React: ${!!React}, useState: ${typeof React?.useState}, createElement: ${typeof React?.createElement}`);
-}
+// React runtime checks removed - simplified toast system
 
 // Initialize production optimizations
 removeProductionLogs();
