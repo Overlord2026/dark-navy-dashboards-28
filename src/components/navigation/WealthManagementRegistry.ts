@@ -94,6 +94,22 @@ export const wealthManagementNavItems: NavItem[] = [
   },
 ];
 
+// Professional Dashboard Navigation
+export const professionalDashboardNavItems: NavItem[] = [
+  {
+    title: "CPA Dashboard",
+    href: "/cpa",
+    icon: BriefcaseIcon,
+    label: "Tax & Accounting Hub"
+  },
+  {
+    title: "Estate Attorney Dashboard", 
+    href: "/attorney",
+    icon: UserCheckIcon,
+    label: "Estate Planning Hub"
+  },
+];
+
 // Client Tools Navigation Registry (top-level category)
 export const clientToolsNavItems: NavItem[] = [
   {

@@ -261,6 +261,10 @@ import PipelinePage from '@/pages/advisors/PipelinePage';
 import AdvisorTools from '@/pages/advisors/AdvisorTools';
 import ProjectIntegration from '@/pages/ProjectIntegration';
 
+// Professional Dashboard Components
+import CPADashboardPage from '@/pages/CPADashboardPage';
+import EstateAttorneyDashboardPage from '@/pages/EstateAttorneyDashboardPage';
+
 // Contact pages
 const ContactSchedulePage = lazy(() => import('@/pages/contact/schedule'));
 const ContactMessagePage = lazy(() => import('@/pages/contact/message'));
@@ -599,6 +603,10 @@ function App() {
             <Route path="/marketplace" element={<MarketplaceIndex />} />
             <Route path="/marketplace/advisors" element={<MarketplaceAdvisors />} />
             <Route path="/marketplace/advisors/:id" element={<AdvisorDetail />} />
+            {/* Professional Dashboard Routes */}
+            <Route path="/cpa" element={<CPADashboardPage />} />
+            <Route path="/attorney" element={<EstateAttorneyDashboardPage />} />
+            
             <Route path="/cpas/home" element={<Suspense fallback={<div>Loading...</div>}><CpaHome /></Suspense>} />
             <Route path="/marketplace/cpas" element={<Suspense fallback={<div>Loading...</div>}><CpaMarketplace /></Suspense>} />
             <Route path="/marketplace/cpas/:id" element={<Suspense fallback={<div>Loading...</div>}><CpaProfile /></Suspense>} />

@@ -9,7 +9,7 @@ import { annuitiesNavItems } from "./tabs/AnnuitiesTab";
 // DEPRECATED: import { familyWealthNavItems } from "./tabs/FamilyWealthTab";
 import { collaborationNavItems } from "./tabs/CollaborationTab";
 import { settingsNavItems } from "./tabs/SettingsTab";
-import { clientToolsNavItems } from "./WealthManagementRegistry";
+import { clientToolsNavItems, professionalDashboardNavItems } from "./WealthManagementRegistry";
 import { NavCategory } from "@/types/navigation";
 import { Network } from "lucide-react";
 
@@ -73,6 +73,13 @@ export const navigationCategories: NavCategory[] = [
     defaultExpanded: true
   },
   {
+    id: "professional-dashboards",
+    title: "PROFESSIONAL DASHBOARDS",
+    label: "PROFESSIONAL DASHBOARDS",
+    items: professionalDashboardNavItems,
+    defaultExpanded: true
+  },
+  {
     id: "integration",
     title: "PROJECT INTEGRATION",
     label: "PROJECT INTEGRATION", 
@@ -111,5 +118,6 @@ export {
   // DEPRECATED: familyWealthNavItems, // Now part of hierarchical Wealth Management
   collaborationNavItems,
   settingsNavItems,
-  clientToolsNavItems
+  clientToolsNavItems,
+  professionalDashboardNavItems
 };
