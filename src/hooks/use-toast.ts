@@ -1,32 +1,22 @@
 import { toast as sonner } from "sonner";
-import * as React from "react";
 
-type ToastOptions = {
-  title?: string;
-  description?: string;
-  variant?: "default" | "destructive";
-  duration?: number;
-  action?: React.ReactElement;
+type ToastInput = string | { 
+  title?: string; 
+  description?: string; 
+  variant?: "default" | "destructive"; 
+  duration?: number; 
 };
 
 /**
- * Provider-free toast API that handles both object and direct Sonner formats
+ * Provider-free toast API - no React hooks or dependencies
  */
-function createToast(input: string | React.ReactElement | ToastOptions, options?: any) {
-  // Handle React element format: toast(<Element />)
-  if (React.isValidElement(input)) {
-    return sonner(input, options);
-  }
-  
-  // Handle object format: toast({ title: "...", description: "...", variant: "..." })
-  if (typeof input === "object" && input !== null) {
-    const { title, description, variant, duration, action } = input as ToastOptions;
+function createToast(input: ToastInput | any, options?: any) {
+  // Handle object format: toast({ title: "...", description: "..." })  
+  if (typeof input === "object" && input !== null && !Array.isArray(input)) {
+    const { title, description, variant, duration } = input;
     const message = title && description ? `${title}: ${description}` : title || description || "Notification";
     
-    const toastOptions = { 
-      duration,
-      action // Pass action directly as ReactElement
-    };
+    const toastOptions = { duration, ...options };
     
     if (variant === "destructive") {
       return sonner.error(message, toastOptions);
@@ -35,49 +25,26 @@ function createToast(input: string | React.ReactElement | ToastOptions, options?
     }
   }
   
-  // Handle string format: toast("message")
-  return sonner(input as string, options);
+  // Handle string format: toast("message") or any other format
+  return sonner(input, options);
 }
 
-// Create enhanced toast object with all Sonner methods
+// Create toast object with all Sonner methods
 const toast = Object.assign(createToast, {
-  success: (message: string | ToastOptions | React.ReactElement, options?: any) => {
-    if (React.isValidElement(message)) {
-      return sonner.success(message, options);
-    }
-    if (typeof message === "object") {
-      const { title, description, duration, action } = message as ToastOptions;
-      const msg = title && description ? `${title}: ${description}` : title || description || "Success";
-      return sonner.success(msg, { duration, action, ...options });
-    }
-    return sonner.success(message, options);
-  },
-  error: (message: string | ToastOptions | React.ReactElement, options?: any) => {
-    if (React.isValidElement(message)) {
-      return sonner.error(message, options);
-    }
-    if (typeof message === "object") {
-      const { title, description, duration, action } = message as ToastOptions;
-      const msg = title && description ? `${title}: ${description}` : title || description || "Error";
-      return sonner.error(msg, { duration, action, ...options });
-    }
-    return sonner.error(message, options);
-  },
-  info: sonner.info || sonner.message || sonner,
-  loading: sonner.loading,
+  success: (msg: any, opts?: any) => sonner.success(msg, opts),
+  error: (msg: any, opts?: any) => sonner.error(msg, opts), 
+  info: (msg: any, opts?: any) => sonner.info ? sonner.info(msg, opts) : sonner(msg, opts),
+  loading: (msg: any, opts?: any) => sonner.loading(msg, opts),
   dismiss: sonner.dismiss,
   promise: sonner.promise
 });
 
 /**
- * Hook that returns toast functions for backward compatibility
+ * Hook-style export for backward compatibility (but no actual React hooks)
  */
 export function useToast() {
   return { toast };
 }
 
-// Export toast for direct imports
 export { toast };
-
-// Default export for flexibility
 export default useToast;
