@@ -9,8 +9,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SequenceRiskAnalyzer } from '@/components/retirement/SequenceRiskAnalyzer';
 import { LTCStressAnalyzer } from '@/components/retirement/LTCStressAnalyzer';
 import { MultiPhaseAnalyzer } from '@/components/retirement/MultiPhaseAnalyzer';
+import { SurvivingSpouseModule } from '@/components/shared/SurvivingSpouseModule';
+import { TaxPlanningModal } from '@/components/calculators/TaxPlanningModal';
+import { ClientRiskProfileQuiz } from '@/components/portfolio/ClientRiskProfileQuiz';
 
 export default function RetirementAnalyzerDemo() {
+  const [showTaxPlanningModal, setShowTaxPlanningModal] = useState(false);
+  const [taxCalculatorType, setTaxCalculatorType] = useState<'roth-conversion' | 'tax-savings-estimator' | 'charitable-gifting'>('roth-conversion');
   const [inputs, setInputs] = useState<RetirementAnalysisInput>({
     goals: {
       retirementAge: 65,
@@ -143,6 +148,17 @@ export default function RetirementAnalyzerDemo() {
     }
   });
 
+  const handleRiskProfileComplete = (profile: any) => {
+    // Integrate risk profile with retirement inputs
+    // This would typically update Monte Carlo parameters based on risk tolerance
+    console.log('Risk profile completed:', profile);
+  };
+
+  const openTaxCalculator = (type: 'roth-conversion' | 'tax-savings-estimator' | 'charitable-gifting') => {
+    setTaxCalculatorType(type);
+    setShowTaxPlanningModal(true);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
       <div className="container mx-auto px-4 py-8">
@@ -163,11 +179,14 @@ export default function RetirementAnalyzerDemo() {
 
           {/* Main Content */}
           <Tabs defaultValue="analyzer" className="w-full">
-            <TabsList className="grid w-full grid-cols-6">
+            <TabsList className="grid w-full grid-cols-9">
               <TabsTrigger value="analyzer">Retirement Analyzer</TabsTrigger>
               <TabsTrigger value="sequence-risk">Sequence Risk</TabsTrigger>
               <TabsTrigger value="ltc-stress">LTC Stress Test</TabsTrigger>
               <TabsTrigger value="multi-phase">Multi-Phase</TabsTrigger>
+              <TabsTrigger value="surviving-spouse">Surviving Spouse</TabsTrigger>
+              <TabsTrigger value="tax-optimization">Tax Optimization</TabsTrigger>
+              <TabsTrigger value="risk-profile">Risk Profile</TabsTrigger>
               <TabsTrigger value="advisor">Advisor Dashboard</TabsTrigger>
               <TabsTrigger value="imports">Plan Imports</TabsTrigger>
             </TabsList>
@@ -193,6 +212,70 @@ export default function RetirementAnalyzerDemo() {
               <MultiPhaseAnalyzer />
             </TabsContent>
             
+            <TabsContent value="surviving-spouse" className="mt-8">
+              <SurvivingSpouseModule />
+            </TabsContent>
+            
+            <TabsContent value="tax-optimization" className="mt-8">
+              <div className="space-y-6">
+                <div className="text-center space-y-4">
+                  <h2 className="text-2xl font-bold">Tax Optimization Suite</h2>
+                  <p className="text-muted-foreground max-w-2xl mx-auto">
+                    Advanced tax planning tools to optimize your retirement strategy through Roth conversions, 
+                    multi-year tax projections, and charitable giving strategies.
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div 
+                    className="p-6 border rounded-lg cursor-pointer hover:border-primary transition-colors"
+                    onClick={() => openTaxCalculator('roth-conversion')}
+                  >
+                    <h3 className="font-semibold text-lg mb-2">Roth Conversion Analysis</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Analyze the tax benefits of converting traditional IRA/401k funds to Roth accounts.
+                    </p>
+                    <div className="text-primary font-medium">Launch Calculator →</div>
+                  </div>
+                  
+                  <div 
+                    className="p-6 border rounded-lg cursor-pointer hover:border-primary transition-colors"
+                    onClick={() => openTaxCalculator('tax-savings-estimator')}
+                  >
+                    <h3 className="font-semibold text-lg mb-2">Multi-Year Tax Projections</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Project tax savings across multiple years with various optimization strategies.
+                    </p>
+                    <div className="text-primary font-medium">Launch Calculator →</div>
+                  </div>
+                  
+                  <div 
+                    className="p-6 border rounded-lg cursor-pointer hover:border-primary transition-colors"
+                    onClick={() => openTaxCalculator('charitable-gifting')}
+                  >
+                    <h3 className="font-semibold text-lg mb-2">Charitable Giving Strategy</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Optimize charitable giving for maximum tax benefits and impact.
+                    </p>
+                    <div className="text-primary font-medium">Launch Calculator →</div>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="risk-profile" className="mt-8">
+              <div className="max-w-3xl mx-auto">
+                <div className="text-center space-y-4 mb-8">
+                  <h2 className="text-2xl font-bold">Dynamic Risk Profiling</h2>
+                  <p className="text-muted-foreground">
+                    Complete this comprehensive risk assessment to personalize your retirement projections 
+                    and optimize your investment strategy based on your unique risk tolerance and capacity.
+                  </p>
+                </div>
+                <ClientRiskProfileQuiz onComplete={handleRiskProfileComplete} />
+              </div>
+            </TabsContent>
+            
             <TabsContent value="advisor" className="mt-8">
               <AdvisorClientDashboard />
             </TabsContent>
@@ -201,6 +284,13 @@ export default function RetirementAnalyzerDemo() {
               <PlanImportDashboard />
             </TabsContent>
           </Tabs>
+          
+          {/* Tax Planning Modal */}
+          <TaxPlanningModal
+            open={showTaxPlanningModal}
+            onClose={() => setShowTaxPlanningModal(false)}
+            calculatorType={taxCalculatorType}
+          />
         </div>
       </div>
     </div>
