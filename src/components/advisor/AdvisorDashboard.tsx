@@ -44,6 +44,9 @@ import { useAdvisorClients } from '@/hooks/useAdvisorClients';
 import { ClientProfileCard } from './ClientProfileCard';
 import { AccountAggregationPanel } from './AccountAggregationPanel';
 import { WorkflowAutomationPanel } from './WorkflowAutomationPanel';
+import { AdvisorGoalsDashboard } from './fintello/AdvisorGoalsDashboard';
+import { PostsLibrary } from './fintello/PostsLibrary';
+import { EnhancedLeadSearch } from './fintello/EnhancedLeadSearch';
 
 // Removed - now using AdvisorClient from useAdvisorClients hook
 
@@ -55,7 +58,7 @@ export function AdvisorDashboard() {
   const [showPlanImport, setShowPlanImport] = useState(false);
   const [showOnboardingBanner, setShowOnboardingBanner] = useState(true);
   const [voiceOpen, setVoiceOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'clients' | 'accounts' | 'automation'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'clients' | 'accounts' | 'automation' | 'goals' | 'posts' | 'leads'>('overview');
   
   // Use the new comprehensive client management hook
   const { clients, metrics, loading } = useAdvisorClients();
@@ -235,6 +238,30 @@ export function AdvisorDashboard() {
                     onClick={() => setActiveTab('automation')}
                   >
                     Automation
+                  </Button>
+                  <Button 
+                    variant={activeTab === 'goals' ? 'secondary' : 'outline'}
+                    size="sm"
+                    className={activeTab === 'goals' ? '' : 'text-white border-white/30 hover:bg-white/10'}
+                    onClick={() => setActiveTab('goals')}
+                  >
+                    Goals
+                  </Button>
+                  <Button 
+                    variant={activeTab === 'posts' ? 'secondary' : 'outline'}
+                    size="sm"
+                    className={activeTab === 'posts' ? '' : 'text-white border-white/30 hover:bg-white/10'}
+                    onClick={() => setActiveTab('posts')}
+                  >
+                    Posts
+                  </Button>
+                  <Button 
+                    variant={activeTab === 'leads' ? 'secondary' : 'outline'}
+                    size="sm"
+                    className={activeTab === 'leads' ? '' : 'text-white border-white/30 hover:bg-white/10'}
+                    onClick={() => setActiveTab('leads')}
+                  >
+                    Leads
                   </Button>
                 </div>
                 <Button 
@@ -537,6 +564,50 @@ export function AdvisorDashboard() {
       <motion.div variants={itemVariants}>
         <MyLeadsPanel />
       </motion.div>
+
+      {/* Tab Content */}
+      {activeTab === 'goals' && (
+        <motion.div variants={itemVariants}>
+          <AdvisorGoalsDashboard />
+        </motion.div>
+      )}
+      
+      {activeTab === 'posts' && (
+        <motion.div variants={itemVariants}>
+          <PostsLibrary />
+        </motion.div>
+      )}
+      
+      {activeTab === 'leads' && (
+        <motion.div variants={itemVariants}>
+          <EnhancedLeadSearch />
+        </motion.div>
+      )}
+
+      {activeTab === 'clients' && (
+        <motion.div variants={itemVariants}>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {clients.map((client) => (
+              <ClientProfileCard 
+                key={client.id} 
+                client={client}
+              />
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {activeTab === 'accounts' && (
+        <motion.div variants={itemVariants}>
+          <AccountAggregationPanel />
+        </motion.div>
+      )}
+
+      {activeTab === 'automation' && (
+        <motion.div variants={itemVariants}>
+          <WorkflowAutomationPanel />
+        </motion.div>
+      )}
 
       {/* Quick Actions Panel */}
       <motion.div variants={itemVariants}>

@@ -4,22 +4,22 @@ import { Lightbulb, TrendingUp, Shield, Building, Zap, Users } from 'lucide-reac
 
 const solutionTools = [
   {
-    title: 'Investment Solutions',
-    description: 'Curated investment opportunities and portfolio strategies',
+    title: 'SWAG Retirement Analyzer',
+    description: 'Science-driven retirement roadmap with GPS planning engine',
     icon: TrendingUp,
-    href: '/solutions/investments'
+    href: '/retirement-analyzer'
+  },
+  {
+    title: 'SWAG Legacy Planning',
+    description: 'Advanced estate planning with multi-generational strategies',
+    icon: Building,
+    href: '/tools/estate-planning'
   },
   {
     title: 'Risk Management',
     description: 'Comprehensive risk assessment and mitigation strategies',
     icon: Shield,
     href: '/solutions/risk'
-  },
-  {
-    title: 'Estate Planning',
-    description: 'Advanced estate planning strategies and structures',
-    icon: Building,
-    href: '/solutions/estate'
   },
   {
     title: 'Tax Strategies',
