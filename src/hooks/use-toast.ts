@@ -39,9 +39,7 @@ const toast = Object.assign(createToast, {
   promise: sonner.promise
 });
 
-/**
- * Hook-style export for backward compatibility (but no actual React hooks)
- */
+/** Back-compat: some sites do `const { toast } = useToast()` */
 export function useToast() {
   return { toast };
 }

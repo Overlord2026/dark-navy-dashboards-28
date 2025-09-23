@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
+import runFirstLoginToolInstaller from "@/hooks/useFirstLoginToolInstaller";
 
 type AuthState = { 
   user: any | null; 
@@ -41,6 +42,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } finally { setLoading(false); }
     })();
+  }, []);
+
+  useEffect(() => {
+    // Defer to next tick so React tree & Toaster are mounted
+    const id = setTimeout(() => runFirstLoginToolInstaller(), 0);
+    return () => clearTimeout(id);
   }, []);
 
   // Legacy compatibility methods (no-op implementations)
