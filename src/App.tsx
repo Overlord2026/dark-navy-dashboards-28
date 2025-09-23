@@ -228,6 +228,7 @@ const AttorneyDetail = lazy(() => import('@/pages/marketplace/AttorneyDetail'));
 const MarketplaceInsurance = lazy(() => import('@/pages/marketplace/Insurance'));
 const FNOLStub = lazy(() => import('@/pages/insurance/fnol'));
 const BindStub = lazy(() => import('@/pages/insurance/bind'));
+const AdvisorROITracker = lazy(() => import('@/pages/advisors/AdvisorROITracker'));
 
 const DemoPage = lazy(() => import('@/pages/demos/[persona]'));
 const PreviewPage = lazy(() => import('@/components/PreviewPage'));
@@ -627,6 +628,11 @@ function App() {
             <Route path="/taxhub/pro" element={<Suspense fallback={<div>Loading...</div>}><TaxHubPro /></Suspense>} />
             <Route path="/cpa/tools" element={<Suspense fallback={<div>Loading...</div>}><CpaTools /></Suspense>} />
             <Route path="/cpa/learn" element={<Suspense fallback={<div>Loading...</div>}><CpaLearn /></Suspense>} />
+            <Route path="/advisors/roi-tracker" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AdvisorROITracker />
+              </Suspense>
+            } />
             
             <Route path="/families/retirees/goals" element={<RetireeGoals />} />
             
