@@ -24,26 +24,65 @@
     "plans": [
       { "key":"advisor_basic","name":"Basic","price":"$99/mo",
         "tagline":"Branded portal and core client collaboration.",
-        "features":[
-          "Up to 100 client seats",
-          "Branded advisor portal",
-          "Core reports & e-signature links",
-          "CSV/CRM export",
-          "Email support"
-        ],
+        "features":["Up to 100 client seats","Branded advisor portal","Core reports & e-signature links","CSV/CRM export","Email support"],
         "cta":"Start Basic","href":"/pricing/checkout?plan=advisor_basic"
       },
       { "key":"advisor_premium","name":"Premium","price":"$249/mo",
         "tagline":"Advanced reports, templates, and automation.",
-        "features":[
-          "Up to 300 client seats",
-          "Custom branding",
-          "Advanced reports & exports",
-          "SWAG™ templates & workflows",
-          "Priority support • Zapier API"
-        ],
+        "features":["Up to 300 client seats","Custom branding","Advanced reports & exports","SWAG™ templates & workflows","Priority support • Zapier API"],
         "cta":"Choose Advisor Premium","href":"/pricing/checkout?plan=advisor_premium","highlight":true
       }
     ]
-  }
+  },
+  "ria": {
+    "headline": "RIA Teams",
+    "subhead": "Role-based controls, auditability, and SSO for multi-advisor firms.",
+    "cta": { "label": "Contact sales", "href": "/contact?plan=ria" },
+    "platform_minimum": "Platform minimum $499/mo (includes 5 advisor seats)",
+    "seat_tiers": [
+      { "range": "5–19 seats", "price": "$79/seat/mo" },
+      { "range": "20–49 seats", "price": "$69/seat/mo" },
+      { "range": "50+ seats", "price": "$59/seat/mo" }
+    ],
+    "annual_discount": "Save 20% with annual billing",
+    "included": [
+      "Firm-wide branding & roles",
+      "Tenant audit logs & evidence receipts",
+      "SSO/SAML",
+      "Sandbox environment",
+      "Quarterly admin training"
+    ],
+    "addons": [
+      "White-label domain",
+      "Data migration",
+      "Custom attestations (SOW)"
+    ]
+  },
+  "faq": [
+    {
+      "q": "How do upgrades work?",
+      "a": "Upgrade anytime; we prorate the change and unlock features immediately. Downgrades apply at the next billing cycle."
+    },
+    {
+      "q": "What counts as a 'household' and 'collaborator'?",
+      "a": "A household is one family unit in your workspace. Collaborators are people you invite—spouse/partner, adult children, or trusted pros."
+    },
+    {
+      "q": "Bank connections & data syncing?",
+      "a": "Premium and Pro support secure account connections for net worth and cashflow. You control what's linked and can disconnect anytime."
+    },
+    {
+      "q": "Storage & document limits?",
+      "a": "Basic includes starter storage. Premium and Pro include expanded storage and exports. Larger archives are available for RIAs."
+    },
+    {
+      "q": "Is my data private?",
+      "a": "Yes. You control sharing. We provide encrypted storage, role-based access, and audit receipts on supported plans."
+    }
+  ],
+  "footnotes": [
+    "Prices in USD. Taxes may apply.",
+    "Features vary by region and integration availability.",
+    "Annual savings reflected at checkout where offered."
+  ]
 }

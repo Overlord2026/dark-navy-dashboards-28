@@ -1,6 +1,8 @@
 import React from "react";
 import PricingTableSite from "@/components/pricing/PricingTableSite";
 import AdvisorPricingSite from "@/components/pricing/AdvisorPricingSite";
+import RiaSeatTable from "@/components/pricing/RiaSeatTable";
+import PricingFAQ from "@/components/pricing/PricingFAQ";
 
 export default function PricingPage() {
   return (
@@ -11,8 +13,11 @@ export default function PricingPage() {
       {/* Advisor */}
       <AdvisorPricingSite />
 
-      {/* Keep RIA anchor placeholder for PR3 */}
-      <section id="ria" className="container mx-auto px-4 py-24" />
+      {/* RIA */}
+      <RiaSeatTable />
+
+      {/* FAQ */}
+      <PricingFAQ />
     </main>
   );
 }
