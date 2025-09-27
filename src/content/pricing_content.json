@@ -1,169 +1,52 @@
 {
-  "meta": {
-    "title": "Pricing — AI you can trust",
-    "description": "Family, Advisor, and RIA plans with SWAG™ Legacy Planning add-on."
-  },
-  "badges": {
-    "family_free": "FREE",
-    "family_premium": "Premium",
-    "family_pro": "Pro",
-    "advisor_basic": "Basic",
-    "advisor_premium": "Premium",
-    "ria_seat": "Seat"
-  },
-  "ctas": {
-    "family_free": "/pricing/checkout?plan=family_free",
-    "family_premium": "/pricing/checkout?plan=family_premium",
-    "family_pro": "/pricing/checkout?plan=family_pro",
-    "advisor_basic": "/pricing/checkout?plan=advisor_basic",
-    "advisor_premium": "/pricing/checkout?plan=advisor_premium",
-    "ria_contact": "/contact?plan=ria"
-  },
   "families": {
-    "headline": "Family plans",
-    "subhead": "Start free. Upgrade as life gets busier.",
-    "tiers": [
+    "plans": [
       {
-        "key": "family_free",
-        "name": "Free",
-        "price": { "monthly": 0, "yearly": 0, "yearly_note": "" },
-        "blurb": "Essentials to get organized.",
-        "bullets": [
-          "1 household • 2 collaborators",
-          "Essentials dashboard",
-          "10 document uploads",
-          "Shared to-dos",
-          "Basic support"
-        ]
-      },
-      {
-        "key": "family_premium",
-        "name": "Premium",
-        "price": { "monthly": 15, "yearly": 144, "yearly_note": "or $144/yr" },
-        "featured": true,
-        "blurb": "Automate the weekly habits.",
-        "bullets": [
-          "Up to 3 households • 5 collaborators",
-          "Bank syncing & cashflow",
-          "Secure document vault",
-          "Goals, reminders, priority support",
-          "Exports when you need them"
-        ]
-      },
-      {
-        "key": "family_pro",
-        "name": "Pro",
-        "price": { "monthly": 39, "yearly": 372, "yearly_note": "or $372/yr" },
-        "blurb": "Advanced dashboards & legacy.",
-        "bullets": [
-          "Up to 5 households • 10 collaborators",
-          "Advanced reports & exports",
-          "Legacy vault & beneficiaries",
-          "Encrypted advisor sharing",
-          "Audit receipts"
-        ]
-      }
-    ]
-  },
-  "advisor": {
-    "headline": "Advisor — Solo",
-    "subhead": "Built for independents who need client collaboration, not bloat.",
-    "tiers": [
-      {
-        "key": "advisor_basic",
+        "key": "free",
         "name": "Basic",
-        "price": { "monthly": 99, "yearly": null, "yearly_note": "" },
-        "bullets": [
-          "100 client seats",
-          "Branded portal",
-          "Core reports & e-signature links",
-          "CSV/CRM export",
-          "Email support"
-        ]
+        "price": "Free",
+        "tagline": "Learn, organize, and get started.",
+        "features": [
+          "Catalog & Guides",
+          "Education Center",
+          "Vault (starter storage)",
+          "Templates & Checklists",
+          "Pros directory"
+        ],
+        "cta": "Start Free",
+        "href": "/signup?plan=free"
       },
       {
-        "key": "advisor_premium",
+        "key": "premium",
         "name": "Premium",
-        "price": { "monthly": 249, "yearly": null, "yearly_note": "" },
-        "featured": true,
-        "bullets": [
-          "300 client seats",
-          "Custom branding",
-          "Advanced reports",
-          "SWAG™ templates",
-          "Audit log exports • Priority support • Zapier API"
-        ]
+        "price": "$29/mo",
+        "tagline": "Connected data and advanced planning tools.",
+        "features": [
+          "Wealth Wall & Reports",
+          "SWAG™ Roadmap (workspace)",
+          "Goals & Budget (enhanced)",
+          "Limited account connections",
+          "More storage"
+        ],
+        "cta": "Choose Premium",
+        "href": "/pricing/checkout?plan=premium",
+        "highlight": true
+      },
+      {
+        "key": "pro",
+        "name": "Pro",
+        "price": "$59/mo",
+        "tagline": "Full planning suite and collaboration.",
+        "features": [
+          "All Premium features",
+          "Tax Planner (advanced)",
+          "Estate Organizer (advanced)",
+          "Expanded connections & exports",
+          "Share with spouse/pro"
+        ],
+        "cta": "Choose Pro",
+        "href": "/pricing/checkout?plan=pro"
       }
-    ],
-    "cta_note": "14-day trial on all advisor plans."
-  },
-  "ria": {
-    "headline": "RIA Teams",
-    "subhead": "Controls, auditability, and SSO for multi-advisor firms.",
-    "pricing": {
-      "platform_minimum": "$499/mo (includes 5 advisor seats)",
-      "seat_tiers": [
-        { "range": "5–19 seats", "price": "$79/seat/mo" },
-        { "range": "20–49 seats", "price": "$69/seat/mo" },
-        { "range": "50+ seats", "price": "$59/seat/mo" }
-      ],
-      "annual_discount": "20% off with annual billing"
-    },
-    "included": [
-      "Firm-wide branding & roles",
-      "Tenant audit logs & evidence receipts",
-      "SSO/SAML",
-      "Sandbox environment",
-      "Quarterly admin training"
-    ],
-    "addons": [
-      "White-label domain",
-      "Data migration",
-      "Custom attestations (SOW)"
     ]
-  },
-  "legacy": {
-    "headline": "SWAG™ Legacy Planning",
-    "subhead": "Organize heirs, assets, and instructions—then keep it current.",
-    "family_addon": [
-      { "tier": "Free", "price": "+$0/mo", "bullets": ["Heirs & key contacts", "5 critical docs", "Simple checklists"] },
-      { "tier": "Premium", "price": "+$9/mo", "bullets": ["Legacy Organizer", "Beneficiaries tracker", "Secure sharing", "Executor checklist & reminders"] },
-      { "tier": "Pro", "price": "+$19/mo", "bullets": ["Full Legacy Vault", "Digital assets registry", "Role-based access", "Notarization links & audit receipts"] }
-    ],
-    "advisor": [
-      { "plan": "Solo — Basic", "price": "+$29/mo add-on" },
-      { "plan": "Solo — Premium", "price": "Included" }
-    ],
-    "ria": [
-      { "plan": "RIA Seats", "price": "+$15/seat/mo add-on" },
-      { "plan": "RIA 20+ seats", "price": "Included" }
-    ]
-  },
-  "faq": [
-    {
-      "q": "How do upgrades work?",
-      "a": "Upgrade anytime; we prorate the change and unlock features immediately. Downgrades apply at the next billing cycle."
-    },
-    {
-      "q": "What counts as a 'household' and 'collaborator'?",
-      "a": "A household is one family unit in your workspace. Collaborators are people you invite—spouse/partner, adult children, or trusted pros."
-    },
-    {
-      "q": "Bank connections & data syncing?",
-      "a": "Premium and Pro support secure bank connections for net worth and cashflow. You control what's linked and can disconnect anytime."
-    },
-    {
-      "q": "Storage & document limits?",
-      "a": "Free includes 10 uploads total. Premium and Pro include expanded storage and exports. Large or regulated archives are available for RIAs."
-    },
-    {
-      "q": "Is my data private?",
-      "a": "Yes. You control sharing. We provide encrypted storage, role-based access, and audit receipts on supported plans."
-    }
-  ],
-  "footnotes": [
-    "Prices in USD. Taxes may apply.",
-    "Features vary by region and integration availability.",
-    "Annual discounts apply at checkout where offered."
-  ]
+  }
 }

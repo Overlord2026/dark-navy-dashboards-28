@@ -1,75 +1,78 @@
 import React from "react";
 import content from "@/content/pricing_content.json";
 
-type Tier = {
+type Plan = {
   key: string;
   name: string;
-  blurb?: string;
-  price: { monthly: number; yearly: number | null; yearly_note?: string };
-  bullets: string[];
-  featured?: boolean;
+  price: string;
+  tagline: string;
+  features: string[];
+  cta: string;
+  href: string;
+  highlight?: boolean;
 };
 
 export default function PricingTable() {
-  const families = content.families;
-  const tiers = families.tiers as Tier[];
+  const plans = content.families.plans as Plan[];
 
   return (
     <section id="families" className="mx-auto max-w-7xl px-4 py-16">
-      <h2 className="text-3xl font-bold text-gray-900 text-center">
-        {families.headline}
+      <h2 className="text-3xl font-bold text-foreground text-center mb-4">
+        Family Plans
       </h2>
-      <p className="mt-2 text-center text-gray-600">{families.subhead}</p>
+      <p className="text-center text-muted-foreground mb-12">
+        Choose the plan that fits your family's wealth management needs
+      </p>
 
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {tiers.map((t) => {
-          const monthly =
-            t.price.monthly === 0 ? "$0" : `$${t.price.monthly}`;
-          const cta = (content.ctas as any)[t.key] as string;
-          const badge = (content.badges as any)[t.key] as string;
-
-          return (
-            <div
-              key={t.key}
-              className={[
-                "rounded-2xl border p-6 shadow-sm",
-                t.featured ? "ring-2 ring-gray-900 shadow-md" : ""
-              ].join(" ")}
-            >
-              <div className="flex items-center justify-between">
-                <h3 className="text-xl font-semibold">{t.name}</h3>
-                <span className="rounded-md border px-2 py-0.5 text-xs text-gray-700">
-                  {badge}
+      <div className="grid gap-8 md:grid-cols-3">
+        {plans.map((plan) => (
+          <div
+            key={plan.key}
+            className={`relative rounded-2xl border p-8 shadow-sm transition-all hover:shadow-md ${
+              plan.highlight 
+                ? "border-primary shadow-lg ring-2 ring-primary/20" 
+                : "border-border"
+            }`}
+          >
+            {plan.highlight && (
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                <span className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium">
+                  Most Popular
                 </span>
               </div>
-              {t.blurb ? (
-                <p className="mt-1 text-gray-600">{t.blurb}</p>
-              ) : null}
-              <div className="mt-4 text-4xl font-bold">
-                {monthly}
-                <span className="text-base font-medium text-gray-500">/mo</span>
+            )}
+            
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-foreground">{plan.name}</h3>
+              <div className="mt-4 mb-2">
+                <span className="text-4xl font-bold text-foreground">{plan.price}</span>
               </div>
-              {t.price.yearly_note ? (
-                <p className="text-xs text-gray-500">{t.price.yearly_note}</p>
-              ) : null}
-              <ul className="mt-6 space-y-2 text-sm text-gray-700">
-                {t.bullets.map((b, i) => (
-                  <li key={i}>{b}</li>
-                ))}
-              </ul>
-              <a
-                href={cta}
-                className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-gray-900 px-4 py-2 text-white"
-              >
-                {t.key === "family_free"
-                  ? "Create free account"
-                  : t.key === "family_premium"
-                  ? "Start 14-day trial"
-                  : "Upgrade to Pro"}
-              </a>
+              <p className="text-muted-foreground mb-6">{plan.tagline}</p>
             </div>
-          );
-        })}
+
+            <ul className="space-y-3 mb-8">
+              {plan.features.map((feature, index) => (
+                <li key={index} className="flex items-start">
+                  <svg className="w-5 h-5 text-primary mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-foreground">{feature}</span>
+                </li>
+              ))}
+            </ul>
+
+            <a
+              href={plan.href}
+              className={`w-full inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-colors ${
+                plan.highlight
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+              }`}
+            >
+              {plan.cta}
+            </a>
+          </div>
+        ))}
       </div>
     </section>
   );
