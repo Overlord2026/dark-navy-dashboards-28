@@ -50,7 +50,7 @@ const navItems: NavItem[] = [
   },
   {
     label: 'Pricing',
-    href: '/pricing'
+    href: '/pricing#families'
   },
   {
     label: 'Learn',
