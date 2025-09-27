@@ -49,6 +49,10 @@ const navItems: NavItem[] = [
     href: '/solutions'
   },
   {
+    label: 'Pricing',
+    href: '/pricing'
+  },
+  {
     label: 'Learn',
     href: '/learn'
   }
