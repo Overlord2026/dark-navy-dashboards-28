@@ -1,5 +1,6 @@
 import React from "react";
 import PricingTableSite from "@/components/pricing/PricingTableSite";
+import AdvisorPricingSite from "@/components/pricing/AdvisorPricingSite";
 
 export default function PricingPage() {
   return (
@@ -7,14 +8,10 @@ export default function PricingPage() {
       {/* Families section */}
       <PricingTableSite />
 
-      {/* Placeholders for next PRs to preserve anchors */}
-      <section id="advisor" className="container mx-auto px-4 py-24">
-        <h2 className="text-xl font-semibold opacity-60">Advisor — Solo</h2>
-        <p className="mt-2 text-sm opacity-60">
-          Advisor pricing cards render here in PR2.
-        </p>
-      </section>
+      {/* Advisor section */}
+      <AdvisorPricingSite />
 
+      {/* Placeholder for next PR to preserve anchor */}
       <section id="ria" className="container mx-auto px-4 py-24">
         <h2 className="text-xl font-semibold opacity-60">RIA Teams</h2>
         <p className="mt-2 text-sm opacity-60">

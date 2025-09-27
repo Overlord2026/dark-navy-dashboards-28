@@ -48,5 +48,57 @@
         "href": "/pricing/checkout?plan=pro"
       }
     ]
+  },
+  "advisor": {
+    "plans": [
+      {
+        "key": "free",
+        "name": "Free Tier",
+        "price": "Free",
+        "tagline": "Basic listing for your practice",
+        "features": [
+          "Basic Marketplace Listing",
+          "Limited Lead Generation", 
+          "Basic Client Management",
+          "Last in Search Results"
+        ],
+        "cta": "Start Free",
+        "href": "/pricing/checkout?plan=advisor-free"
+      },
+      {
+        "key": "standard",
+        "name": "Standard",
+        "price": "$99/mo",
+        "tagline": "Professional tools for growing practices",
+        "features": [
+          "Enhanced Marketplace Listing",
+          "Standard Lead Generation",
+          "Full Client Management",
+          "White-Labeled Portal",
+          "Basic Marketing Tools",
+          "Standard Support"
+        ],
+        "cta": "Choose Standard",
+        "href": "/pricing/checkout?plan=advisor-standard",
+        "highlight": true
+      },
+      {
+        "key": "premium", 
+        "name": "Premium",
+        "price": "$1,000/mo",
+        "tagline": "Enterprise-grade platform for established advisors",
+        "features": [
+          "Premium Marketplace Listing",
+          "Advanced Marketing Funnels & CRM",
+          "Enterprise Client Management",
+          "Priority Listing in Marketplace",
+          "Fully Customizable White-Label Portal",
+          "White-labeled Practice Management",
+          "Priority Support & Dedicated Rep"
+        ],
+        "cta": "Choose Premium", 
+        "href": "/pricing/checkout?plan=advisor-premium"
+      }
+    ]
   }
 }
