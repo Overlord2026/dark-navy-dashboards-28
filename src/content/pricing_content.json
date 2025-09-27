@@ -1,103 +1,48 @@
 {
   "families": {
     "plans": [
-      {
-        "key": "free",
-        "name": "Basic",
-        "price": "Free",
-        "tagline": "Learn, organize, and get started.",
-        "features": [
-          "Catalog & Guides",
-          "Education Center",
-          "Vault (starter storage)",
-          "Templates & Checklists",
-          "Pros directory"
-        ],
-        "cta": "Start Free",
-        "href": "/signup?plan=free"
+      { "key":"free","name":"Basic","price":"Free",
+        "tagline":"Learn, organize, and get started.",
+        "features":["Catalog & Guides","Education Center","Vault (starter storage)","Templates & Checklists","Pros directory"],
+        "cta":"Start Free","href":"/signup?plan=free"
       },
-      {
-        "key": "premium",
-        "name": "Premium",
-        "price": "$29/mo",
-        "tagline": "Connected data and advanced planning tools.",
-        "features": [
-          "Wealth Wall & Reports",
-          "SWAG™ Roadmap (workspace)",
-          "Goals & Budget (enhanced)",
-          "Limited account connections",
-          "More storage"
-        ],
-        "cta": "Choose Premium",
-        "href": "/pricing/checkout?plan=premium",
-        "highlight": true
+      { "key":"premium","name":"Premium","price":"$29/mo",
+        "tagline":"Connected data and advanced planning tools.",
+        "features":["Wealth Wall & Reports","SWAG™ Roadmap workspace","Goals & Budget (enhanced)","Limited account connections","More storage"],
+        "cta":"Choose Premium","href":"/pricing/checkout?plan=premium","highlight":true
       },
-      {
-        "key": "pro",
-        "name": "Pro",
-        "price": "$59/mo",
-        "tagline": "Full planning suite and collaboration.",
-        "features": [
-          "All Premium features",
-          "Tax Planner (advanced)",
-          "Estate Organizer (advanced)",
-          "Expanded connections & exports",
-          "Share with spouse/pro"
-        ],
-        "cta": "Choose Pro",
-        "href": "/pricing/checkout?plan=pro"
+      { "key":"pro","name":"Pro","price":"$59/mo",
+        "tagline":"Full planning suite and collaboration.",
+        "features":["All Premium features","Tax Planner (advanced)","Estate Organizer (advanced)","Expanded connections & exports","Share with spouse/pro"],
+        "cta":"Choose Pro","href":"/pricing/checkout?plan=pro"
       }
     ]
   },
   "advisor": {
+    "headline": "Advisor — Solo",
+    "subhead": "A clean, compliant client hub without the enterprise bloat.",
     "plans": [
-      {
-        "key": "free",
-        "name": "Free Tier",
-        "price": "Free",
-        "tagline": "Basic listing for your practice",
-        "features": [
-          "Basic Marketplace Listing",
-          "Limited Lead Generation", 
-          "Basic Client Management",
-          "Last in Search Results"
+      { "key":"advisor_basic","name":"Basic","price":"$99/mo",
+        "tagline":"Branded portal and core client collaboration.",
+        "features":[
+          "Up to 100 client seats",
+          "Branded advisor portal",
+          "Core reports & e-signature links",
+          "CSV/CRM export",
+          "Email support"
         ],
-        "cta": "Start Free",
-        "href": "/pricing/checkout?plan=advisor-free"
+        "cta":"Start Basic","href":"/pricing/checkout?plan=advisor_basic"
       },
-      {
-        "key": "standard",
-        "name": "Standard",
-        "price": "$99/mo",
-        "tagline": "Professional tools for growing practices",
-        "features": [
-          "Enhanced Marketplace Listing",
-          "Standard Lead Generation",
-          "Full Client Management",
-          "White-Labeled Portal",
-          "Basic Marketing Tools",
-          "Standard Support"
+      { "key":"advisor_premium","name":"Premium","price":"$249/mo",
+        "tagline":"Advanced reports, templates, and automation.",
+        "features":[
+          "Up to 300 client seats",
+          "Custom branding",
+          "Advanced reports & exports",
+          "SWAG™ templates & workflows",
+          "Priority support • Zapier API"
         ],
-        "cta": "Choose Standard",
-        "href": "/pricing/checkout?plan=advisor-standard",
-        "highlight": true
-      },
-      {
-        "key": "premium", 
-        "name": "Premium",
-        "price": "$1,000/mo",
-        "tagline": "Enterprise-grade platform for established advisors",
-        "features": [
-          "Premium Marketplace Listing",
-          "Advanced Marketing Funnels & CRM",
-          "Enterprise Client Management",
-          "Priority Listing in Marketplace",
-          "Fully Customizable White-Label Portal",
-          "White-labeled Practice Management",
-          "Priority Support & Dedicated Rep"
-        ],
-        "cta": "Choose Premium", 
-        "href": "/pricing/checkout?plan=advisor-premium"
+        "cta":"Choose Advisor Premium","href":"/pricing/checkout?plan=advisor_premium","highlight":true
       }
     ]
   }

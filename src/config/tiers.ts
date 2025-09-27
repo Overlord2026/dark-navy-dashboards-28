@@ -5,28 +5,18 @@ export const TIERS = {
 } as const;
 
 export const ADVISOR_TIERS = {
-  FREE: { 
-    marketplaceVisibility: 'low',
-    leadGeneration: 'limited', 
-    clientManagement: 'basic',
-    whiteLabel: false,
-    marketingTools: false,
-    support: 'community'
-  },
-  STANDARD: {
-    marketplaceVisibility: 'medium',
-    leadGeneration: 'standard',
-    clientManagement: 'full', 
-    whiteLabel: true,
-    marketingTools: 'basic',
-    support: 'standard'
+  BASIC: {
+    clientSeats: 100,
+    branding: 'basic',
+    reports: 'core',
+    integrations: 'csv',
+    support: 'email'
   },
   PREMIUM: {
-    marketplaceVisibility: 'high',
-    leadGeneration: 'advanced',
-    clientManagement: 'enterprise',
-    whiteLabel: true,
-    marketingTools: 'advanced', 
+    clientSeats: 300,
+    branding: 'custom',
+    reports: 'advanced',
+    integrations: 'zapier',
     support: 'priority'
   }
 } as const;

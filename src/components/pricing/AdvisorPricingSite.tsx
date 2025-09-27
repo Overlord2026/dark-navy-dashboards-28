@@ -5,18 +5,19 @@ type Plan = typeof data.advisor.plans[number];
 
 export default function AdvisorPricingSite() {
   const plans: Plan[] = data.advisor.plans;
+  const { headline, subhead } = data.advisor;
 
   return (
     <section id="advisor" className="bg-bfo-navy text-bfo-ivory">
       <div className="container mx-auto px-4 py-16">
         <header className="mb-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-extrabold">Advisor — Solo</h2>
+          <h2 className="text-2xl md:text-3xl font-extrabold">{headline}</h2>
           <p className="mt-2 text-white/70">
-            Professional tools and marketplace presence for financial advisors.
+            {subhead}
           </p>
         </header>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2">
           {plans.map((p) => (
             <div
               key={p.key}
