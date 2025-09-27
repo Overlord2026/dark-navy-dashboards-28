@@ -13453,6 +13453,42 @@ export type Database = {
           },
         ]
       }
+      email_automation_logs: {
+        Row: {
+          created_at: string | null
+          error_message: string | null
+          id: string
+          recipient_email: string
+          sent_at: string | null
+          sequence_id: string | null
+          status: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          recipient_email: string
+          sent_at?: string | null
+          sequence_id?: string | null
+          status?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          recipient_email?: string
+          sent_at?: string | null
+          sequence_id?: string | null
+          status?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       email_schedule: {
         Row: {
           created_at: string
@@ -29832,6 +29868,7 @@ export type Database = {
             | null
           personalization_settings: Json | null
           phone: string | null
+          plan: string | null
           premium_analytics_access: boolean | null
           privacy_settings: Json | null
           recruited_at: string | null
@@ -29900,6 +29937,7 @@ export type Database = {
             | null
           personalization_settings?: Json | null
           phone?: string | null
+          plan?: string | null
           premium_analytics_access?: boolean | null
           privacy_settings?: Json | null
           recruited_at?: string | null
@@ -29968,6 +30006,7 @@ export type Database = {
             | null
           personalization_settings?: Json | null
           phone?: string | null
+          plan?: string | null
           premium_analytics_access?: boolean | null
           privacy_settings?: Json | null
           recruited_at?: string | null
@@ -31719,6 +31758,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      referral_tracking: {
+        Row: {
+          conversion_date: string | null
+          created_at: string | null
+          id: string
+          referred_email: string
+          referred_user_id: string | null
+          referrer_id: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          conversion_date?: string | null
+          created_at?: string | null
+          id?: string
+          referred_email: string
+          referred_user_id?: string | null
+          referrer_id?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          conversion_date?: string | null
+          created_at?: string | null
+          id?: string
+          referred_email?: string
+          referred_user_id?: string | null
+          referrer_id?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
       }
       referrals: {
         Row: {
@@ -34567,6 +34642,39 @@ export type Database = {
           relationship?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      social_shares: {
+        Row: {
+          created_at: string | null
+          engagement_metrics: Json | null
+          id: string
+          message: string
+          persona: string
+          platform: string
+          shared_url: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          engagement_metrics?: Json | null
+          id?: string
+          message: string
+          persona: string
+          platform: string
+          shared_url: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          engagement_metrics?: Json | null
+          id?: string
+          message?: string
+          persona?: string
+          platform?: string
+          shared_url?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -40609,6 +40717,36 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
         ]
+      }
+      viral_metrics: {
+        Row: {
+          created_at: string | null
+          id: string
+          total_conversions: number | null
+          total_shares: number | null
+          updated_at: string | null
+          user_id: string | null
+          viral_coefficient: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          total_conversions?: number | null
+          total_shares?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          viral_coefficient?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          total_conversions?: number | null
+          total_shares?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          viral_coefficient?: number | null
+        }
+        Relationships: []
       }
       voice_ce_sessions: {
         Row: {

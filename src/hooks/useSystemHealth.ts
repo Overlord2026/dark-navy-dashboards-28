@@ -9,7 +9,13 @@ export function useSystemHealth() {
       if (error) throw error;
       return data;
     },
-    refetchInterval: 60000, // Refresh every minute
+    refetchInterval: (data, query) => {
+      // Overlap guard: don't refetch if query is currently fetching
+      if (query?.state.isFetching) return false;
+      // Exponential backoff on errors, minimum 30s as requested
+      return query?.state.error ? 120000 : 60000;
+    },
+    staleTime: 30000, // Consider data stale after 30s
   });
 
   const backupStatus = useQuery({
@@ -19,7 +25,12 @@ export function useSystemHealth() {
       if (error) throw error;
       return data;
     },
-    refetchInterval: 300000, // Refresh every 5 minutes
+    refetchInterval: (data, query) => {
+      // Overlap guard and exponential backoff
+      if (query?.state.isFetching) return false;
+      return query?.state.error ? 600000 : 300000; // 10min on error, 5min normal
+    },
+    staleTime: 120000, // Consider data stale after 2min
   });
 
   const edgeFunctionLogs = useQuery({
@@ -37,7 +48,12 @@ export function useSystemHealth() {
       if (error) throw error;
       return data || [];
     },
-    refetchInterval: 60000,
+    refetchInterval: (data, query) => {
+      // Overlap guard and smart polling
+      if (query?.state.isFetching) return false;
+      return query?.state.error ? 180000 : 90000; // 3min on error, 1.5min normal
+    },
+    staleTime: 45000, // Consider data stale after 45s
   });
 
   return {
