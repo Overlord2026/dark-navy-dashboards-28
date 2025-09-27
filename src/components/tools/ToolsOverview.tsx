@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Calculator, TrendingUp, Shield, DollarSign, FileText, PieChart, CreditCard, Building, Users, Briefcase, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { TIERS } from '@/config/tiers';
+import { LEGACY_TIERS } from '@/config/tiers';
 
 const toolCategories = [
   {
@@ -158,9 +158,9 @@ const getBadgeColor = (badge: string) => {
 const getToolFootnotes = (badge: string) => {
   switch (badge) {
     case 'Premium':
-      return `Account aggregation limit: ${TIERS.PREMIUM.aggLimit} accounts`;
+      return `Account aggregation limit: ${LEGACY_TIERS.PREMIUM.aggLimit} accounts`;
     case 'Pro':
-      return `Account aggregation limit: ${TIERS.PRO.aggLimit} accounts`;
+      return `Account aggregation limit: ${LEGACY_TIERS.PRO.aggLimit} accounts`;
     default:
       return null;
   }
