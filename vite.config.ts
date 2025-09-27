@@ -1,11 +1,18 @@
 import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { componentTagger } from "lovable-tagger";
 
-export default defineConfig({
-  server: { port: 8080 },
+export default defineConfig(({ mode }) => ({
+  server: {
+    host: "::",
+    port: 8080,
+  },
   cacheDir: "node_modules/.vite-bfo-final",
-  plugins: [react()],
+  plugins: [
+    react(),
+    mode === 'development' && componentTagger(),
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
@@ -25,6 +32,6 @@ export default defineConfig({
   },
   define: {
     "__BUILD_ID__": JSON.stringify(Date.now()),
-    "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "development")
+    "process.env.NODE_ENV": JSON.stringify(mode || "development")
   }
-});
+}));
