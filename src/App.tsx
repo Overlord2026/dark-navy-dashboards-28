@@ -22,7 +22,7 @@ import SecondaryNav from '@/components/layout/SecondaryNav';
 import ReceiptsListPage from '@/pages/ReceiptsListPage';
 import ReceiptDetailPage from '@/pages/ReceiptDetailPage';
 import SamplesPage from '@/pages/SamplesPage';
-import Pricing from '@/pages/Pricing';
+import PricingPage from '@/pages/pricing';
 
 // Landing page imports
 import LandingNew from '@/pages/LandingNew';
@@ -966,7 +966,7 @@ function App() {
               </Suspense>
             } />
             <Route path="/welcome/transition" element={<Suspense fallback={<div>Loading...</div>}><WelcomeTransition /></Suspense>} />
-            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/pricing" element={<PricingPage />} />
             
             
             {/* K401 Routes */}

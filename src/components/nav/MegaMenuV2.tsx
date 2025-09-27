@@ -151,7 +151,7 @@ export function MegaMenuV2() {
             </Link>
 
             {/* Pricing */}
-            <Link to="/pricing" className={`flex items-center gap-1 transition-colors ${
+            <Link to="/pricing#families" className={`flex items-center gap-1 transition-colors ${
               location.pathname === '/pricing' ? 'text-bfo-gold' : 'text-white hover:text-bfo-gold'
             }`}>
               <DollarSign className="w-4 h-4" />

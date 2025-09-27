@@ -88,7 +88,7 @@ function MobileMenu() {
             </div>
             <Link to="/health" onClick={onNavigate} className="block px-3 py-2 text-white hover:text-bfo-gold">Healthcare</Link>
             <Link to="/solutions" onClick={onNavigate} className="block px-3 py-2 text-white hover:text-bfo-gold">Solutions</Link>
-            <Link to="/pricing" onClick={onNavigate} className="block px-3 py-2 text-white hover:text-bfo-gold">Pricing</Link>
+            <Link to="/pricing#families" onClick={onNavigate} className="block px-3 py-2 text-white hover:text-bfo-gold">Pricing</Link>
           </div>
         </div>
       )}
@@ -138,7 +138,7 @@ export function MegaMenu() {
               <NavLink to="/solutions">Solutions</NavLink>
             </li>
             <li className="hidden lg:block">
-              <NavLink to="/pricing">Pricing</NavLink>
+              <NavLink to="/pricing#families">Pricing</NavLink>
             </li>
             <li className="ml-auto">
               <MobileMenu />
