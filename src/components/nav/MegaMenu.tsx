@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import {
   DropdownMenu,
@@ -9,10 +9,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
+  const location = useLocation();
+  const isActive = location.pathname === to;
+  
   return (
     <Link 
       to={to} 
-      className="px-3 py-2 text-sm font-medium hover:text-bfo-gold transition-colors whitespace-nowrap text-white"
+      className={`px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap ${
+        isActive ? 'text-bfo-gold' : 'text-white hover:text-bfo-gold'
+      }`}
     >
       {children}
     </Link>
@@ -83,6 +88,7 @@ function MobileMenu() {
             </div>
             <Link to="/health" onClick={onNavigate} className="block px-3 py-2 text-white hover:text-bfo-gold">Healthcare</Link>
             <Link to="/solutions" onClick={onNavigate} className="block px-3 py-2 text-white hover:text-bfo-gold">Solutions</Link>
+            <Link to="/pricing" onClick={onNavigate} className="block px-3 py-2 text-white hover:text-bfo-gold">Pricing</Link>
           </div>
         </div>
       )}
@@ -130,6 +136,9 @@ export function MegaMenu() {
             </li>
             <li className="hidden lg:block">
               <NavLink to="/solutions">Solutions</NavLink>
+            </li>
+            <li className="hidden lg:block">
+              <NavLink to="/pricing">Pricing</NavLink>
             </li>
             <li className="ml-auto">
               <MobileMenu />

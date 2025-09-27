@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { ChevronDown, Home, Users, Building2, GraduationCap, TrendingUp, BookOpen } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ChevronDown, Home, Users, Building2, GraduationCap, TrendingUp, BookOpen, DollarSign } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
 export function MegaMenuV2() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const location = useLocation();
 
   const handleMenuClick = (menu: string) => {
     setOpenMenu(openMenu === menu ? null : menu);
@@ -142,13 +143,25 @@ export function MegaMenuV2() {
             </Link>
 
             {/* Solutions */}
-            <Link to="/solutions" className="flex items-center gap-1 text-white hover:text-bfo-gold transition-colors">
+            <Link to="/solutions" className={`flex items-center gap-1 transition-colors ${
+              location.pathname === '/solutions' ? 'text-bfo-gold' : 'text-white hover:text-bfo-gold'
+            }`}>
               <TrendingUp className="w-4 h-4" />
               Solutions
             </Link>
 
+            {/* Pricing */}
+            <Link to="/pricing" className={`flex items-center gap-1 transition-colors ${
+              location.pathname === '/pricing' ? 'text-bfo-gold' : 'text-white hover:text-bfo-gold'
+            }`}>
+              <DollarSign className="w-4 h-4" />
+              Pricing
+            </Link>
+
             {/* Learn */}
-            <Link to="/learn" className="flex items-center gap-1 text-white hover:text-bfo-gold transition-colors">
+            <Link to="/learn" className={`flex items-center gap-1 transition-colors ${
+              location.pathname === '/learn' ? 'text-bfo-gold' : 'text-white hover:text-bfo-gold'
+            }`}>
               <BookOpen className="w-4 h-4" />
               Learn
             </Link>

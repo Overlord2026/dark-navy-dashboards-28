@@ -31,4 +31,5 @@ export const NAV: NavItem[] = [
   },
   { label: 'Healthcare', path: '/health' },
   { label: 'Solutions', path: '/solutions' },
+  { label: 'Pricing', path: '/pricing' },
 ];
