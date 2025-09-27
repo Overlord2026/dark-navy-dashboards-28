@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import PricingTable from '@/components/pricing/PricingTable';
+import PricingTableSite from '@/components/pricing/PricingTableSite';
 
 export default function Pricing() {
   return (
@@ -34,7 +34,7 @@ export default function Pricing() {
         </section>
 
         {/* Family Plans */}
-        <PricingTable />
+        <PricingTableSite />
 
         {/* Coming Soon Sections */}
         <section className="py-16 bg-muted/30">
