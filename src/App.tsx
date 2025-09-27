@@ -292,6 +292,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import DevTryPage from './pages/DevTryPage';
 
+// System protection components  
+import NonProdBanner from '@/components/system/NonProdBanner';
+import FooterBuildTag from '@/components/system/FooterBuildTag';
+import NonProdOnly from '@/components/guards/NonProdOnly';
+import { ENABLE_DEV_PANEL } from '@/lib/flags';
+
 // Tax Planning Imports
 import { TaxShell } from '@/features/tax/TaxShell';
 import { TaxLauncher } from '@/pages/tax/TaxLauncher';
@@ -412,6 +418,7 @@ function App() {
   return (
     <HelmetProvider>
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        <NonProdBanner />
         <div className="min-h-screen bg-background text-foreground">
             {/* Permanent Top Banner on ALL pages */}
             <TopBanner />
@@ -1020,10 +1027,10 @@ function App() {
             )}
 
             {/* Admin Routes - Flag Protected */}
-            <Route path="/admin/diagnostics" element={<AdminDiagnostics />} />
-            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/qa-coverage" element={<QACoverage />} />}
-            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check" element={<ReadyCheck />} />}
-            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check-enhanced" element={<ReadyCheckEnhanced />} />}
+            <Route path="/admin/diagnostics" element={<NonProdOnly><AdminDiagnostics /></NonProdOnly>} />
+            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/qa-coverage" element={<NonProdOnly><QACoverage /></NonProdOnly>} />}
+            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check" element={<NonProdOnly><ReadyCheck /></NonProdOnly>} />}
+            {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check-enhanced" element={<NonProdOnly><ReadyCheckEnhanced /></NonProdOnly>} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/rules-coverage" element={<RulesCoverage />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/rules-import" element={<RulesImport />} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/rules-export" element={<RulesExport />} />}
@@ -1174,7 +1181,8 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
           
-          <DevPanel />
+          {/* Conditionally render DevPanel based on environment flag */}
+          {ENABLE_DEV_PANEL && <DevPanel />}
           <AutoLoadDemo />
           
            
@@ -1184,6 +1192,10 @@ function App() {
             <BehaviorTracker>
               <div /> {/* Empty children since tracker runs in background */}
             </BehaviorTracker>
+           </div>
+           {/* Build tag footer - always visible */}
+           <div className="fixed bottom-1 right-2">
+             <FooterBuildTag />
            </div>
           </div>
         </ThemeProvider>

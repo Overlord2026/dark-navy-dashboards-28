@@ -1,4 +1,4 @@
-// Minimal feature flags implementation with environment inheritance
+// Enhanced feature flags with environment & build protections
 import def from '@/config/featureFlags.default.json';
 import devFlags from '@/config/featureFlags.dev.json';
 import stagingFlags from '@/config/featureFlags.staging.json';
@@ -6,7 +6,26 @@ import prodFlags from '@/config/featureFlags.prod.json';
 
 export type FeatureFlag = keyof typeof def;
 
-// Determine environment flags synchronously
+/* Environment & build flags (Vite) */
+type PublicMode = 'staging' | 'prod';
+
+const env = import.meta.env as Record<string, string | boolean | undefined>;
+const toBool = (v: unknown) => v === true || v === 'true' || v === '1';
+
+export const PUBLIC_MODE: PublicMode =
+  (env.VITE_PUBLIC_MODE as PublicMode) || 'staging';
+
+export const IS_PROD = PUBLIC_MODE === 'prod';
+export const ENABLE_EXPERIMENTS = toBool(env.VITE_ENABLE_EXPERIMENTS) && !IS_PROD;
+export const ENABLE_DEV_PANEL = toBool(env.VITE_ENABLE_DEV_PANEL) && !IS_PROD;
+
+export const APP_NAME = (env.VITE_APP_NAME as string) || 'BFO Platform';
+
+/* __BUILD_ID__ is provided by Vite define() at build time */
+declare const __BUILD_ID__: string;
+export const BUILD_ID = typeof __BUILD_ID__ !== 'undefined' ? __BUILD_ID__ : 'dev-local';
+
+// Determine environment flags synchronously  
 function getEnvironmentFlags() {
   const flavor = import.meta.env.VITE_BUILD_FLAVOR || import.meta.env.MODE;
   

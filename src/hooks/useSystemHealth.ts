@@ -9,9 +9,9 @@ export function useSystemHealth() {
       if (error) throw error;
       return data;
     },
-    refetchInterval: (data, query) => {
+    refetchInterval: (query) => {
       // Overlap guard: don't refetch if query is currently fetching
-      if (query?.state.isFetching) return false;
+      if (query?.state.fetchStatus === 'fetching') return false;
       // Exponential backoff on errors, minimum 30s as requested
       return query?.state.error ? 120000 : 60000;
     },
@@ -25,9 +25,9 @@ export function useSystemHealth() {
       if (error) throw error;
       return data;
     },
-    refetchInterval: (data, query) => {
+    refetchInterval: (query) => {
       // Overlap guard and exponential backoff
-      if (query?.state.isFetching) return false;
+      if (query?.state.fetchStatus === 'fetching') return false;
       return query?.state.error ? 600000 : 300000; // 10min on error, 5min normal
     },
     staleTime: 120000, // Consider data stale after 2min
@@ -48,9 +48,9 @@ export function useSystemHealth() {
       if (error) throw error;
       return data || [];
     },
-    refetchInterval: (data, query) => {
+    refetchInterval: (query) => {
       // Overlap guard and smart polling
-      if (query?.state.isFetching) return false;
+      if (query?.state.fetchStatus === 'fetching') return false;
       return query?.state.error ? 180000 : 90000; // 3min on error, 1.5min normal
     },
     staleTime: 45000, // Consider data stale after 45s

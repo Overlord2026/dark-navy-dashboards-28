@@ -2,6 +2,15 @@ import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { componentTagger } from "lovable-tagger";
+import { execSync } from "node:child_process";
+
+const gitHash = (() => {
+  try { return execSync("git rev-parse --short HEAD").toString().trim(); }
+  catch { return "nogit"; }
+})();
+const utc = new Date().toISOString();
+/* Allow CI/Release script to override */
+const BUILD_ID = process.env.BUILD_ID ? String(process.env.BUILD_ID) : `${gitHash}-${utc}`;
 
 export default defineConfig(({ mode }) => ({
   server: {
@@ -31,7 +40,7 @@ export default defineConfig(({ mode }) => ({
     // exclude: ["@radix-ui/react-toast"], // uncomment if shim in use
   },
   define: {
-    "__BUILD_ID__": JSON.stringify(Date.now()),
+    "__BUILD_ID__": JSON.stringify(BUILD_ID),
     "process.env.NODE_ENV": JSON.stringify(mode || "development")
   }
 }));
