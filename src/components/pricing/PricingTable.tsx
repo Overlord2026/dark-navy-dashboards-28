@@ -1,120 +1,107 @@
+import { useState } from 'react';
 import { Link } from "react-router-dom";
-
-type Plan = {
-  key: "free" | "premium" | "pro";
-  name: string;
-  price: string;
-  tagline: string;
-  features: string[];
-  ctaText: string;
-  to: string;
-  highlight?: boolean;
-};
-
-const PLANS: Plan[] = [
-  {
-    key: "free",
-    name: "Basic",
-    price: "Free",
-    tagline: "Learn, plan, and organize — no integrations required.",
-    features: [
-      "Catalog & Guides",
-      "Education Center (courses)",
-      "Vault uploads (quota)",
-      "Templates & Checklists",
-      "Pros directory",
-      "Manual Goals & Budget",
-      "Demo views for data features",
-    ],
-    ctaText: "Start Free",
-    to: "/signup?plan=free",
-  },
-  {
-    key: "premium",
-    name: "Premium",
-    price: "$29/mo",
-    tagline: "Unlock advanced tools and limited data connections.",
-    features: [
-      "Wealth Wall & Reports",
-      "Retirement Roadmap",
-      "Goals & Budget (enhanced)",
-      "Limited account connections",
-      "Higher Vault storage",
-      "Education Center (all courses)",
-    ],
-    ctaText: "Choose Premium",
-    to: "/pricing/checkout?plan=premium",
-    highlight: true,
-  },
-  {
-    key: "pro",
-    name: "Pro",
-    price: "$59/mo",
-    tagline: "Full planning suite and collaboration features.",
-    features: [
-      "All Premium features",
-      "Tax Planner (advanced)",
-      "Estate Organizer (advanced)",
-      "Expanded connections & exports",
-      "Share with spouse/pro",
-      "Priority support",
-    ],
-    ctaText: "Choose Pro",
-    to: "/pricing/checkout?plan=pro",
-  },
-];
+import { Check } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import pricingContent from '@/content/pricing_content.json';
 
 function PricingTable() {
-  return (
-    <section className="bg-bfo-navy text-bfo-ivory">
-      <div className="container mx-auto px-4 py-16">
-        <header className="mb-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-extrabold">Pricing</h2>
-          <p className="mt-2 text-white/70">Start free. Upgrade anytime for connected data and advanced planning tools.</p>
-        </header>
+  const [isAnnual, setIsAnnual] = useState(false);
+  const { families, badges, ctas } = pricingContent;
 
-        <div className="grid gap-4 md:grid-cols-3">
-          {PLANS.map((p) => (
-            <div
-              key={p.key}
-              className={`rounded-2xl border p-6 ${
-                p.highlight
-                  ? "border-bfo-gold/40 bg-bfo-gold/5 shadow-[0_0_0_2px_rgba(212,175,55,0.08)]"
-                  : "border-white/10 bg-white/5"
+  return (
+    <section className="py-16" id="families">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-foreground mb-4">{families.headline}</h2>
+          <p className="text-muted-foreground mb-8">{families.subhead}</p>
+          
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <span className={`text-sm ${!isAnnual ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
+              Monthly
+            </span>
+            <button
+              onClick={() => setIsAnnual(!isAnnual)}
+              className="relative inline-flex h-6 w-11 items-center rounded-full bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-background shadow transition-transform ${
+                  isAnnual ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
+            <span className={`text-sm ${isAnnual ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
+              Annual
+            </span>
+            {isAnnual && (
+              <span className="text-sm bg-primary/10 text-primary px-2 py-1 rounded-full">
+                Save 20%
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {families.tiers.map((tier) => (
+            <Card
+              key={tier.key}
+              className={`relative rounded-2xl shadow-sm border transition-all hover:shadow-md ${
+                tier.featured
+                  ? 'ring-2 ring-foreground scale-105'
+                  : 'border-border'
               }`}
             >
-              <div className="flex items-baseline justify-between">
-                <h3 className="text-xl font-bold">{p.name}</h3>
-                <div className="text-2xl font-extrabold">{p.price}</div>
-              </div>
-              <p className="mt-1 text-sm text-white/75">{p.tagline}</p>
-
-              <ul className="mt-4 space-y-2 text-sm">
-                {p.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-bfo-gold"></span>
-                    <span>{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                to={p.to}
-                className={`mt-6 inline-flex w-full items-center justify-center rounded-lg px-4 py-2 font-medium ${
-                  p.highlight
-                    ? "bg-bfo-gold text-bfo-black hover:bg-bfo-gold/90"
-                    : "border border-white/15 hover:bg-white/5"
-                }`}
-              >
-                {p.ctaText}
-              </Link>
-
-              {p.key === "free" && (
-                <p className="mt-3 text-xs text-white/60">
-                  Free focuses on education, organization, and self-service tools. Premium adds connected data and advanced planning.
-                </p>
+              {tier.featured && (
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <span className="bg-foreground text-background px-4 py-1 rounded-full text-sm font-medium">
+                    {badges[tier.key as keyof typeof badges]}
+                  </span>
+                </div>
               )}
-            </div>
+              
+              <CardHeader className="text-center">
+                <CardTitle className="text-xl font-bold">{tier.name}</CardTitle>
+                <div className="mt-4">
+                  <span className="text-4xl font-bold text-foreground">
+                    ${isAnnual && tier.price.yearly ? tier.price.yearly : tier.price.monthly}
+                  </span>
+                  <span className="text-muted-foreground">
+                    {tier.price.monthly === 0 ? '' : isAnnual ? '/year' : '/month'}
+                  </span>
+                  {isAnnual && tier.price.yearly_note && (
+                    <div className="text-sm text-muted-foreground mt-1">
+                      {tier.price.yearly_note}
+                    </div>
+                  )}
+                </div>
+                <p className="text-sm text-muted-foreground mt-2">{tier.blurb}</p>
+              </CardHeader>
+
+              <CardContent>
+                <ul className="space-y-3">
+                  {tier.bullets.map((bullet, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <Check className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-muted-foreground">{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+
+              <CardFooter>
+                <Link
+                  to={ctas[tier.key as keyof typeof ctas]}
+                  className="w-full"
+                >
+                  <Button
+                    className="w-full"
+                    variant={tier.featured ? 'default' : 'outline'}
+                  >
+                    {tier.name === 'Free' ? 'Get Started Free' : `Choose ${tier.name}`}
+                  </Button>
+                </Link>
+              </CardFooter>
+            </Card>
           ))}
         </div>
       </div>

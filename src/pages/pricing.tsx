@@ -1,23 +1,21 @@
 import { Helmet } from 'react-helmet-async';
-import FamilyPlans from '@/components/pricing/FamilyPlans';
-import AdvisorSolo from '@/components/pricing/AdvisorSolo';
-import RiaTeams from '@/components/pricing/RiaTeams';
-import LegacyAddOn from '@/components/pricing/LegacyAddOn';
+import PricingTable from '@/components/pricing/PricingTable';
+import pricingContent from '@/content/pricing_content.json';
 
 export default function Pricing() {
   return (
     <>
       <Helmet>
-        <title>Pricing — AI you can trust</title>
+        <title>{pricingContent.meta.title}</title>
         <meta
           name="description"
-          content="Family, Advisor, and RIA plans with SWAG™ Legacy Planning add-on."
+          content={pricingContent.meta.description}
         />
         <meta name="keywords" content="pricing, family office, advisor, RIA, legacy planning, SWAG" />
-        <meta property="og:title" content="Pricing — AI you can trust" />
+        <meta property="og:title" content={pricingContent.meta.title} />
         <meta
           property="og:description"
-          content="Family, Advisor, and RIA plans with SWAG™ Legacy Planning add-on."
+          content={pricingContent.meta.description}
         />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="/pricing" />
@@ -38,16 +36,41 @@ export default function Pricing() {
         </section>
 
         {/* Family Plans */}
-        <FamilyPlans />
+        <PricingTable />
 
-        {/* Advisor Solo */}
-        <AdvisorSolo />
+        {/* Advisor Solo - Placeholder */}
+        <section className="py-16 bg-muted/30" id="advisor">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              {pricingContent.advisor.headline}
+            </h2>
+            <p className="text-muted-foreground mb-8">
+              {pricingContent.advisor.subhead}
+            </p>
+            <div className="bg-background/50 rounded-lg p-8 max-w-2xl mx-auto">
+              <p className="text-muted-foreground">
+                Advisor pricing coming soon. Contact us for early access.
+              </p>
+            </div>
+          </div>
+        </section>
 
-        {/* RIA Teams */}
-        <RiaTeams />
-
-        {/* SWAG™ Legacy Planning Add-on */}
-        <LegacyAddOn />
+        {/* RIA Teams - Placeholder */}
+        <section className="py-16" id="ria">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              {pricingContent.ria.headline}
+            </h2>
+            <p className="text-muted-foreground mb-8">
+              {pricingContent.ria.subhead}
+            </p>
+            <div className="bg-muted/30 rounded-lg p-8 max-w-2xl mx-auto">
+              <p className="text-muted-foreground">
+                RIA pricing coming soon. Contact us for enterprise solutions.
+              </p>
+            </div>
+          </div>
+        </section>
 
         {/* FAQ Section */}
         <section className="py-16 bg-muted/30">
