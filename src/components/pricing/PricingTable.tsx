@@ -64,7 +64,7 @@ const PLANS: Plan[] = [
   },
 ];
 
-export default function PricingTable() {
+function PricingTable() {
   return (
     <section className="bg-bfo-navy text-bfo-ivory">
       <div className="container mx-auto px-4 py-16">
@@ -121,3 +121,6 @@ export default function PricingTable() {
     </section>
   );
 }
+
+export default PricingTable;
+export { PricingTable };

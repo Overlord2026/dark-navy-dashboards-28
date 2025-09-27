@@ -1,5 +1,5 @@
 import Hero from "@/components/landing/Hero";
-import { CatalogGrid } from "@/components/catalog/CatalogGrid";
+import CatalogGrid from "@/components/catalog/CatalogGrid";
 import PricingTable from "@/components/pricing/PricingTable";
 
 export default function LandingNew() {

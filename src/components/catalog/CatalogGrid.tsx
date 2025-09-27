@@ -161,7 +161,7 @@ const catalogItems: CatalogItem[] = [
   }
 ];
 
-export function CatalogGrid() {
+function CatalogGrid() {
   const navigate = useNavigate();
 
   const handleGetStarted = (slug: string) => {
@@ -212,3 +212,6 @@ export function CatalogGrid() {
     </section>
   );
 }
+
+export default CatalogGrid;
+export { CatalogGrid };

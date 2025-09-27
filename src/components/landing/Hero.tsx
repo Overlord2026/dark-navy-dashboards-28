@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function Hero() {
+function Hero() {
   return (
     <section className="relative overflow-hidden bg-bfo-navy text-bfo-ivory">
       <div className="container mx-auto px-4 py-16 md:py-24">
@@ -57,3 +57,6 @@ export default function Hero() {
     </section>
   );
 }
+
+export default Hero;
+export { Hero };
