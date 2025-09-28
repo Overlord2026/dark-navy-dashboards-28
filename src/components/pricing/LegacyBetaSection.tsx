@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { InfoIcon, ArrowRight } from 'lucide-react';
 import { FLAGS } from '@/config/flags';
 import data from '@/content/pricing_content.json';
-import { trackLegacyBetaInterest } from '@/lib/analytics/legacyEvents';
+import { track } from '@/lib/analytics';
 
 export default function LegacyBetaSection() {
   if (!FLAGS.legacyBeta) return null;
@@ -12,7 +12,7 @@ export default function LegacyBetaSection() {
   const legacyData = data.legacy;
 
   const handleBetaInterest = (feature: string, planKey: string) => {
-    trackLegacyBetaInterest(feature, planKey);
+    track(`legacy.beta_interest`, { feature, plan_key: planKey });
   };
 
   return (
