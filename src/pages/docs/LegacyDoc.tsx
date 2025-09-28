@@ -1,9 +1,24 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import SEOHead from "@/components/seo/SEOHead";
+import Breadcrumbs from "@/components/nav/Breadcrumbs";
 
 export default function LegacyDoc() {
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Documentation" }, // No href since /docs doesn't exist yet
+    { label: "Legacy Planning" }
+  ];
+
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12 text-gray-900 dark:text-bfo-ivory">
+    <>
+      <SEOHead
+        title="SWAG™ Legacy Planning Documentation"
+        description="Organize heirs, assets, and instructions—kept current with reminders and audit-ready exports. Complete estate planning workflow for families and advisors."
+        keywords={["legacy planning", "estate planning", "family office", "heirs", "executor", "trustee", "compliance", "audit", "wealth management", "inheritance planning"]}
+      />
+      <main className="mx-auto max-w-3xl px-4 py-12 text-gray-900 dark:text-bfo-ivory">
+        <Breadcrumbs items={breadcrumbItems} />
       <header className="mb-8">
         <p className="inline-block rounded-md border px-2 py-0.5 text-xs opacity-80">
           Beta
@@ -91,6 +106,7 @@ export default function LegacyDoc() {
           </li>
         </ul>
       </section>
-    </main>
+      </main>
+    </>
   );
 }
