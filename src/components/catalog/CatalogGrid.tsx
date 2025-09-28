@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { PricingBadge } from '@/components/pricing/PricingBadge';
 import { 
   TrendingUp, 
   DollarSign, 
@@ -28,6 +29,7 @@ interface CatalogItem {
   freeBlurb: string;
   premiumBlurb: string;
   icon: React.ComponentType<{ className?: string }>;
+  planKey: 'free' | 'premium' | 'pro';
 }
 
 const catalogItems: CatalogItem[] = [
@@ -37,7 +39,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Comprehensive portfolio optimization and wealth growth strategies',
     freeBlurb: 'Basic portfolio tracking and market insights',
     premiumBlurb: 'Advanced analytics, custom strategies, and dedicated portfolio management',
-    icon: TrendingUp
+    icon: TrendingUp,
+    planKey: 'free'
   },
   {
     slug: 'tax-planning',
@@ -45,7 +48,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Advanced tax strategies and optimization for high-net-worth families',
     freeBlurb: 'Tax planning fundamentals and basic strategies',
     premiumBlurb: 'Sophisticated tax structures, offshore planning, and ongoing optimization',
-    icon: DollarSign
+    icon: DollarSign,
+    planKey: 'premium'
   },
   {
     slug: 'estate-planning',
@@ -53,7 +57,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Legacy preservation and multi-generational wealth transfer',
     freeBlurb: 'Estate planning basics and document templates',
     premiumBlurb: 'Complex trust structures, dynasty planning, and family governance',
-    icon: Users
+    icon: Users,
+    planKey: 'premium'
   },
   {
     slug: 'risk-management',
@@ -61,7 +66,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Comprehensive protection strategies for family wealth',
     freeBlurb: 'Basic insurance needs analysis',
     premiumBlurb: 'Captive insurance, sophisticated coverage design, and risk mitigation',
-    icon: Shield
+    icon: Shield,
+    planKey: 'free'
   },
   {
     slug: 'wealth-transfer',
@@ -69,7 +75,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Strategic transfer of assets to next generations',
     freeBlurb: 'Gift and transfer planning basics',
     premiumBlurb: 'Advanced transfer techniques, valuation discounts, and tax optimization',
-    icon: Gift
+    icon: Gift,
+    planKey: 'pro'
   },
   {
     slug: 'philanthropic-planning',
@@ -77,7 +84,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Charitable giving strategies and foundation management',
     freeBlurb: 'Basic charitable giving strategies',
     premiumBlurb: 'Private foundations, DAFs, and complex charitable structures',
-    icon: Heart
+    icon: Heart,
+    planKey: 'premium'
   },
   {
     slug: 'trust-administration',
@@ -85,7 +93,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Professional management of trusts and estate assets',
     freeBlurb: 'Trust basics and administration overview',
     premiumBlurb: 'Full-service trust administration and fiduciary services',
-    icon: Building
+    icon: Building,
+    planKey: 'pro'
   },
   {
     slug: 'private-banking',
@@ -93,7 +102,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Exclusive banking services and credit solutions',
     freeBlurb: 'Private banking service overview',
     premiumBlurb: 'Dedicated relationship management and custom credit facilities',
-    icon: Landmark
+    icon: Landmark,
+    planKey: 'pro'
   },
   {
     slug: 'alternative-investments',
@@ -101,7 +111,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Access to private equity, hedge funds, and unique opportunities',
     freeBlurb: 'Alternative investment education and market insights',
     premiumBlurb: 'Direct access to exclusive deals and due diligence support',
-    icon: BarChart3
+    icon: BarChart3,
+    planKey: 'premium'
   },
   {
     slug: 'family-governance',
@@ -109,7 +120,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Structure and decision-making frameworks for family enterprises',
     freeBlurb: 'Family governance fundamentals',
     premiumBlurb: 'Custom governance structures, family constitutions, and board services',
-    icon: Crown
+    icon: Crown,
+    planKey: 'pro'
   },
   {
     slug: 'concierge-services',
@@ -117,7 +129,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Lifestyle management and family support services',
     freeBlurb: 'Basic concierge service information',
     premiumBlurb: 'Full-service lifestyle management and family office coordination',
-    icon: Briefcase
+    icon: Briefcase,
+    planKey: 'premium'
   },
   {
     slug: 'education-planning',
@@ -125,7 +138,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Strategic planning for children\'s educational journey',
     freeBlurb: '529 plans and basic education funding',
     premiumBlurb: 'Private school planning, college consulting, and multi-generational strategies',
-    icon: GraduationCap
+    icon: GraduationCap,
+    planKey: 'free'
   },
   {
     slug: 'healthcare-planning',
@@ -133,7 +147,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Comprehensive healthcare coordination and advocacy',
     freeBlurb: 'Healthcare planning basics',
     premiumBlurb: 'Medical advocacy, specialist coordination, and wellness programs',
-    icon: Stethoscope
+    icon: Stethoscope,
+    planKey: 'premium'
   },
   {
     slug: 'technology-security',
@@ -141,7 +156,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Digital asset protection and family cyber security',
     freeBlurb: 'Basic cyber security guidance',
     premiumBlurb: 'Comprehensive digital security, privacy protection, and tech consulting',
-    icon: Lock
+    icon: Lock,
+    planKey: 'pro'
   },
   {
     slug: 'legal-services',
@@ -149,7 +165,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Specialized legal counsel for family enterprises',
     freeBlurb: 'Legal service provider directory',
     premiumBlurb: 'Dedicated legal counsel and specialized family office attorneys',
-    icon: Scale
+    icon: Scale,
+    planKey: 'premium'
   },
   {
     slug: 'real-estate',
@@ -157,7 +174,8 @@ const catalogItems: CatalogItem[] = [
     summary: 'Investment property management and real estate strategies',
     freeBlurb: 'Real estate investment basics',
     premiumBlurb: 'Property management, deal sourcing, and real estate family office services',
-    icon: Home
+    icon: Home,
+    planKey: 'free'
   }
 ];
 
@@ -180,7 +198,10 @@ function CatalogGrid() {
           {catalogItems.map((item) => (
             <Card key={item.slug} className="border-border hover:border-brand-gold/50 transition-all duration-200 hover:shadow-lg">
               <CardHeader className="pb-3">
-                <item.icon className="h-8 w-8 text-brand-gold mb-3" />
+                <div className="flex items-center justify-between mb-3">
+                  <item.icon className="h-8 w-8 text-brand-gold" />
+                  <PricingBadge planKey={item.planKey} />
+                </div>
                 <CardTitle className="text-lg leading-tight">{item.title}</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">

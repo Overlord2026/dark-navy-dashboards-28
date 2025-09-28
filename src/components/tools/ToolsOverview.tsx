@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Calculator, TrendingUp, Shield, DollarSign, FileText, PieChart, CreditCard, Building, Users, Briefcase, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { LEGACY_TIERS } from '@/config/tiers';
-import { PlanBadge } from '@/components/common/PlanBadge';
+import { PricingBadge } from '@/components/pricing/PricingBadge';
 import type { FamilyPlanKey } from '@/config/tiers';
 
 const toolCategories = [
@@ -180,7 +180,7 @@ export function ToolsOverview() {
                       <CardHeader className="pb-4">
                         <div className="flex items-center justify-between mb-3">
                           <IconComponent className="h-8 w-8 text-brand-gold" />
-                          <PlanBadge planKey={tool.planKey} />
+                          <PricingBadge planKey={tool.planKey} />
                         </div>
                         <CardTitle className="text-lg group-hover:text-brand-gold transition-colors">
                           {tool.name}
