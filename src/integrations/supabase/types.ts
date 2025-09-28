@@ -20520,6 +20520,144 @@ export type Database = {
           },
         ]
       }
+      legacy_documents: {
+        Row: {
+          created_at: string | null
+          document_name: string
+          document_type: string
+          household_id: string
+          id: string
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          document_name: string
+          document_type: string
+          household_id: string
+          id?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          document_name?: string
+          document_type?: string
+          household_id?: string
+          id?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legacy_documents_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "legacy_households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      legacy_exports: {
+        Row: {
+          created_at: string | null
+          export_type: string
+          exported_by: string
+          household_id: string
+          id: string
+          receipt_hash: string
+        }
+        Insert: {
+          created_at?: string | null
+          export_type?: string
+          exported_by: string
+          household_id: string
+          id?: string
+          receipt_hash: string
+        }
+        Update: {
+          created_at?: string | null
+          export_type?: string
+          exported_by?: string
+          household_id?: string
+          id?: string
+          receipt_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legacy_exports_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "legacy_households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      legacy_heirs: {
+        Row: {
+          created_at: string | null
+          household_id: string
+          id: string
+          name: string
+          role: string
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          household_id: string
+          id?: string
+          name: string
+          role?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          household_id?: string
+          id?: string
+          name?: string
+          role?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legacy_heirs_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "legacy_households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      legacy_households: {
+        Row: {
+          created_at: string | null
+          household_name: string
+          id: string
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          household_name: string
+          id?: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          household_name?: string
+          id?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       legacy_items: {
         Row: {
           content_type: string | null
@@ -41517,6 +41655,28 @@ export type Database = {
           total_files_backed_up: number | null
           total_operations: number | null
           total_size_backed_up: number | null
+        }
+        Relationships: []
+      }
+      legacy_kpi_summary: {
+        Row: {
+          active_households: number | null
+          document_completion_rate: number | null
+          total_documents: number | null
+          total_exports: number | null
+          total_heirs: number | null
+          total_households: number | null
+          verified_documents: number | null
+        }
+        Relationships: []
+      }
+      legacy_kpi_timeseries: {
+        Row: {
+          date: string | null
+          documents_verified: number | null
+          households_created: number | null
+          trusts_uploaded: number | null
+          wills_uploaded: number | null
         }
         Relationships: []
       }
