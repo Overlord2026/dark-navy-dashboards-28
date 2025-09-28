@@ -1,15 +1,13 @@
 export const FLAGS = {
+  // Agent automation flags
   __ENABLE_AGENT_AUTOMATIONS__: false,
   __REQUIRE_APPROVAL_HIGH_RISK__: true,
   
-  // Legacy Planning Features
-  legacyBeta: true,                    // render Legacy UI and routes
-  legacyAdvancedEnabled: false,        // hide advanced vault features for Families
-  legacyExecutorSharing: true,         // enable executor sharing workflows
-  legacyExportBundles: true,          // enable export functionality
-  legacyAuditReceipts: false,         // enable audit trail features
-  
-  // add more feature toggles here as needed
+  // Toggle to render the Legacy section on the pricing page
+  legacyBeta: true,
+
+  // Gate advanced vault UX for families during beta
+  legacyAdvancedEnabled: false
 } as const;
 
 // Legacy exports for backward compatibility
