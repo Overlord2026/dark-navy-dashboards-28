@@ -106,6 +106,13 @@ export const isFamilyPlan = (k: string): k is FamilyPlanKey =>
 export const isAdvisorPlan = (k: string): k is AdvisorPlanKey =>
   (["advisor_basic", "advisor_premium"] as string[]).includes(k);
 
+// Utility function to determine plan type
+export function getPlanType(planKey: string): 'family' | 'advisor' | 'unknown' {
+  if (isFamilyPlan(planKey)) return 'family';
+  if (isAdvisorPlan(planKey)) return 'advisor';
+  return 'unknown';
+}
+
 // Legacy type exports for backward compatibility
 export type TierType = keyof typeof LEGACY_TIERS;
 export type AdvisorTierType = keyof typeof ADVISOR_TIERS;

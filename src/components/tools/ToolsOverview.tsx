@@ -1,10 +1,11 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Calculator, TrendingUp, Shield, DollarSign, FileText, PieChart, CreditCard, Building, Users, Briefcase, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { LEGACY_TIERS } from '@/config/tiers';
+import { PlanBadge } from '@/components/common/PlanBadge';
+import type { FamilyPlanKey } from '@/config/tiers';
 
 const toolCategories = [
   {
@@ -16,7 +17,7 @@ const toolCategories = [
         name: 'Roth IRA Conversion',
         description: 'Calculate optimal conversion timing and amounts',
         icon: Calculator,
-        badge: 'FREE',
+        planKey: 'free' as FamilyPlanKey,
         route: '/tools/tax/roth-conversion'
       },
       {
@@ -24,7 +25,7 @@ const toolCategories = [
         name: 'Tax Bracket Manager',
         description: 'Manage income across tax brackets efficiently',
         icon: PieChart,
-        badge: 'Premium',
+        planKey: 'premium' as FamilyPlanKey,
         route: '/tools/tax/bracket-manager'
       },
       {
@@ -32,7 +33,7 @@ const toolCategories = [
         name: 'Charitable Giving Optimizer',
         description: 'Maximize charitable deductions and impact',
         icon: FileText,
-        badge: 'Pro',
+        planKey: 'pro' as FamilyPlanKey,
         route: '/tools/tax/charitable-giving'
       }
     ]
@@ -46,7 +47,7 @@ const toolCategories = [
         name: 'Portfolio Risk Analyzer',
         description: 'Comprehensive portfolio risk assessment',
         icon: TrendingUp,
-        badge: 'FREE',
+        planKey: 'free' as FamilyPlanKey,
         route: '/tools/investment/portfolio-analyzer'
       },
       {
@@ -54,7 +55,7 @@ const toolCategories = [
         name: 'Asset Allocation Optimizer',
         description: 'Optimize your asset allocation strategy',
         icon: PieChart,
-        badge: 'Premium',
+        planKey: 'premium' as FamilyPlanKey,
         route: '/tools/investment/asset-allocation'
       },
       {
@@ -62,7 +63,7 @@ const toolCategories = [
         name: 'Investment Due Diligence',
         description: 'Professional investment research tools',
         icon: Shield,
-        badge: 'Pro',
+        planKey: 'pro' as FamilyPlanKey,
         route: '/tools/investment/due-diligence'
       }
     ]
@@ -76,7 +77,7 @@ const toolCategories = [
         name: 'Estate Tax Calculator',
         description: 'Calculate potential estate tax liabilities',
         icon: Calculator,
-        badge: 'FREE',
+        planKey: 'free' as FamilyPlanKey,
         route: '/tools/estate/tax-calculator'
       },
       {
@@ -84,7 +85,7 @@ const toolCategories = [
         name: 'Trust Structure Analyzer',
         description: 'Analyze optimal trust structures',
         icon: Building,
-        badge: 'Premium',
+        planKey: 'premium' as FamilyPlanKey,
         route: '/tools/estate/trust-analyzer'
       },
       {
@@ -92,7 +93,7 @@ const toolCategories = [
         name: 'Business Succession Planner',
         description: 'Plan your business succession strategy',
         icon: Briefcase,
-        badge: 'Pro',
+        planKey: 'pro' as FamilyPlanKey,
         route: '/tools/estate/succession-planner'
       }
     ]
@@ -106,7 +107,7 @@ const toolCategories = [
         name: 'Retirement Calculator',
         description: 'Calculate retirement savings needs',
         icon: Calculator,
-        badge: 'FREE',
+        planKey: 'free' as FamilyPlanKey,
         route: '/tools/retirement/calculator'
       },
       {
@@ -114,7 +115,7 @@ const toolCategories = [
         name: 'Social Security Optimizer',
         description: 'Optimize your Social Security benefits',
         icon: Users,
-        badge: 'Premium',
+        planKey: 'premium' as FamilyPlanKey,
         route: '/tools/retirement/social-security'
       },
       {
@@ -122,44 +123,18 @@ const toolCategories = [
         name: 'Withdrawal Strategy Planner',
         description: 'Plan optimal retirement withdrawals',
         icon: DollarSign,
-        badge: 'Pro',
+        planKey: 'pro' as FamilyPlanKey,
         route: '/tools/retirement/withdrawal-strategy'
       }
     ]
   }
 ];
 
-const getBadgeVariant = (badge: string) => {
-  switch (badge) {
-    case 'FREE':
-      return 'default';
-    case 'Premium':
-      return 'secondary';
-    case 'Pro':
-      return 'outline';
-    default:
-      return 'default';
-  }
-};
-
-const getBadgeColor = (badge: string) => {
-  switch (badge) {
-    case 'FREE':
-      return 'bg-green-100 text-green-800 hover:bg-green-100';
-    case 'Premium':
-      return 'bg-blue-100 text-blue-800 hover:bg-blue-100';
-    case 'Pro':
-      return 'bg-brand-gold/20 text-brand-gold border-brand-gold hover:bg-brand-gold/30';
-    default:
-      return '';
-  }
-};
-
-const getToolFootnotes = (badge: string) => {
-  switch (badge) {
-    case 'Premium':
+const getToolFootnotes = (planKey: string) => {
+  switch (planKey) {
+    case 'premium':
       return `Account aggregation limit: ${LEGACY_TIERS.PREMIUM.aggLimit} accounts`;
-    case 'Pro':
+    case 'pro':
       return `Account aggregation limit: ${LEGACY_TIERS.PRO.aggLimit} accounts`;
     default:
       return null;
@@ -205,12 +180,7 @@ export function ToolsOverview() {
                       <CardHeader className="pb-4">
                         <div className="flex items-center justify-between mb-3">
                           <IconComponent className="h-8 w-8 text-brand-gold" />
-                          <Badge 
-                            variant={getBadgeVariant(tool.badge)}
-                            className={getBadgeColor(tool.badge)}
-                          >
-                            {tool.badge}
-                          </Badge>
+                          <PlanBadge planKey={tool.planKey} />
                         </div>
                         <CardTitle className="text-lg group-hover:text-brand-gold transition-colors">
                           {tool.name}
@@ -218,9 +188,9 @@ export function ToolsOverview() {
                         <CardDescription className="text-sm">
                           {tool.description}
                         </CardDescription>
-                        {getToolFootnotes(tool.badge) && (
+                        {getToolFootnotes(tool.planKey) && (
                           <p className="text-xs text-muted-foreground mt-2 italic">
-                            {getToolFootnotes(tool.badge)}
+                            {getToolFootnotes(tool.planKey)}
                           </p>
                         )}
                       </CardHeader>

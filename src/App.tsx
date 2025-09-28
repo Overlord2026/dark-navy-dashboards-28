@@ -967,6 +967,7 @@ function App() {
             } />
             <Route path="/welcome/transition" element={<Suspense fallback={<div>Loading...</div>}><WelcomeTransition /></Suspense>} />
             <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/pricing/checkout" element={<PricingPage />} />
             
             
             {/* K401 Routes */}
