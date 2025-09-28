@@ -13,3 +13,6 @@ export default function PricingBadge({ planKey }: PricingBadgeProps) {
     </span>
   );
 }
+
+// Named export for compatibility
+export { PricingBadge };
