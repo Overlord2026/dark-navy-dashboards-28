@@ -4019,33 +4019,51 @@ export type Database = {
       }
       app_events: {
         Row: {
+          advisor_firm_id: string | null
           context: Json
           created_at: string
+          data: Json | null
+          event: string | null
           event_type: string
+          export_hash: string | null
+          household_id: string | null
           id: string
           page: string | null
+          plan_key: string | null
           referrer: string | null
           session_id: string | null
           user_id: string | null
           utm: Json | null
         }
         Insert: {
+          advisor_firm_id?: string | null
           context?: Json
           created_at?: string
+          data?: Json | null
+          event?: string | null
           event_type: string
+          export_hash?: string | null
+          household_id?: string | null
           id?: string
           page?: string | null
+          plan_key?: string | null
           referrer?: string | null
           session_id?: string | null
           user_id?: string | null
           utm?: Json | null
         }
         Update: {
+          advisor_firm_id?: string | null
           context?: Json
           created_at?: string
+          data?: Json | null
+          event?: string | null
           event_type?: string
+          export_hash?: string | null
+          household_id?: string | null
           id?: string
           page?: string | null
+          plan_key?: string | null
           referrer?: string | null
           session_id?: string | null
           user_id?: string | null
@@ -41658,28 +41676,6 @@ export type Database = {
         }
         Relationships: []
       }
-      legacy_kpi_summary: {
-        Row: {
-          active_households: number | null
-          document_completion_rate: number | null
-          total_documents: number | null
-          total_exports: number | null
-          total_heirs: number | null
-          total_households: number | null
-          verified_documents: number | null
-        }
-        Relationships: []
-      }
-      legacy_kpi_timeseries: {
-        Row: {
-          date: string | null
-          documents_verified: number | null
-          households_created: number | null
-          trusts_uploaded: number | null
-          wills_uploaded: number | null
-        }
-        Relationships: []
-      }
       query_performance_summary: {
         Row: {
           avg_execution_time_ms: number | null
@@ -56060,6 +56056,10 @@ export type Database = {
         Args: { p_anchor_data: Json; p_anchor_type: string; p_hash: string }
         Returns: boolean
       }
+      admin_emit_kpi_proofslip: {
+        Args: { days?: number; firm_id?: string }
+        Returns: Json
+      }
       aies_emit_receipt: {
         Args: {
           p_actor: string
@@ -56072,6 +56072,17 @@ export type Database = {
           p_trust_grade?: string
         }
         Returns: string
+      }
+      app_event_log: {
+        Args: {
+          p_advisor_firm_id?: string
+          p_data?: Json
+          p_event: string
+          p_export_hash?: string
+          p_household_id?: string
+          p_plan_key?: string
+        }
+        Returns: undefined
       }
       approve_k_of_n: {
         Args: { p_approved?: boolean; p_hash: string; p_threshold?: number }
@@ -56921,6 +56932,58 @@ export type Database = {
       last4: {
         Args: { text_value: string }
         Returns: string
+      }
+      legacy_kpis_summary: {
+        Args: { days?: number }
+        Returns: {
+          completed: number
+          completion_rate: number
+          exported: number
+          median_minutes_to_export: number
+          revalidated: number
+          revalidation_rate: number
+          share_rate: number
+          shared: number
+          started: number
+          window_end: string
+          window_start: string
+        }[]
+      }
+      legacy_kpis_summary_for_caller: {
+        Args: { days?: number }
+        Returns: {
+          completed: number
+          completion_rate: number
+          exported: number
+          median_minutes_to_export: number
+          revalidated: number
+          revalidation_rate: number
+          share_rate: number
+          shared: number
+          started: number
+          window_end: string
+          window_start: string
+        }[]
+      }
+      legacy_kpis_timeseries: {
+        Args: { days?: number }
+        Returns: {
+          completed: number
+          d: string
+          exported: number
+          shared: number
+          started: number
+        }[]
+      }
+      legacy_kpis_timeseries_for_caller: {
+        Args: { days?: number }
+        Returns: {
+          completed: number
+          d: string
+          exported: number
+          shared: number
+          started: number
+        }[]
       }
       log_accessibility_event: {
         Args: {

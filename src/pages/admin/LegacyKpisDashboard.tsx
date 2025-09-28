@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { CalendarDays, TrendingUp, Users, FileText, Share2, Clock, RefreshCw } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { hasAdminRole } from '@/lib/admin';
 
 interface KpiSummary {
   window_start: string;
@@ -33,20 +35,26 @@ export default function LegacyKpisDashboard() {
   const [timeseries, setTimeseries] = useState<KpiTimeseries[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPeriod, setSelectedPeriod] = useState<number>(7);
+  const [firmOnly, setFirmOnly] = useState(true);
+  const { session } = useAuth();
 
   const loadData = async (days: number) => {
     try {
       setLoading(true);
       
+      // Use different RPC functions based on firmOnly toggle
+      const summaryFn = firmOnly ? "legacy_kpis_summary_for_caller" : "legacy_kpis_summary";
+      const timeseriesFn = firmOnly ? "legacy_kpis_timeseries_for_caller" : "legacy_kpis_timeseries";
+      
       // Get summary data
       const { data: summaryData, error: summaryError } = await supabase
-        .rpc('legacy_kpis_summary' as any, { days });
+        .rpc(summaryFn as any, { days });
       
       if (summaryError) throw summaryError;
       
       // Get timeseries data
       const { data: timeseriesData, error: timeseriesError } = await supabase
-        .rpc('legacy_kpis_timeseries' as any, { days });
+        .rpc(timeseriesFn as any, { days });
         
       if (timeseriesError) throw timeseriesError;
 
@@ -61,10 +69,29 @@ export default function LegacyKpisDashboard() {
 
   useEffect(() => {
     loadData(selectedPeriod);
-  }, [selectedPeriod]);
+  }, [selectedPeriod, firmOnly]);
 
   const handlePeriodChange = (days: number) => {
     setSelectedPeriod(days);
+  };
+
+  const emitProofSlip = async () => {
+    try {
+      const { data, error } = await supabase.rpc("admin_emit_kpi_proofslip", { 
+        days: 1, 
+        firm_id: null 
+      });
+      
+      if (error) {
+        alert(`Emit failed: ${error.message}`);
+      } else if (data?.success) {
+        alert("ProofSlip emitted.");
+      } else {
+        alert(`Emit failed: ${data?.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      alert(`Emit failed: ${error}`);
+    }
   };
 
   if (loading) {
@@ -87,29 +114,46 @@ export default function LegacyKpisDashboard() {
           <p className="text-muted-foreground">
             Analytics for legacy planning workflow performance
           </p>
+          {hasAdminRole(session) && (
+            <div className="mt-3 flex gap-2">
+              <Button onClick={emitProofSlip} variant="outline" size="sm">
+                Emit KPI ProofSlip (today)
+              </Button>
+            </div>
+          )}
         </div>
-        <div className="flex gap-2">
-          <Button
-            variant={selectedPeriod === 7 ? 'default' : 'outline'}
-            onClick={() => handlePeriodChange(7)}
-            size="sm"
-          >
-            7d
-          </Button>
-          <Button
-            variant={selectedPeriod === 14 ? 'default' : 'outline'}
-            onClick={() => handlePeriodChange(14)}
-            size="sm"
-          >
-            14d
-          </Button>
-          <Button
-            variant={selectedPeriod === 30 ? 'default' : 'outline'}
-            onClick={() => handlePeriodChange(30)}
-            size="sm"
-          >
-            30d
-          </Button>
+        <div className="flex items-center gap-4">
+          <div className="flex gap-2">
+            <Button
+              variant={selectedPeriod === 7 ? 'default' : 'outline'}
+              onClick={() => handlePeriodChange(7)}
+              size="sm"
+            >
+              7d
+            </Button>
+            <Button
+              variant={selectedPeriod === 14 ? 'default' : 'outline'}
+              onClick={() => handlePeriodChange(14)}
+              size="sm"
+            >
+              14d
+            </Button>
+            <Button
+              variant={selectedPeriod === 30 ? 'default' : 'outline'}
+              onClick={() => handlePeriodChange(30)}
+              size="sm"
+            >
+              30d
+            </Button>
+          </div>
+          <label className="ml-2 inline-flex items-center gap-2 text-sm">
+            <input 
+              type="checkbox" 
+              checked={firmOnly} 
+              onChange={e => setFirmOnly(e.target.checked)} 
+            />
+            My firm only
+          </label>
         </div>
       </div>
 
