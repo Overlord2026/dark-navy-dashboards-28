@@ -23,13 +23,10 @@ export default {
         foreground: "hsl(var(--foreground))",
         
         // BFO Premium Brand Colors (HSL for proper theming)
-        bfo: {
-          navy: '#0B1B2B',
-          gold: '#C6A15B',
-          black: '#0A0A0A',
-          ivory: '#F8F7F3',
-          white: '#FFFFFF'
-        },
+        'bfo-navy': '#0B1B2B',
+        'bfo-ivory': '#F8F7F3', 
+        'bfo-gold': '#C6A15B',
+        'bfo-black': '#0A0A0A',
         
         // Brand Colors - Black & Gold
         'brand-black': 'hsl(var(--brand-black))',
