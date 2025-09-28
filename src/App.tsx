@@ -201,6 +201,7 @@ import Evidence from '@/pages/admin/Evidence';
 import CanonicalExports from "@/diag/CanonicalExports";
 import ReactDiag from '@/pages/ReactDiag';
 import AdminDiagnostics from '@/pages/admin/AdminDiagnostics';
+import LegacyKPIDashboard from '@/pages/admin/LegacyKPIDashboard';
 
 // Welcome Flow Components
 const FamilyWelcomeFlow = lazy(() => import('@/components/welcome/FullScreenWelcome').then(m => ({ default: m.FullScreenWelcome })));
@@ -1034,6 +1035,7 @@ function App() {
 
             {/* Admin Routes - Flag Protected */}
             <Route path="/admin/diagnostics" element={<NonProdOnly><AdminDiagnostics /></NonProdOnly>} />
+            <Route path="/admin/legacy-kpis" element={<NonProdOnly><LegacyKPIDashboard /></NonProdOnly>} />
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/qa-coverage" element={<NonProdOnly><QACoverage /></NonProdOnly>} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check" element={<NonProdOnly><ReadyCheck /></NonProdOnly>} />}
             {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/ready-check-enhanced" element={<NonProdOnly><ReadyCheckEnhanced /></NonProdOnly>} />}
