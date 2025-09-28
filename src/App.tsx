@@ -293,7 +293,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import DevTryPage from './pages/DevTryPage';
 
-// System protection components  
+// Documentation Components
+const LegacyDoc = lazy(() => import('@/pages/docs/LegacyDoc'));
+
+// System protection components
 import NonProdBanner from '@/components/system/NonProdBanner';
 import FooterBuildTag from '@/components/system/FooterBuildTag';
 import NonProdOnly from '@/components/guards/NonProdOnly';
@@ -970,6 +973,12 @@ function App() {
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/pricing/checkout" element={<Checkout />} />
             
+            {/* Documentation Routes */}
+            <Route path="/docs/legacy" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <LegacyDoc />
+              </Suspense>
+            } />
             
             {/* K401 Routes */}
             <Route path="/k401/rollover" element={

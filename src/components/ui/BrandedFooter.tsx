@@ -39,6 +39,7 @@ export function BrandedFooter() {
               <li><Link to="/discover" className="hover:text-bfo-gold transition-colors">Discover</Link></li>
               <li><Link to="/solutions" className="hover:text-bfo-gold transition-colors">Solutions</Link></li>
               <li><Link to="/family/receipts" className="hover:text-bfo-gold transition-colors">Activity Log</Link></li>
+              <li><Link to="/docs/legacy" className="hover:text-bfo-gold transition-colors">Legacy (Beta)</Link></li>
             </ul>
           </div>
         </div>
