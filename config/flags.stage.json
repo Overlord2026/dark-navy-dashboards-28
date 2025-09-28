@@ -16,5 +16,10 @@
   "security.rlsPolicies": true,
   "security.auditLogging": true,
   "performance.edgeCaching": true,
-  "debug.enableConsoleLogging": false
+  "debug.enableConsoleLogging": false,
+  "legacy.legacyBeta": true,
+  "legacy.legacyAdvancedEnabled": false,
+  "legacy.legacyExecutorSharing": true,
+  "legacy.legacyExportBundles": true,
+  "legacy.legacyAuditReceipts": false
 }

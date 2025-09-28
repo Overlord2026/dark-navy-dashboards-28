@@ -1,5 +1,7 @@
 import data from "@/content/pricing_content.json";
 import { Link } from "react-router-dom";
+import { LegacyFeaturesSection } from "@/components/legacy/LegacyFeaturesSection";
+import { FLAGS } from "@/config/flags";
 
 type Plan = typeof data.advisor.plans[number];
 
@@ -43,6 +45,27 @@ export default function AdvisorPricingSite() {
                 ))}
               </ul>
 
+              {/* Legacy Features for Advisors */}
+              {FLAGS.legacyBeta && (
+                <div className="mt-4 pt-4 border-t border-white/10">
+                  <div className="text-xs text-white/60 mb-2">SWAG™ Legacy Planning:</div>
+                  <div className="text-xs">
+                    {p.key === 'advisor_basic' && (
+                      <div className="flex items-center gap-2">
+                        <span>Add-on (TBA)</span>
+                        <span className="px-2 py-1 bg-amber-500/20 text-amber-300 rounded text-xs">Beta</span>
+                      </div>
+                    )}
+                    {p.key === 'advisor_premium' && (
+                      <div className="flex items-center gap-2">
+                        <span>Included</span>
+                        <span className="px-2 py-1 bg-amber-500/20 text-amber-300 rounded text-xs">Beta</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               <Link
                 to={p.href}
                 className={`mt-6 inline-flex w-full items-center justify-center rounded-lg px-4 py-2 font-medium ${
@@ -56,6 +79,13 @@ export default function AdvisorPricingSite() {
             </div>
           ))}
         </div>
+
+        {/* Standalone Legacy Features Section */}
+        {FLAGS.legacyBeta && (
+          <div className="mt-16 max-w-2xl mx-auto">
+            <LegacyFeaturesSection planType="advisor" />
+          </div>
+        )}
       </div>
     </section>
   );

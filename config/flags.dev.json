@@ -17,5 +17,10 @@
   "security.auditLogging": true,
   "performance.edgeCaching": true,
   "debug.enableConsoleLogging": true,
-  "HEALTH_PUBLIC": true
+  "HEALTH_PUBLIC": true,
+  "legacy.legacyBeta": true,
+  "legacy.legacyAdvancedEnabled": true,
+  "legacy.legacyExecutorSharing": true,
+  "legacy.legacyExportBundles": true,
+  "legacy.legacyAuditReceipts": true
 }

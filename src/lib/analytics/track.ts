@@ -8,6 +8,11 @@ const ANALYTICS_ENABLED = Boolean(import.meta.env.VITE_ANALYTICS_ENABLED);
  * - automatic context (path, ts)
  * - de-dupe window (prevents double fires)
  * - multi-sink (PostHog/Segment if present, otherwise Supabase Edge)
+ * 
+ * Legacy event examples:
+ * - legacy.flow_started, legacy.checklist_completed
+ * - legacy.export_created, legacy.share_grant_created
+ * - legacy.reminder_scheduled, legacy.item_updated
  */
 export async function track(
   event: string,
