@@ -1,155 +1,85 @@
-import React from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { InfoIcon, ArrowRight } from 'lucide-react';
-import { FLAGS } from '@/config/flags';
-import data from '@/content/pricing_content.json';
-import { track } from '@/lib/analytics';
+import React from "react";
+import content from "@/content/pricing_content.json";
+import { FLAGS } from "@/config/flags";
+import { Link } from "react-router-dom";
 
 export default function LegacyBetaSection() {
   if (!FLAGS.legacyBeta) return null;
 
-  const legacyData = data.legacy;
+  const s = (content as any).legacy;
+  if (!s) return null;
 
-  const handleBetaInterest = (feature: string, planKey: string) => {
-    track(`legacy.beta_interest`, { feature, plan_key: planKey });
-  };
+  const Pill = ({ children }: { children: React.ReactNode }) => (
+    <span className="rounded-md border border-white/20 bg-white/10 px-2 py-0.5 text-xs text-white/80">
+      {children}
+    </span>
+  );
+
+  const Line = ({ label, note, badges = [] as string[] }) => (
+    <li className="flex items-center justify-between gap-3 py-2">
+      <span className="text-sm">{label}</span>
+      <span className="flex items-center gap-2">
+        {note ? <span className="text-xs text-white/70">{note}</span> : null}
+        {badges.map((b) => (
+          <Pill key={b}>{b}</Pill>
+        ))}
+      </span>
+    </li>
+  );
 
   return (
-    <section id="legacy" className="py-20 bg-gradient-to-b from-background to-muted/20">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <h2 className="text-4xl font-bold">{legacyData.headline}</h2>
-            <Badge variant="outline" className="bg-amber-500/10 text-amber-700 border-amber-500/20 dark:text-amber-400">
-              {legacyData.labels.beta}
-            </Badge>
-          </div>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            {legacyData.subhead}
-          </p>
-        </div>
+    <section id="legacy" className="bg-bfo-navy text-bfo-ivory">
+      <div className="container mx-auto px-4 py-16">
+        <header className="mb-8 text-center">
+          <h2 className="text-2xl md:text-3xl font-extrabold">{s.headline}</h2>
+          <p className="mt-2 text-white/70">{s.subhead}</p>
+        </header>
 
-        {/* Beta Notice */}
-        <div className="max-w-4xl mx-auto mb-12">
-          <div className="flex items-start gap-3 p-6 rounded-lg border border-amber-500/20 bg-amber-500/5">
-            <InfoIcon className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
-            <div className="flex-1">
-              <h4 className="font-semibold text-sm mb-2">Beta Feature</h4>
-              <p className="text-sm text-muted-foreground">
-                Legacy Planning is currently in beta. Features and availability may change as we continue to improve the experience. 
-                No additional cost during beta period.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Feature Grid */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid gap-6 lg:grid-cols-3">
           {/* Families */}
-          <div className="bg-card rounded-lg border p-6">
-            <h3 className="text-xl font-semibold mb-4">Families</h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">{legacyData.families.basic.label}</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground">{legacyData.families.basic.note}</span>
-                  <Badge variant="outline" className="bg-amber-500/10 text-amber-700 border-amber-500/20 dark:text-amber-400 text-xs">
-                    {legacyData.families.basic.badges[0]}
-                  </Badge>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">{legacyData.families.advanced.label}</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground">{legacyData.families.advanced.note}</span>
-                  <Badge variant="outline" className="bg-muted text-muted-foreground border-muted-foreground/20 text-xs">
-                    {legacyData.families.advanced.badges[0]}
-                  </Badge>
-                </div>
-              </div>
-            </div>
-            <Button 
-              variant="outline" 
-              className="w-full mt-6"
-              onClick={() => handleBetaInterest('family_legacy', 'family_basic')}
-            >
-              Try Beta <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h3 className="text-lg font-semibold">Families</h3>
+            <ul className="mt-2 divide-y divide-white/10">
+              <Line label={s.families.basic.label} note={s.families.basic.note} badges={s.families.basic.badges} />
+              <Line label={s.families.advanced.label} note={s.families.advanced.note} badges={s.families.advanced.badges} />
+            </ul>
+            <p className="mt-3 text-xs text-white/70">
+              Advanced Legacy Vault is in active development and will be released after beta hardening.
+            </p>
           </div>
 
           {/* Advisor */}
-          <div className="bg-card rounded-lg border p-6">
-            <h3 className="text-xl font-semibold mb-4">Advisor — Solo</h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Basic</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground">{legacyData.advisor.solo_basic.note}</span>
-                  <Badge variant="outline" className="bg-amber-500/10 text-amber-700 border-amber-500/20 dark:text-amber-400 text-xs">
-                    {legacyData.advisor.solo_basic.badges[0]}
-                  </Badge>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Premium</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground">{legacyData.advisor.solo_premium.note}</span>
-                  <Badge variant="outline" className="bg-amber-500/10 text-amber-700 border-amber-500/20 dark:text-amber-400 text-xs">
-                    {legacyData.advisor.solo_premium.badges[0]}
-                  </Badge>
-                </div>
-              </div>
-            </div>
-            <Button 
-              variant="outline" 
-              className="w-full mt-6"
-              onClick={() => handleBetaInterest('advisor_legacy', 'advisor_premium')}
-            >
-              Try Beta <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h3 className="text-lg font-semibold">Advisor — Solo</h3>
+            <ul className="mt-2 divide-y divide-white/10">
+              <Line label="Basic" note={s.advisor.solo_basic.note} badges={s.advisor.solo_basic.badges} />
+              <Line label="Premium" note={s.advisor.solo_premium.note} badges={s.advisor.solo_premium.badges} />
+            </ul>
+            <p className="mt-3 text-xs text-white/70">
+              During beta, Premium includes full Legacy to collect effectiveness data.
+            </p>
           </div>
 
           {/* RIA */}
-          <div className="bg-card rounded-lg border p-6">
-            <h3 className="text-xl font-semibold mb-4">RIA Teams</h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">5-19 seats</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground">{legacyData.ria.under_20.note}</span>
-                  <Badge variant="outline" className="bg-amber-500/10 text-amber-700 border-amber-500/20 dark:text-amber-400 text-xs">
-                    {legacyData.ria.under_20.badges[0]}
-                  </Badge>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">20+ seats</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground">{legacyData.ria.over_20.note}</span>
-                  <Badge variant="outline" className="bg-amber-500/10 text-amber-700 border-amber-500/20 dark:text-amber-400 text-xs">
-                    {legacyData.ria.over_20.badges[0]}
-                  </Badge>
-                </div>
-              </div>
-            </div>
-            <Button 
-              variant="outline" 
-              className="w-full mt-6"
-              onClick={() => handleBetaInterest('ria_legacy', 'ria_team')}
-            >
-              Contact Sales <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h3 className="text-lg font-semibold">RIA Teams</h3>
+            <ul className="mt-2 divide-y divide-white/10">
+              <Line label="Under 20 seats" note={s.ria.under_20.note} badges={s.ria.under_20.badges} />
+              <Line label="20+ seats" note={s.ria.over_20.note} badges={s.ria.over_20.badges} />
+            </ul>
+            <p className="mt-3 text-xs text-white/70">
+              Seat-gated inclusion helps us measure firm-wide adoption before GA.
+            </p>
           </div>
         </div>
 
-        {/* Beta Disclaimer */}
-        <div className="text-center mt-12">
-          <p className="text-sm text-muted-foreground">
-            * Beta features are included at no additional cost during the beta period. 
-            Pricing and feature availability subject to change.
-          </p>
+        <div className="mt-8 text-center">
+          <Link
+            to={s.cta.learn_more_href}
+            className="inline-flex items-center justify-center rounded-lg border border-white/15 px-4 py-2 text-sm font-medium hover:bg-white/10"
+          >
+            {s.cta.learn_more_label}
+          </Link>
         </div>
       </div>
     </section>
