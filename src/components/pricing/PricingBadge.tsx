@@ -44,28 +44,22 @@ function getBadgeVariant(planKey: PlanKey): 'default' | 'secondary' | 'destructi
 }
 
 function getBadgeClassName(planKey: PlanKey, planType: string): string {
-  // Base styles for different plan types
-  const baseStyles = {
-    family: '',
-    advisor: 'border-blue-200 text-blue-700',
-  };
-
-  // Specific styles for each plan
+  // Base styles using semantic tokens
+  const baseStyles = 'font-medium';
+  
+  // Specific styles for each plan using design system tokens
   const planStyles: Record<PlanKey, string> = {
     // Family plans
-    free: 'bg-green-100 text-green-800 hover:bg-green-100 border-green-200',
-    premium: 'bg-blue-100 text-blue-800 hover:bg-blue-100 border-blue-200', 
-    pro: 'bg-brand-gold/20 text-brand-gold border-brand-gold hover:bg-brand-gold/30',
+    free: 'bg-muted text-muted-foreground border-muted-foreground/30',
+    premium: 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20', 
+    pro: 'bg-secondary text-secondary-foreground border-secondary/50 hover:bg-secondary/80',
     
     // Advisor plans
-    advisor_basic: 'bg-slate-100 text-slate-700 hover:bg-slate-100 border-slate-300',
-    advisor_premium: 'bg-blue-100 text-blue-800 hover:bg-blue-100 border-blue-200',
+    advisor_basic: 'bg-background text-foreground border-border hover:bg-muted',
+    advisor_premium: 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20',
   };
 
-  return cn(
-    baseStyles[planType as keyof typeof baseStyles] || baseStyles.family,
-    planStyles[planKey]
-  );
+  return cn(baseStyles, planStyles[planKey]);
 }
 
 export default PricingBadge;
