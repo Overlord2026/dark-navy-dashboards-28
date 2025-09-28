@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { PricingBadge } from '@/components/pricing/PricingBadge';
+import PricingBadge from '@/components/pricing/PricingBadge';
 import { 
   Check, X, Shield, ArrowRight, Calculator, FileText, Clock, 
   TrendingUp, DollarSign, Users, AlertTriangle, CheckCircle2,

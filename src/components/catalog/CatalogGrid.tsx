@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { PricingBadge } from '@/components/pricing/PricingBadge';
+import PricingBadge from '@/components/pricing/PricingBadge';
 import { 
   TrendingUp, 
   DollarSign, 

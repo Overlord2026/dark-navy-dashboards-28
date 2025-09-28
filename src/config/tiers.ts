@@ -1,14 +1,15 @@
 // Canonical plan keys used across app gating, badges, and checkout.
 export type FamilyPlanKey = "free" | "premium" | "pro";
 export type AdvisorPlanKey = "advisor_basic" | "advisor_premium";
+export type PlanKey = FamilyPlanKey | AdvisorPlanKey;
 
-export const BADGES = {
+export const BADGES: Record<PlanKey, string> = {
   free: "FREE",
   premium: "Premium",
   pro: "Pro",
   advisor_basic: "Basic",
   advisor_premium: "Premium",
-} as const;
+};
 
 export const TIERS = {
   families: {
@@ -41,12 +42,6 @@ export const TIERS = {
       premium: "/pricing/checkout?plan=premium",
       pro: "/pricing/checkout?plan=pro",
     } as Record<FamilyPlanKey, string>,
-    // Functional gating properties for backward compatibility
-    config: {
-      free: { allowAggregation: false, vaultQuota: { files: 10, mb: 50 } },
-      premium: { allowAggregation: true, aggLimit: 3, vaultQuota: { files: 200, mb: 2048 } },
-      pro: { allowAggregation: true, aggLimit: 10, vaultQuota: { files: 1000, mb: 10240 } },
-    },
   },
   advisor: {
     order: ["advisor_basic", "advisor_premium"] as AdvisorPlanKey[],
@@ -70,41 +65,41 @@ export const TIERS = {
       advisor_basic: "/pricing/checkout?plan=advisor_basic",
       advisor_premium: "/pricing/checkout?plan=advisor_premium",
     } as Record<AdvisorPlanKey, string>,
-    // Functional gating properties
-    config: {
-      advisor_basic: {
-        clientSeats: 100,
-        branding: 'basic',
-        reports: 'core',
-        integrations: 'csv',
-        support: 'email'
-      },
-      advisor_premium: {
-        clientSeats: 300,
-        branding: 'custom',
-        reports: 'advanced',
-        integrations: 'zapier',
-        support: 'priority'
-      }
-    },
   },
 } as const;
 
-// Legacy exports for backward compatibility
-export const LEGACY_TIERS = {
-  FREE: TIERS.families.config.free,
-  PREMIUM: TIERS.families.config.premium,
-  PRO: TIERS.families.config.pro,
-} as const;
-
-export const ADVISOR_TIERS = TIERS.advisor.config;
-
-// Simple helpers to keep ToolsOverview/Catalog consistent.
 export const isFamilyPlan = (k: string): k is FamilyPlanKey =>
   (["free", "premium", "pro"] as string[]).includes(k);
 
 export const isAdvisorPlan = (k: string): k is AdvisorPlanKey =>
   (["advisor_basic", "advisor_premium"] as string[]).includes(k);
+
+export const isPlanKey = (k: string): k is PlanKey =>
+  isFamilyPlan(k) || isAdvisorPlan(k);
+
+// Legacy compatibility for existing code
+export const LEGACY_TIERS = {
+  FREE: { allowAggregation: false, vaultQuota: { files: 10, mb: 50 } },
+  PREMIUM: { allowAggregation: true, aggLimit: 3, vaultQuota: { files: 200, mb: 2048 } },
+  PRO: { allowAggregation: true, aggLimit: 10, vaultQuota: { files: 1000, mb: 10240 } },
+} as const;
+
+export const ADVISOR_TIERS = {
+  advisor_basic: {
+    clientSeats: 100,
+    branding: 'basic',
+    reports: 'core',
+    integrations: 'csv',
+    support: 'email'
+  },
+  advisor_premium: {
+    clientSeats: 300,
+    branding: 'custom',
+    reports: 'advanced',
+    integrations: 'zapier',
+    support: 'priority'
+  }
+} as const;
 
 // Utility function to determine plan type
 export function getPlanType(planKey: string): 'family' | 'advisor' | 'unknown' {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { PricingBadge } from './PricingBadge';
+import PricingBadge from './PricingBadge';
 import { StatusBadge, StatusType } from './StatusBadge';
 import type { FamilyPlanKey, AdvisorPlanKey } from '@/config/tiers';
 import { cn } from '@/lib/utils';

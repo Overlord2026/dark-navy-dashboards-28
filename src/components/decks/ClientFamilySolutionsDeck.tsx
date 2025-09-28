@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Check, X, Shield, ArrowRight, Vault, Building, MapPin, Calculator, FileText, Calendar } from 'lucide-react';
-import { PricingBadge } from '@/components/pricing/PricingBadge';
+import PricingBadge from '@/components/pricing/PricingBadge';
 
 const Slide = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
   <div className={`min-h-screen w-full flex flex-col justify-center items-center p-8 bg-gradient-to-br from-surface via-navy to-cardBg ${className}`}>

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Check, AlertTriangle } from 'lucide-react';
 import { useUserSubscription, type PlanKey } from '@/hooks/useUserSubscription';
-import { PricingBadge } from '@/components/pricing/PricingBadge';
+import PricingBadge from '@/components/pricing/PricingBadge';
 import { TIERS, getPlanType } from '@/config/tiers';
 import { CheckoutService } from '@/lib/checkout';
 import { useToast } from '@/hooks/use-toast';

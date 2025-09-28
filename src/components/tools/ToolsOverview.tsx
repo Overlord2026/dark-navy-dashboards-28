@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Calculator, TrendingUp, Shield, DollarSign, FileText, PieChart, CreditCard, Building, Users, Briefcase, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { LEGACY_TIERS } from '@/config/tiers';
-import { PricingBadge } from '@/components/pricing/PricingBadge';
+import PricingBadge from '@/components/pricing/PricingBadge';
 import type { FamilyPlanKey } from '@/config/tiers';
 
 const toolCategories = [
