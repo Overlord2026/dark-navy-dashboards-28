@@ -5,7 +5,7 @@ interface PricingBadgeProps {
   planKey: string;
 }
 
-export default function PricingBadge({ planKey }: PricingBadgeProps) {
+function PricingBadge({ planKey }: PricingBadgeProps) {
   const label = isPlanKey(planKey) ? BADGES[planKey] : "Plan";
   return (
     <span className="ml-2 rounded-md border border-white/20 bg-white/10 px-2 py-0.5 text-xs text-white/80">
@@ -14,5 +14,5 @@ export default function PricingBadge({ planKey }: PricingBadgeProps) {
   );
 }
 
-// Named export for compatibility
+export default PricingBadge;
 export { PricingBadge };
