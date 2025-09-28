@@ -23,6 +23,7 @@ import ReceiptsListPage from '@/pages/ReceiptsListPage';
 import ReceiptDetailPage from '@/pages/ReceiptDetailPage';
 import SamplesPage from '@/pages/SamplesPage';
 import PricingPage from '@/pages/pricing';
+import Checkout from '@/pages/pricing/Checkout';
 
 // Landing page imports
 import LandingNew from '@/pages/LandingNew';
@@ -967,7 +968,7 @@ function App() {
             } />
             <Route path="/welcome/transition" element={<Suspense fallback={<div>Loading...</div>}><WelcomeTransition /></Suspense>} />
             <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/pricing/checkout" element={<PricingPage />} />
+            <Route path="/pricing/checkout" element={<Checkout />} />
             
             
             {/* K401 Routes */}
