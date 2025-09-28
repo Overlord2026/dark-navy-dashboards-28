@@ -292,9 +292,7 @@ import { QuoteStartPage } from './pages/marketplace/QuoteStartPage';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import DevTryPage from './pages/DevTryPage';
-
-// Documentation Components
-const LegacyDoc = lazy(() => import('@/pages/docs/LegacyDoc'));
+import LegacyDoc from '@/pages/docs/LegacyDoc';
 
 // System protection components
 import NonProdBanner from '@/components/system/NonProdBanner';
@@ -974,11 +972,7 @@ function App() {
             <Route path="/pricing/checkout" element={<Checkout />} />
             
             {/* Documentation Routes */}
-            <Route path="/docs/legacy" element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <LegacyDoc />
-              </Suspense>
-            } />
+            <Route path="/docs/legacy" element={<LegacyDoc />} />
             
             {/* K401 Routes */}
             <Route path="/k401/rollover" element={
