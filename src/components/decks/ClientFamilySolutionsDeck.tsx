@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Check, X, Shield, ArrowRight, Vault, Building, MapPin, Calculator, FileText, Calendar } from 'lucide-react';
+import { PricingBadge } from '@/components/pricing/PricingBadge';
 
 const Slide = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
   <div className={`min-h-screen w-full flex flex-col justify-center items-center p-8 bg-gradient-to-br from-surface via-navy to-cardBg ${className}`}>
@@ -274,15 +275,15 @@ export default function ClientFamilySolutionsDeck() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center p-4 bg-surface rounded-lg">
-                  <span className="text-textPrimary">Basic</span>
+                  <PricingBadge planKey="free" />
                   <span className="text-xl font-bold text-gold">$19</span>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-surface rounded-lg">
-                  <span className="text-textPrimary">Premium</span>
+                  <PricingBadge planKey="premium" />
                   <span className="text-xl font-bold text-gold">$49</span>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-surface rounded-lg">
-                  <span className="text-textPrimary">Elite</span>
+                  <PricingBadge planKey="pro" />
                   <span className="text-xl font-bold text-gold">$99</span>
                 </div>
               </CardContent>
@@ -294,15 +295,15 @@ export default function ClientFamilySolutionsDeck() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center p-4 bg-surface rounded-lg">
-                  <span className="text-textPrimary">Basic</span>
+                  <PricingBadge planKey="free" />
                   <span className="text-xl font-bold text-gold">$200</span>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-surface rounded-lg">
-                  <span className="text-textPrimary">Premium</span>
+                  <PricingBadge planKey="premium" />
                   <span className="text-xl font-bold text-gold">$500</span>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-surface rounded-lg">
-                  <span className="text-textPrimary">Elite</span>
+                  <PricingBadge planKey="pro" />
                   <span className="text-xl font-bold text-gold">$1,000</span>
                 </div>
               </CardContent>

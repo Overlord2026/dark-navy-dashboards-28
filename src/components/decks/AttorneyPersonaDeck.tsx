@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { PricingBadge } from '@/components/pricing/PricingBadge';
 import { 
   Scale, 
   Shield, 
@@ -262,7 +263,7 @@ export const AttorneyPersonaDeck = () => {
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-sm">Premium Plan</span>
+                    <PricingBadge planKey="advisor_premium" />
                     <span className="text-sm font-semibold">$199/mo</span>
                   </div>
                   <div className="text-sm text-muted-foreground">

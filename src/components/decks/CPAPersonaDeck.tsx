@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { PricingBadge } from '@/components/pricing/PricingBadge';
 import { 
   Check, X, Shield, ArrowRight, Calculator, FileText, Clock, 
   TrendingUp, DollarSign, Users, AlertTriangle, CheckCircle2,
@@ -299,7 +300,7 @@ export default function CPAPersonaDeck() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center p-3 bg-surface/20 rounded-lg">
                   <div>
-                    <span className="block font-semibold">Pro Plan</span>
+                    <PricingBadge planKey="pro" />
                     <span className="text-sm text-textSecondary">All tools included</span>
                   </div>
                   <span className="font-bold">$99/mo</span>

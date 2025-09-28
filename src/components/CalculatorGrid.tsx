@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { PricingBadge } from '@/components/pricing/PricingBadge';
 import { 
   BarChart3, 
   Calculator, 
@@ -268,13 +269,13 @@ export function CalculatorGrid({
         <CardContent className="text-xs space-y-2">
           <div className="grid grid-cols-4 gap-4">
             <div>
-              <span className="font-medium">Basic:</span> {counts.basic} calculators
+              <PricingBadge planKey="free" /> {counts.basic} calculators
             </div>
             <div>
-              <span className="font-medium">Premium:</span> {counts.premium} calculators
+              <PricingBadge planKey="premium" /> {counts.premium} calculators
             </div>
             <div>
-              <span className="font-medium">Elite:</span> {counts.elite} calculators
+              <PricingBadge planKey="pro" /> {counts.elite} calculators
             </div>
             <div>
               <span className="font-medium">Total:</span> {counts.total} available
