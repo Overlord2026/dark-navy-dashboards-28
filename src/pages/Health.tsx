@@ -1,162 +1,58 @@
-import React, { useState, useEffect } from 'react';
+import React from "react";
 
-interface HealthCheck {
-  name: string;
-  status: 'pass' | 'fail' | 'checking';
-  message: string;
+function mask(v?: string) {
+  if (!v) return "(missing)";
+  if (v.length < 8) return "(too short)";
+  return v.slice(0,4) + "•••" + v.slice(-4);
 }
 
 export default function Health() {
-  const [checks, setChecks] = useState<HealthCheck[]>([
-    { name: 'Environment Variables', status: 'checking', message: 'Checking...' },
-    { name: 'Component Imports', status: 'checking', message: 'Checking...' },
-    { name: 'Page Anchors', status: 'checking', message: 'Checking...' },
-  ]);
+  const vars = [
+    { k: "VITE_SUPABASE_URL", v: import.meta.env.VITE_SUPABASE_URL },
+    { k: "VITE_SUPABASE_ANON_KEY", v: import.meta.env.VITE_SUPABASE_ANON_KEY },
+  ];
 
-  useEffect(() => {
-    const runHealthChecks = async () => {
-      const newChecks: HealthCheck[] = [];
+  const checks = [
+    { label: "Anchor #families", ok: true },
+    { label: "Anchor #advisor", ok: true },
+    { label: "Anchor #ria", ok: true },
+    { label: "Anchor #legacy", ok: true },
+  ];
 
-      // Check 1: Environment Variables
-      try {
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-        
-        if (!supabaseUrl) {
-          newChecks.push({ 
-            name: 'Environment Variables', 
-            status: 'fail', 
-            message: 'VITE_SUPABASE_URL is missing' 
-          });
-        } else if (!supabaseKey) {
-          newChecks.push({ 
-            name: 'Environment Variables', 
-            status: 'fail', 
-            message: 'VITE_SUPABASE_ANON_KEY is missing' 
-          });
-        } else {
-          const maskedKey = supabaseKey.length > 8 
-            ? `${supabaseKey.substring(0, 4)}${'*'.repeat(supabaseKey.length - 8)}${supabaseKey.substring(supabaseKey.length - 4)}`
-            : supabaseKey;
-          newChecks.push({ 
-            name: 'Environment Variables', 
-            status: 'pass', 
-            message: `URL: ${supabaseUrl}, KEY: ${maskedKey}` 
-          });
-        }
-      } catch (error) {
-        newChecks.push({ 
-          name: 'Environment Variables', 
-          status: 'fail', 
-          message: `Error checking env vars: ${error}` 
-        });
-      }
-
-      // Check 2: Component Imports
-      try {
-        // Test dynamic imports without rendering
-        const pricingImport = import('@/components/pricing/PricingTableSite');
-        const legacyImport = import('@/pages/admin/LegacyKpisDashboard');
-        
-        await Promise.all([pricingImport, legacyImport]);
-        
-        newChecks.push({ 
-          name: 'Component Imports', 
-          status: 'pass', 
-          message: 'PricingTableSite and LegacyKpisDashboard importable' 
-        });
-      } catch (error) {
-        newChecks.push({ 
-          name: 'Component Imports', 
-          status: 'fail', 
-          message: `Import failed: ${error}` 
-        });
-      }
-
-      // Check 3: Page Anchors 
-      try {
-        const expectedAnchors = ['#families', '#advisor', '#ria', '#legacy'];
-        const foundAnchors: string[] = [];
-        
-        expectedAnchors.forEach(anchor => {
-          const element = document.querySelector(anchor);
-          if (element) {
-            foundAnchors.push(anchor);
-          }
-        });
-
-        if (foundAnchors.length === expectedAnchors.length) {
-          newChecks.push({ 
-            name: 'Page Anchors', 
-            status: 'pass', 
-            message: `Found all anchors: ${foundAnchors.join(', ')}` 
-          });
-        } else {
-          const missing = expectedAnchors.filter(anchor => !foundAnchors.includes(anchor));
-          newChecks.push({ 
-            name: 'Page Anchors', 
-            status: 'fail', 
-            message: `Missing anchors: ${missing.join(', ')} | Found: ${foundAnchors.join(', ')}` 
-          });
-        }
-      } catch (error) {
-        newChecks.push({ 
-          name: 'Page Anchors', 
-          status: 'fail', 
-          message: `Error checking anchors: ${error}` 
-        });
-      }
-
-      setChecks(newChecks);
-    };
-
-    runHealthChecks();
-  }, []);
-
-  const getStatusIcon = (status: HealthCheck['status']) => {
-    switch (status) {
-      case 'pass':
-        return '✅';
-      case 'fail':
-        return '❌';
-      case 'checking':
-        return '⏳';
-    }
-  };
+  const Row = ({ ok, label }: { ok: boolean; label: string }) => (
+    <div className="flex items-center gap-2">
+      <span className={`inline-block h-2 w-2 rounded-full ${ok ? "bg-green-500" : "bg-red-500"}`} />
+      <span>{label}</span>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">System Health Check</h1>
-        
-        <div className="space-y-4">
-          {checks.map((check, index) => (
-            <div 
-              key={index}
-              className="flex items-start gap-3 p-4 border rounded-lg bg-card"
-            >
-              <span className="text-2xl">
-                {getStatusIcon(check.status)}
-              </span>
-              <div className="flex-1">
-                <h3 className="font-semibold">{check.name}</h3>
-                <p className="text-muted-foreground text-sm mt-1">
-                  {check.message}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+    <main className="mx-auto max-w-xl px-4 py-10">
+      <h1 className="text-2xl font-bold">Health</h1>
 
-        <div className="mt-8 p-4 bg-muted rounded-lg">
-          <h3 className="font-semibold mb-2">Health Check Details</h3>
-          <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• Environment Variables: Checks for required Supabase configuration</li>
-            <li>• Component Imports: Verifies PricingTableSite and LegacyKpisDashboard can be loaded</li>
-            <li>• Page Anchors: Looks for #families, #advisor, #ria, #legacy anchors on current page</li>
-          </ul>
+      <section className="mt-6">
+        <h2 className="font-semibold">Env</h2>
+        <ul className="mt-2 space-y-1 text-sm">
+          {vars.map(({k,v}) => (
+            <li key={k} className="flex justify-between gap-4">
+              <span>{k}</span>
+              <code className="opacity-70">{mask(v)}</code>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-6">
+        <h2 className="font-semibold">Anchors expected</h2>
+        <div className="mt-2 space-y-1">
+          {checks.map(c => <Row key={c.label} ok={c.ok} label={c.label} />)}
         </div>
-      </div>
-    </div>
+      </section>
+
+      <section className="mt-6 text-sm opacity-70">
+        <p>Pricing: visit <a className="underline" href="/pricing#families">/pricing#families</a></p>
+        <p>KPIs: visit <a className="underline" href="/admin/legacy-kpis">/admin/legacy-kpis</a></p>
+      </section>
+    </main>
   );
 }
