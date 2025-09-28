@@ -293,6 +293,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import DevTryPage from './pages/DevTryPage';
 import LegacyDoc from '@/pages/docs/LegacyDoc';
+import Health from '@/pages/Health';
 
 // System protection components
 import NonProdBanner from '@/components/system/NonProdBanner';
@@ -569,7 +570,7 @@ function App() {
             <Route path="/tools/cashflow" element={<Navigate to="/cashflow" replace />} />
             <Route path="/tools/transactions" element={<Navigate to="/transactions" replace />} />
             
-            <Route path="/health" element={<HealthcareLanding />} />
+            <Route path="/health" element={<Health />} />
             
             {/* Family Routes */}
             <Route path="/family/roadmap" element={<FamilyRoadmap />} />
