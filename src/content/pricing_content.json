@@ -74,6 +74,10 @@
     "ria": {
       "under_20": { "note": "Add-on (TBA)", "badges": ["Beta"] },
       "over_20": { "note": "Included (beta)", "badges": ["Beta"] }
+    },
+    "cta": {
+      "learn_more_label": "Learn about Legacy",
+      "learn_more_href": "/docs/legacy" 
     }
   },
   "faq": [
