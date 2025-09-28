@@ -10,6 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CheckSquare, Calendar, User, Mail, BarChart3 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { track } from '@/lib/analytics/track';
+import { trackItemUpdated } from '@/lib/telemetry';
+import { useUserPlanKey } from '@/hooks/useUserPlanKey';
 
 interface ChecklistItem {
   id: string;
@@ -102,6 +104,7 @@ export const InteractiveLaunchChecklist: React.FC = () => {
   const [selectedSegment, setSelectedSegment] = useState<string>('all');
   const [selectedTier, setSelectedTier] = useState<string>('all');
   const [selectedWeek, setSelectedWeek] = useState<string>('all');
+  const planKey = useUserPlanKey();
 
   useEffect(() => {
     loadChecklistData();
@@ -233,6 +236,17 @@ export const InteractiveLaunchChecklist: React.FC = () => {
           old_status: item.status,
           new_status: status
         });
+
+        // Track legacy item updated event
+        trackItemUpdated(item.target_name, {
+          item_type: 'launch_checklist',
+          week: item.week,
+          segment: item.segment,
+          tier: item.tier,
+          old_status: item.status,
+          new_status: status,
+          notes: notes
+        }, planKey);
       }
 
       // Reload progress data

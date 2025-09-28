@@ -54,3 +54,6 @@ export const trackShareGranted = (householdId: string, planKey?: string) =>
 
 export const trackItemUpdated = (householdId: string, itemData: Record<string, unknown>, planKey?: string) => 
   logLegacy("legacy.item_updated", { household_id: householdId, data: itemData, plan_key: planKey });
+
+export const trackReminderScheduled = (householdId: string, planKey?: string, reminderData?: Record<string, unknown>) => 
+  logLegacy("legacy.reminder_scheduled", { household_id: householdId, plan_key: planKey, data: reminderData });

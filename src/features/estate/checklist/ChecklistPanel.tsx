@@ -14,6 +14,8 @@ import {
 } from './types';
 import { mapSignal } from './mapper';
 import { recomputeChecklist } from './recompute';
+import { trackChecklistCompleted } from '@/lib/telemetry';
+import { useUserPlanKey } from '@/hooks/useUserPlanKey';
 
 type ChecklistPanelProps = {
   checklist: Checklist;
@@ -42,6 +44,8 @@ const CHECKLIST_SECTIONS = [
 
 export default function ChecklistPanel({ checklist, showRecompute = false, onUpdate }: ChecklistPanelProps) {
   const [isRecomputing, setIsRecomputing] = React.useState(false);
+  const [hasTrackedCompletion, setHasTrackedCompletion] = React.useState(false);
+  const planKey = useUserPlanKey();
 
   const handleRecompute = async () => {
     if (!showRecompute || isRecomputing) return;
@@ -78,6 +82,16 @@ export default function ChecklistPanel({ checklist, showRecompute = false, onUpd
     (Object.values(checklist.items).filter(item => item.status === 'COMPLETE').length / 
      Object.values(checklist.items).length) * 100
   );
+
+  // Track checklist completion once when reaching 100%
+  React.useEffect(() => {
+    if (completionPercentage === 100 && !hasTrackedCompletion) {
+      trackChecklistCompleted(checklist.clientId, planKey);
+      setHasTrackedCompletion(true);
+    } else if (completionPercentage < 100) {
+      setHasTrackedCompletion(false);
+    }
+  }, [completionPercentage, checklist.clientId, planKey, hasTrackedCompletion]);
 
   return (
     <Card className="w-full">

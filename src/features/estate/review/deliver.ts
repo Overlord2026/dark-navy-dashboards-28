@@ -1,4 +1,5 @@
 import { recordReceipt } from '@/features/receipts/record';
+import { trackShareGranted } from '@/lib/telemetry';
 import type { ReviewSession } from './types';
 
 export async function deliverReviewPacket(options: {
@@ -14,6 +15,9 @@ export async function deliverReviewPacket(options: {
   // PRE share to family user (Vault grant)
   console.log(`Granting access to ${deliverId} for user ${familyUserId}`);
   const versionLabel = currentVersion ? `v${currentVersion.vno}` : 'legacy';
+  
+  // Track legacy share grant event
+  await trackShareGranted(familyUserId);
 
   // Log Consent-RDS with scope for estate review packet
   await recordReceipt({

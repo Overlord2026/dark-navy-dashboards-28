@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { recordReceipt } from './receipts';
 import { withAttestation } from './attestation';
 import { inputs_hash } from '@/lib/canonical';
+import { logLegacy } from '@/lib/telemetry';
 
 export interface StormAlert {
   alert_id: string;
@@ -145,6 +146,16 @@ async function scheduleAppraisalReminders(): Promise<void> {
         reminder_type: 'appraisal_due',
         scheduled_date: reminderDate.toISOString().split('T')[0],
         due_date: asset.next_appraisal_due
+      });
+
+      // Track legacy reminder scheduled event
+      await logLegacy("legacy.reminder_scheduled", {
+        household_id: asset.user_id,
+        data: {
+          asset_id: asset.id,
+          reminder_type: 'appraisal_due',
+          scheduled_date: reminderDate.toISOString().split('T')[0]
+        }
       });
     }
   }
