@@ -7,6 +7,7 @@ type PlanKey = FamilyPlanKey | AdvisorPlanKey;
 interface CheckoutPlan {
   planKey: PlanKey | null;
   badge: string;
+  features: string[];
   checkoutHref: string;
 }
 
@@ -22,8 +23,20 @@ export function useCheckoutPlan(): CheckoutPlan {
   
   const planKey = isValidPlan(planParam) ? planParam : null;
   
-  // Get badge text
+  // Get features for plan
+  const getFeatures = (key: PlanKey): readonly string[] => {
+    if (key in TIERS.families.features) {
+      return TIERS.families.features[key as FamilyPlanKey];
+    }
+    if (key in TIERS.advisor.features) {
+      return TIERS.advisor.features[key as AdvisorPlanKey];
+    }
+    return [];
+  };
+  
+  // Get badge text and features
   const badge = planKey ? BADGES[planKey] : '';
+  const features = planKey ? [...getFeatures(planKey)] : [];
   
   // Get checkout href
   const getCheckoutHref = (key: PlanKey | null): string => {
@@ -47,6 +60,7 @@ export function useCheckoutPlan(): CheckoutPlan {
   return {
     planKey,
     badge,
+    features,
     checkoutHref,
   };
 }
