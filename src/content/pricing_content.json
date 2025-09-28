@@ -58,6 +58,24 @@
       "Custom attestations (SOW)"
     ]
   },
+  "legacy": {
+    "status": "beta",
+    "headline": "SWAG™ Legacy Planning",
+    "subhead": "Organize heirs, assets, and instructions — kept current.",
+    "labels": { "beta": "Beta", "coming": "Coming soon" },
+    "families": {
+      "basic": { "label": "Legacy basics", "note": "Included", "badges": ["Beta"] },
+      "advanced": { "label": "Legacy Vault", "note": "Coming soon", "badges": ["Coming soon"] }
+    },
+    "advisor": {
+      "solo_basic": { "note": "Add-on (TBA)", "badges": ["Beta"] },
+      "solo_premium": { "note": "Included (beta)", "badges": ["Beta"] }
+    },
+    "ria": {
+      "under_20": { "note": "Add-on (TBA)", "badges": ["Beta"] },
+      "over_20": { "note": "Included (beta)", "badges": ["Beta"] }
+    }
+  },
   "faq": [
     {
       "q": "How do upgrades work?",
