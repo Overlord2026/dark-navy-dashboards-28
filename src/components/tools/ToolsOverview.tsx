@@ -3,9 +3,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Calculator, TrendingUp, Shield, DollarSign, FileText, PieChart, CreditCard, Building, Users, Briefcase, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { LEGACY_TIERS } from '@/config/tiers';
 import PricingBadge from '@/components/pricing/PricingBadge';
 import type { FamilyPlanKey } from '@/config/tiers';
+
+// Inline legacy tiers for backward compatibility
+const LEGACY_TIERS = {
+  PREMIUM: { aggLimit: 3 },
+  PRO: { aggLimit: 10 },
+} as const;
 
 const toolCategories = [
   {

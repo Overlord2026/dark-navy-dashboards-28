@@ -1,6 +1,6 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { BADGES, getPlanType } from '@/config/tiers';
+import { BADGES } from '@/config/tiers';
 import type { FamilyPlanKey, AdvisorPlanKey } from '@/config/tiers';
 import { cn } from '@/lib/utils';
 
@@ -10,6 +10,13 @@ interface PlanBadgeProps {
   planKey: PlanKey;
   className?: string;
   variant?: 'default' | 'secondary' | 'destructive' | 'outline';
+}
+
+// Inline helper to determine plan type
+function getPlanType(planKey: string): 'family' | 'advisor' | 'unknown' {
+  if (['free', 'premium', 'pro'].includes(planKey)) return 'family';
+  if (['advisor_basic', 'advisor_premium'].includes(planKey)) return 'advisor';
+  return 'unknown';
 }
 
 export function PlanBadge({ planKey, className, variant }: PlanBadgeProps) {

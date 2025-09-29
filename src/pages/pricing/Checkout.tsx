@@ -6,10 +6,17 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Check, AlertTriangle } from 'lucide-react';
 import { useUserSubscription, type PlanKey } from '@/hooks/useUserSubscription';
 import PricingBadge from '@/components/pricing/PricingBadge';
-import { TIERS, getPlanType } from '@/config/tiers';
+import { TIERS } from '@/config/tiers';
 import { CheckoutService } from '@/lib/checkout';
 import { useToast } from '@/hooks/use-toast';
 import type { FamilyPlanKey, AdvisorPlanKey } from '@/config/tiers';
+
+// Inline helper to determine plan type
+function getPlanType(planKey: string): 'family' | 'advisor' | 'unknown' {
+  if (['free', 'premium', 'pro'].includes(planKey)) return 'family';
+  if (['advisor_basic', 'advisor_premium'].includes(planKey)) return 'advisor';
+  return 'unknown';
+}
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -126,9 +133,6 @@ export default function Checkout() {
   }
   
   const planType = getPlanType(targetPlanKey);
-  const features = planType === 'family' 
-    ? TIERS.families.features[targetPlanKey as FamilyPlanKey] 
-    : TIERS.advisor.features[targetPlanKey as AdvisorPlanKey];
      
   const handleProceedToPayment = async () => {
     try {
@@ -180,18 +184,6 @@ export default function Checkout() {
           <CardContent className="space-y-6">
             {/* Plan Details */}
             <div className="space-y-4">
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Plan Features</h3>
-                <div className="grid gap-2">
-                  {features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-green-600" />
-                      <span className="text-sm">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
               {/* Billing Information */}
               <div className="border-t pt-4">
                 <div className="flex justify-between items-center">
