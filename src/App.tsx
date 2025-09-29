@@ -65,16 +65,16 @@ import HQDashboard from '@/pages/stubs/HQDashboard';
 import PublishIndex from '@/pages/admin/publish/Index';
 import AdminPanel from '@/pages/stubs/AdminPanel';
 
-// New persona landing pages  
-const FamiliesIndex = lazy(() => import('@/pages/families/index'));
-const ProsIndex = lazy(() => import('@/pages/pros/index'));
+// New persona landing pages - eager loaded for instant navigation
+import FamiliesIndex from '@/pages/families/index';
+import ProsIndex from '@/pages/pros/index';
 import ProsHub from '@/pages/pros/ProsHub';
 import ToolsLauncher from '@/pages/pros/ToolsLauncher';
 import AccountantsCTA from '@/pages/pros/AccountantsCTA';
 import AttorneysCTA from '@/pages/pros/AttorneysCTA';
 import ProWorkspaceLayout from '@/components/layout/ProWorkspaceLayout';
 
-const HealthcareNew = lazy(() => import('@/pages/healthcare/index'));
+import HealthcareNew from '@/pages/healthcare/index';
 const SolutionsLanding = lazy(() => import('@/pages/solutions/index'));
 const LearnLanding = lazy(() => import('@/pages/learn/index'));
 

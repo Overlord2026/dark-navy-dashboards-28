@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, startTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import { PROS, FAMILIES } from "@/config/personas";
 
@@ -6,7 +6,13 @@ export default function PersonaSwitcher() {
   const nav = useNavigate();
   const [val, setVal] = useState<string>(()=>localStorage.getItem("persona") || "");
   useEffect(()=>{ if(val) localStorage.setItem("persona", val); }, [val]);
-  function go(path:string){ if(path) nav(path); }
+  function go(path:string){ 
+    if(path) {
+      startTransition(() => {
+        nav(path);
+      });
+    }
+  }
 
   const options = [
     { group:"Service Professionals", items: PROS.map(p=>({label:p.label, to:p.to})) },
