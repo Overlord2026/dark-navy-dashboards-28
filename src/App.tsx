@@ -27,6 +27,7 @@ import Checkout from '@/pages/pricing/Checkout';
 
 // Landing page imports
 import LandingNew from '@/pages/LandingNew';
+import { HomePage } from '@/pages/HomePage';
 import FamiliesLanding from '@/pages/landing/FamiliesLanding';
 import ProsLanding from '@/pages/landing/ProsLanding';
 import ReportsPage from '@/pages/ReportsPage';
@@ -431,7 +432,7 @@ function App() {
             <RedirectHandler />
             <div style={{ paddingTop: '160px' }}>
             <Routes>
-            <Route path="/" element={<LandingNew />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/old-home" element={
               isAuthenticated ? (
                 <Navigate to="/families" replace />
