@@ -9,6 +9,7 @@ export type { UserProfile };
 
 interface UserContextType {
   userProfile: UserProfile | null;
+  supabaseUser: any | null; // Raw Supabase user with app_metadata
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
@@ -222,6 +223,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <UserContext.Provider
       value={{
         userProfile,
+        supabaseUser: user, // Expose raw Supabase user with app_metadata
         isAuthenticated,
         isLoading,
         login,

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
-import { hasAdminRole } from "@/lib/roles";
+import { useIsAdmin, useUserRole, useUserFirmId } from "@/hooks/useIsAdmin";
 
 type SummaryRow =
   Database["public"]["Functions"]["legacy_kpis_summary"]["Returns"][number];
@@ -18,32 +18,11 @@ export default function LegacyKPIDashboard() {
   const [firmOnly, setFirmOnly] = useState(true);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [role, setRole] = useState<string | null>(null);
-  const [firmId, setFirmId] = useState<string | null>(null);
-
-  // session → role/firm
-  useEffect(() => {
-    let mounted = true;
-    (async () => {
-      const { data } = await supabase.auth.getSession();
-      const meta = data.session?.user?.app_metadata as any;
-      if (!mounted) return;
-      setRole(meta?.role ?? null);
-      setFirmId(meta?.firm_id ?? null);
-      setIsAdmin(hasAdminRole(meta));
-    })();
-    const sub = supabase.auth.onAuthStateChange((_e, s) => {
-      const meta = s?.user?.app_metadata as any;
-      setRole(meta?.role ?? null);
-      setFirmId(meta?.firm_id ?? null);
-      setIsAdmin(hasAdminRole(meta));
-    });
-    return () => {
-      mounted = false;
-      sub.data.subscription.unsubscribe();
-    };
-  }, []);
+  
+  // Use clean hooks for admin checking
+  const isAdmin = useIsAdmin();
+  const role = useUserRole();
+  const firmId = useUserFirmId();
 
   // fetch data
   useEffect(() => {

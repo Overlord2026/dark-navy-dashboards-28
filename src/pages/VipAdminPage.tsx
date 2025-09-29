@@ -4,20 +4,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { VipInviteEngine } from '@/components/admin/VipInviteEngine';
 import { VipWallDisplay } from '@/components/admin/VipWallDisplay';
 import { VipAutomationEngine } from '@/components/admin/VipAutomationEngine';
-import { useUser } from '@/context/UserContext';
+import { useIsAdmin } from '@/hooks/useIsAdmin';
 
 export default function VipAdminPage() {
-  const { userProfile } = useUser();
+  const isAdmin = useIsAdmin();
 
-  // Check if user has required admin role
-  const hasAdminAccess = userProfile?.role && [
-    'admin', 
-    'system_administrator', 
-    'tenant_admin',
-    'superadmin'
-  ].includes(userProfile.role);
-
-  if (!hasAdminAccess) {
+  if (!isAdmin) {
     return <Navigate to="/client-dashboard" replace />;
   }
 
