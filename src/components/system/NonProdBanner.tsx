@@ -1,9 +1,9 @@
 import React from "react";
-import { BUILD_ID } from "@/lib/flags";
+import { BUILD_ID } from "@/lib/build";
 import { FLAGS } from "@/config/flags";
 
 export default function NonProdBanner() {
-  if (!FLAGS.showNonProdBanner || FLAGS.IS_PRODUCTION) return null;
+  if (FLAGS.IS_PRODUCTION || !FLAGS.showNonProdBanner) return null;
   return (
     <div
       className="fixed top-0 left-0 right-0 z-[9999] bg-amber-600 text-white text-xs md:text-sm px-3 py-1 flex items-center justify-between shadow"
