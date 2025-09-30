@@ -3,7 +3,7 @@
  * Wrapper for @swag/analyzer package
  */
 
-import type { RetirementAnalysisInput, RetirementAnalysisResults, CashFlowProjection } from '@/types/retirement';
+import type { RetirementAnalysisInput, RetirementAnalysisResults, CashFlowProjection, RetirementPolicy } from '@/types/retirement';
 
 export interface StressScenario {
   id: string;
@@ -51,7 +51,8 @@ export const PREDEFINED_SCENARIOS: StressScenario[] = [
 ];
 
 export async function createRetirementAnalysis(
-  input: RetirementAnalysisInput
+  input: RetirementAnalysisInput,
+  policy?: RetirementPolicy
 ): Promise<RetirementAnalysisResults> {
   // Simplified analysis - in production this would call @swag/analyzer
   const { goals, accounts, expenses } = input;
@@ -122,7 +123,8 @@ export async function createRetirementAnalysis(
 
 export async function runStressTest(
   baseInput: RetirementAnalysisInput,
-  scenario: StressScenario
+  scenario: StressScenario,
+  policy?: RetirementPolicy
 ): Promise<RetirementAnalysisResults> {
   const modifiedInput = { ...baseInput };
   
@@ -138,7 +140,7 @@ export async function runStressTest(
     modifiedInput.goals.lifeExpectancy += scenario.modifiers.longevityYears;
   }
   
-  return createRetirementAnalysis(modifiedInput);
+  return createRetirementAnalysis(modifiedInput, policy);
 }
 
 export function generateScenarios(baseInput: RetirementAnalysisInput): StressScenario[] {

@@ -102,6 +102,28 @@ export interface CashFlowProjection {
   portfolioSustainability: 'excellent' | 'good' | 'at_risk' | 'critical';
 }
 
+export type GuardrailMethod = 'none' | 'gk';
+
+export interface GuardrailConfig {
+  method: GuardrailMethod;
+  initial_withdrawal_rate: number;
+  bands_pct: number;
+  raise_cut_pct: {
+    up: number;
+    down: number;
+  };
+}
+
+export interface PolicyMetrics {
+  etayFormula: string;
+  seayFormula: string;
+}
+
+export interface RetirementPolicy {
+  guardrails: GuardrailConfig;
+  metrics: PolicyMetrics;
+}
+
 export interface RetirementAnalysisInput {
   goals: RetirementGoals;
   socialSecurity: SocialSecurityInput;
@@ -111,6 +133,7 @@ export interface RetirementAnalysisInput {
   taxOptimization: TaxOptimizationSettings;
   healthcare: HealthcareCosts;
   legacy: LegacyPlanning;
+  policy?: RetirementPolicy;
 }
 
 export interface RetirementAnalysisResults {

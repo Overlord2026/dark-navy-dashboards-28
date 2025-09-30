@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScenarioBar } from '@/components/retirement/ScenarioBar';
+import { PolicyPanel } from '@/components/retirement/PolicyPanel';
 import { createRetirementAnalysis, runStressTest, generateScenarios, PREDEFINED_SCENARIOS } from '@/lib/retirement/engine';
-import type { RetirementAnalysisInput, RetirementAnalysisResults } from '@/types/retirement';
+import type { RetirementAnalysisInput, RetirementAnalysisResults, RetirementPolicy } from '@/types/retirement';
 import { useRetirementIntake } from '@/store/retirementIntake';
 import { FileDown, Play, Plus } from 'lucide-react';
 
@@ -14,6 +15,18 @@ export default function SwagAnalyzerPage() {
   const [activeScenario, setActiveScenario] = useState('base');
   const [results, setResults] = useState<Record<string, RetirementAnalysisResults>>({});
   const [loading, setLoading] = useState(false);
+  const [policy, setPolicy] = useState<RetirementPolicy>({
+    guardrails: {
+      method: 'none',
+      initial_withdrawal_rate: 0.04,
+      bands_pct: 0.20,
+      raise_cut_pct: { up: 0.10, down: 0.10 }
+    },
+    metrics: {
+      etayFormula: '',
+      seayFormula: ''
+    }
+  });
 
   // Sample input for demo
   const sampleInput: RetirementAnalysisInput = {
@@ -85,7 +98,10 @@ export default function SwagAnalyzerPage() {
   };
 
   // Use stored inputs from intake or fallback to sample
-  const analysisInput = (storedInputs as RetirementAnalysisInput) || sampleInput;
+  const analysisInput = {
+    ...((storedInputs as RetirementAnalysisInput) || sampleInput),
+    policy
+  };
 
   const handleRunAnalysis = async () => {
     setLoading(true);
@@ -95,9 +111,9 @@ export default function SwagAnalyzerPage() {
       
       for (const scenario of scenarios) {
         if (scenario.id === 'base') {
-          newResults[scenario.id] = await createRetirementAnalysis(analysisInput);
+          newResults[scenario.id] = await createRetirementAnalysis(analysisInput, policy);
         } else {
-          newResults[scenario.id] = await runStressTest(analysisInput, scenario);
+          newResults[scenario.id] = await runStressTest(analysisInput, scenario, policy);
         }
       }
       
@@ -158,73 +174,112 @@ export default function SwagAnalyzerPage() {
             />
 
             {currentResult && (
-              <div className="mt-6 space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Readiness Score</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-6xl font-bold text-primary">
-                      {currentResult.readinessScore.toFixed(0)}
-                      <span className="text-2xl text-muted-foreground">/100</span>
-                    </div>
-                  </CardContent>
-                </Card>
+              <div className="mt-6 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
+                {/* LEFT: Results column */}
+                <div className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Readiness Score</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-6xl font-bold text-primary">
+                        {currentResult.readinessScore.toFixed(0)}
+                        <span className="text-2xl text-muted-foreground">/100</span>
+                      </div>
+                    </CardContent>
+                  </Card>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Monte Carlo Results</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div>
-                        <div className="text-sm text-muted-foreground">Success Rate</div>
-                        <div className="text-2xl font-bold">
-                          {(currentResult.monteCarlo.successProbability * 100).toFixed(1)}%
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Monte Carlo Results</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div>
+                          <div className="text-sm text-muted-foreground">Success Rate</div>
+                          <div className="text-2xl font-bold">
+                            {(currentResult.monteCarlo.successProbability * 100).toFixed(1)}%
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">SWAG Score</div>
+                          <div className="text-2xl font-bold">
+                            {currentResult.monteCarlo.swagScore.toFixed(0)}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">Years Sustained</div>
+                          <div className="text-2xl font-bold">
+                            {currentResult.monteCarlo.yearsOfPortfolioSustainability}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">Income Gap</div>
+                          <div className="text-2xl font-bold">
+                            ${(currentResult.monthlyIncomeGap / 1000).toFixed(1)}K
+                          </div>
                         </div>
                       </div>
-                      <div>
-                        <div className="text-sm text-muted-foreground">SWAG Score</div>
-                        <div className="text-2xl font-bold">
-                          {currentResult.monteCarlo.swagScore.toFixed(0)}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-muted-foreground">Years Sustained</div>
-                        <div className="text-2xl font-bold">
-                          {currentResult.monteCarlo.yearsOfPortfolioSustainability}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-muted-foreground">Income Gap</div>
-                        <div className="text-2xl font-bold">
-                          ${(currentResult.monthlyIncomeGap / 1000).toFixed(1)}K
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Recommendations</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {currentResult.recommendations.map((rec) => (
-                        <div key={rec.id} className="border-l-4 border-primary pl-4">
-                          <div className="font-semibold">{rec.title}</div>
-                          <div className="text-sm text-muted-foreground">{rec.description}</div>
+                      {/* Second row for ETAY/SEAY/Guardrails */}
+                      <div className="grid grid-cols-3 gap-4 pt-4 border-t">
+                        <div>
+                          <div className="text-sm text-muted-foreground">ETAY</div>
+                          <div className="text-2xl font-bold">
+                            {policy.metrics.etayFormula ? '📝' : '—'}
+                            <span className="text-sm ml-1 text-muted-foreground">
+                              {policy.metrics.etayFormula ? 'Custom' : 'Not set'}
+                            </span>
+                          </div>
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                        <div>
+                          <div className="text-sm text-muted-foreground">SEAY</div>
+                          <div className="text-2xl font-bold">
+                            {policy.metrics.seayFormula ? '📝' : '—'}
+                            <span className="text-sm ml-1 text-muted-foreground">
+                              {policy.metrics.seayFormula ? 'Custom' : 'Not set'}
+                            </span>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">Guardrails</div>
+                          <div className="text-2xl font-bold">
+                            {policy.guardrails.method === 'gk' ? '✓' : '—'}
+                            <span className="text-sm ml-1 text-muted-foreground">
+                              {policy.guardrails.method === 'gk' ? 'Active' : 'Off'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
 
-                <Button className="gap-2">
-                  <FileDown className="h-4 w-4" />
-                  Export PDF Report
-                </Button>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Recommendations</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {currentResult.recommendations.map((rec) => (
+                          <div key={rec.id} className="border-l-4 border-primary pl-4">
+                            <div className="font-semibold">{rec.title}</div>
+                            <div className="text-sm text-muted-foreground">{rec.description}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Button className="gap-2">
+                    <FileDown className="h-4 w-4" />
+                    Export PDF Report
+                  </Button>
+                </div>
+
+                {/* RIGHT: Policy Panel */}
+                <div className="lg:sticky lg:top-6 lg:self-start">
+                  <PolicyPanel policy={policy} onChange={setPolicy} />
+                </div>
               </div>
             )}
           </>
