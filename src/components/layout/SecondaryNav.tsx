@@ -8,7 +8,7 @@ if (!React || typeof React.useContext !== 'function') {
   throw new Error('React runtime not properly initialized in SecondaryNav');
 }
 
-function SecondaryNav() {
+export function SecondaryNav() {
   const nav = useNavigate();
   const loc = useLocation();
   const items = useMemo(() => [
@@ -114,6 +114,5 @@ function SecondaryNav() {
   );
 }
 
-// Default and named exports
+// Default export
 export default SecondaryNav;
-export { SecondaryNav };
