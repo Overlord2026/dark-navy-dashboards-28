@@ -5,14 +5,17 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
 import { ScenarioBar } from '@/components/retirement/ScenarioBar';
 import { PolicyPanel } from '@/components/retirement/PolicyPanel';
+import { ResultsKpiTiles } from '@/components/retirement/ResultsKpiTiles';
 import { createRetirementAnalysis, runStressTest, generateScenarios, PREDEFINED_SCENARIOS } from '@/lib/retirement/engine';
 import type { RetirementAnalysisInput, RetirementAnalysisResults, RetirementPolicy } from '@/types/retirement';
 import { useRetirementIntake } from '@/store/retirementIntake';
 import { buildExplainPackFromState, downloadSwagExplainPack } from '@/lib/explainpack';
 import { createScenario, createVersion, enqueueRun, pollRunUntilComplete, getResults, type RetirementResults } from '@/data/analyzer';
-import { Play, Plus, Download, Printer, Save, Loader2 } from 'lucide-react';
+import { Play, Plus, Download, Printer, Save, Loader2, Send } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function SwagAnalyzerPage() {
@@ -22,7 +25,8 @@ export default function SwagAnalyzerPage() {
   const [results, setResults] = useState<Record<string, RetirementAnalysisResults>>({});
   const [loading, setLoading] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
-  const [scenarioName, setScenarioName] = useState('');
+  const [scenarioName, setScenarioName] = useState('My Retirement Plan');
+  const [selectedVersion, setSelectedVersion] = useState('v1');
   const [currentScenarioId, setCurrentScenarioId] = useState<string | null>(null);
   const [currentVersionId, setCurrentVersionId] = useState<string | null>(null);
   const [mcResults, setMcResults] = useState<RetirementResults | null>(null);
@@ -253,102 +257,37 @@ export default function SwagAnalyzerPage() {
           </p>
         </div>
 
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Analysis Controls</CardTitle>
-            <CardDescription>Run comprehensive retirement analysis</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-4">
-            <Button 
-              onClick={handleRunAnalysis} 
-              disabled={loading}
-              className="gap-2"
-            >
-              <Play className="h-4 w-4" />
-              {loading ? 'Running Analysis...' : 'Run Analysis'}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => navigate('/wealth/retirement/start')}
-              className="gap-2"
-            >
-              <Plus className="h-4 w-4" />
-              New Analysis
-            </Button>
-            {Object.keys(results).length > 0 && (
-              <>
-                <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="gap-2">
-                      <Save className="h-4 w-4" />
-                      Save Scenario
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Save Scenario</DialogTitle>
-                      <DialogDescription>
-                        Save this retirement scenario for future reference
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4 py-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="scenario-name">Scenario Name</Label>
-                        <Input
-                          id="scenario-name"
-                          placeholder="My Retirement Plan"
-                          value={scenarioName}
-                          onChange={(e) => setScenarioName(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <Button onClick={handleSaveScenario}>Save</Button>
-                  </DialogContent>
-                </Dialog>
-
-                <Button
-                  variant="outline"
-                  onClick={handleRunSimulation}
-                  disabled={runStatus === 'running' || runStatus === 'queued'}
-                  className="gap-2"
-                >
-                  {runStatus === 'running' || runStatus === 'queued' ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Running...
-                    </>
-                  ) : (
-                    <>
-                      <Play className="h-4 w-4" />
-                      Run Simulation (5k)
-                    </>
-                  )}
-                </Button>
-
-                <Button
-                  variant="outline"
-                  onClick={handleExportJson}
-                  className="gap-2"
-                >
-                  <Download className="h-4 w-4" />
-                  Export JSON
-                </Button>
-
-                <Button
-                  variant="outline"
-                  onClick={handlePrintPdf}
-                  className="gap-2"
-                >
-                  <Printer className="h-4 w-4" />
-                  Print PDF
-                </Button>
-              </>
-            )}
-          </CardContent>
-        </Card>
+        {/* Initial Analysis Button */}
+        {Object.keys(results).length === 0 && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>Get Started</CardTitle>
+              <CardDescription>Run comprehensive retirement analysis</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-wrap gap-4">
+              <Button 
+                onClick={handleRunAnalysis} 
+                disabled={loading}
+                className="gap-2"
+              >
+                <Play className="h-4 w-4" />
+                {loading ? 'Running Analysis...' : 'Run Analysis'}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => navigate('/wealth/retirement/start')}
+                className="gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                New Analysis
+              </Button>
+            </CardContent>
+          </Card>
+        )}
 
         {Object.keys(results).length > 0 && (
           <>
+            {/* Scenario Bar */}
             <ScenarioBar
               scenarios={PREDEFINED_SCENARIOS}
               activeScenario={activeScenario}
@@ -357,167 +296,171 @@ export default function SwagAnalyzerPage() {
             />
 
             {currentResult && (
-              <div className="mt-6 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
-                {/* LEFT: Results column */}
-                <div className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Readiness Score</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-6xl font-bold text-primary">
-                        {currentResult.readinessScore.toFixed(0)}
-                        <span className="text-2xl text-muted-foreground">/100</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Monte Carlo Results</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <>
+                {/* Premium Results Header Bar */}
+                <Card className="mt-6">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-6">
                         <div>
-                          <div className="text-sm text-muted-foreground">Success Rate</div>
-                          <div className="text-2xl font-bold">
-                            {(currentResult.monteCarlo.successProbability * 100).toFixed(1)}%
-                          </div>
+                          <div className="text-sm text-muted-foreground mb-1">Scenario</div>
+                          <div className="text-xl font-semibold">{scenarioName}</div>
                         </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground">SWAG Score</div>
-                          <div className="text-2xl font-bold">
-                            {currentResult.monteCarlo.swagScore.toFixed(0)}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground">Years Sustained</div>
-                          <div className="text-2xl font-bold">
-                            {currentResult.monteCarlo.yearsOfPortfolioSustainability}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground">Income Gap</div>
-                          <div className="text-2xl font-bold">
-                            ${(currentResult.monthlyIncomeGap / 1000).toFixed(1)}K
-                          </div>
+                        <Separator orientation="vertical" className="h-10" />
+                        <div className="w-40">
+                          <div className="text-sm text-muted-foreground mb-1">Version</div>
+                          <Select value={selectedVersion} onValueChange={setSelectedVersion}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="v1">Version 1</SelectItem>
+                              <SelectItem value="v2">Version 2</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
                       </div>
-
-                      {/* Second row for ETAY/SEAY/Guardrails */}
-                      <div className="grid grid-cols-3 gap-4 pt-4 border-t">
-                        <div>
-                          <div className="text-sm text-muted-foreground">ETAY</div>
-                          <div className="text-2xl font-bold">
-                            {policy.metrics.etayFormula ? '📝' : '—'}
-                            <span className="text-sm ml-1 text-muted-foreground">
-                              {policy.metrics.etayFormula ? 'Custom' : 'Not set'}
-                            </span>
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground">SEAY</div>
-                          <div className="text-2xl font-bold">
-                            {policy.metrics.seayFormula ? '📝' : '—'}
-                            <span className="text-sm ml-1 text-muted-foreground">
-                              {policy.metrics.seayFormula ? 'Custom' : 'Not set'}
-                            </span>
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground">Guardrails</div>
-                          <div className="text-2xl font-bold">
-                            {policy.guardrails.method === 'gk' ? '✓' : '—'}
-                            <span className="text-sm ml-1 text-muted-foreground">
-                              {policy.guardrails.method === 'gk' ? 'Active' : 'Off'}
-                            </span>
-                          </div>
-                        </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={handleRunSimulation}
+                          disabled={runStatus === 'running' || runStatus === 'queued'}
+                          className="gap-2"
+                        >
+                          {runStatus === 'running' || runStatus === 'queued' ? (
+                            <>
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                              Running...
+                            </>
+                          ) : (
+                            <>
+                              <Play className="h-4 w-4" />
+                              Run MC
+                            </>
+                          )}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={handlePrintPdf}
+                          className="gap-2"
+                        >
+                          <Printer className="h-4 w-4" />
+                          Export
+                        </Button>
+                        <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
+                          <DialogTrigger asChild>
+                            <Button variant="outline" className="gap-2">
+                              <Save className="h-4 w-4" />
+                              Save
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Save Scenario</DialogTitle>
+                              <DialogDescription>
+                                Save this retirement scenario for future reference
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="space-y-4 py-4">
+                              <div className="space-y-2">
+                                <Label htmlFor="scenario-name">Scenario Name</Label>
+                                <Input
+                                  id="scenario-name"
+                                  placeholder="My Retirement Plan"
+                                  value={scenarioName}
+                                  onChange={(e) => setScenarioName(e.target.value)}
+                                />
+                              </div>
+                            </div>
+                            <Button onClick={handleSaveScenario}>Save</Button>
+                          </DialogContent>
+                        </Dialog>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </CardContent>
+                </Card>
 
-                  {mcResults && (
+                {/* Main Layout: Results + Policy Panel */}
+                <div className="mt-6 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
+                  {/* LEFT: Results column */}
+                  <div className="space-y-6">
+                    {/* KPI Tiles */}
+                    <ResultsKpiTiles
+                      successProbability={mcResults?.success_probability || currentResult.monteCarlo.successProbability}
+                      etayValue={mcResults?.etay_value}
+                      seayValue={mcResults?.seay_value}
+                      breachRate={mcResults?.breach_rate || 0}
+                    />
+
+                    {/* Readiness Score Card */}
                     <Card>
                       <CardHeader>
-                        <CardTitle>Monte Carlo Results</CardTitle>
-                        <CardDescription>5,000 path simulation</CardDescription>
+                        <CardTitle>Readiness Score</CardTitle>
                       </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          <div>
-                            <div className="text-sm text-muted-foreground">Success Probability</div>
-                            <div className="text-2xl font-bold">
-                              {mcResults.success_probability ? (mcResults.success_probability * 100).toFixed(1) : '—'}%
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground">Terminal P50</div>
-                            <div className="text-2xl font-bold">
-                              ${mcResults.terminal_p50 ? (mcResults.terminal_p50 / 1000).toFixed(0) : '—'}K
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground">Breach Rate</div>
-                            <div className="text-2xl font-bold">
-                              {mcResults.breach_rate ? (mcResults.breach_rate * 100).toFixed(1) : '—'}%
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground">Terminal P10/P90</div>
-                            <div className="text-xl font-bold">
-                              ${mcResults.terminal_p10 ? (mcResults.terminal_p10 / 1000).toFixed(0) : '—'}K / 
-                              ${mcResults.terminal_p90 ? (mcResults.terminal_p90 / 1000).toFixed(0) : '—'}K
-                            </div>
-                          </div>
+                      <CardContent>
+                        <div className="text-6xl font-bold text-primary">
+                          {currentResult.readinessScore.toFixed(0)}
+                          <span className="text-2xl text-muted-foreground">/100</span>
                         </div>
-
-                        {(mcResults.etay_value || mcResults.seay_value) && (
-                          <div className="grid grid-cols-2 gap-4 pt-4 border-t">
-                            {mcResults.etay_value && (
-                              <div>
-                                <div className="text-sm text-muted-foreground">ETAY</div>
-                                <div className="text-2xl font-bold">
-                                  {(mcResults.etay_value * 100).toFixed(2)}%
-                                </div>
-                              </div>
-                            )}
-                            {mcResults.seay_value && (
-                              <div>
-                                <div className="text-sm text-muted-foreground">SEAY</div>
-                                <div className="text-2xl font-bold">
-                                  {(mcResults.seay_value * 100).toFixed(2)}%
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        )}
                       </CardContent>
                     </Card>
-                  )}
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Recommendations</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {currentResult.recommendations.map((rec) => (
-                          <div key={rec.id} className="border-l-4 border-primary pl-4">
-                            <div className="font-semibold">{rec.title}</div>
-                            <div className="text-sm text-muted-foreground">{rec.description}</div>
+                    {/* Monte Carlo Results Card */}
+                    {mcResults && (
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Extended Monte Carlo Results</CardTitle>
+                          <CardDescription>5,000 path simulation</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <div>
+                              <div className="text-sm text-muted-foreground">Terminal P10</div>
+                              <div className="text-2xl font-bold">
+                                ${mcResults.terminal_p10 ? (mcResults.terminal_p10 / 1000).toFixed(0) : '—'}K
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-sm text-muted-foreground">Terminal P50</div>
+                              <div className="text-2xl font-bold">
+                                ${mcResults.terminal_p50 ? (mcResults.terminal_p50 / 1000).toFixed(0) : '—'}K
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-sm text-muted-foreground">Terminal P90</div>
+                              <div className="text-2xl font-bold">
+                                ${mcResults.terminal_p90 ? (mcResults.terminal_p90 / 1000).toFixed(0) : '—'}K
+                              </div>
+                            </div>
                           </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
+                        </CardContent>
+                      </Card>
+                    )}
 
-                {/* RIGHT: Policy Panel */}
-                <div className="lg:sticky lg:top-6 lg:self-start">
-                  <PolicyPanel policy={policy} onChange={setPolicy} />
+                    {/* Recommendations Card */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Recommendations</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          {currentResult.recommendations.map((rec) => (
+                            <div key={rec.id} className="border-l-4 border-primary pl-4">
+                              <div className="font-semibold">{rec.title}</div>
+                              <div className="text-sm text-muted-foreground">{rec.description}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* RIGHT: Policy Panel with subtle divider */}
+                  <div className="border-l pl-6">
+                    <PolicyPanel policy={policy} onChange={setPolicy} />
+                  </div>
                 </div>
-              </div>
+              </>
             )}
           </>
         )}
