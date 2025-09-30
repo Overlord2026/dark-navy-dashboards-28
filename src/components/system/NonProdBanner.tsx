@@ -1,8 +1,9 @@
 import React from "react";
-import { IS_PROD, APP_NAME, BUILD_ID } from "../../lib/flags";
+import { BUILD_ID } from "@/lib/flags";
+import FLAGS from "@/config/flags";
 
 export default function NonProdBanner() {
-  if (IS_PROD) return null;
+  if (!FLAGS.showNonProdBanner || FLAGS.IS_PRODUCTION) return null;
   return (
     <div
       className="fixed top-0 left-0 right-0 z-[9999] bg-amber-600 text-white text-xs md:text-sm px-3 py-1 flex items-center justify-between shadow"
@@ -10,7 +11,7 @@ export default function NonProdBanner() {
       aria-live="polite"
     >
       <span className="font-medium tracking-wide">
-        STAGING — {APP_NAME}
+        STAGING — BFO Platform
       </span>
       <span className="font-mono">BUILD {BUILD_ID}</span>
     </div>

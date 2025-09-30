@@ -1117,8 +1117,9 @@ function App() {
                {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/db/migrations" element={<DbMigrations />} />}
                {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration" element={<MigrationHub />} />}
                
-                {/* Public Health Check Route */}
-                {getFlag('HEALTH_PUBLIC') && <Route path="/__health" element={<HealthCheck />} />}
+                 {/* Public Health Check Routes */}
+                 {getFlag('HEALTH_PUBLIC') && <Route path="/__health" element={<HealthCheck />} />}
+                 {getFlag('HEALTH_PUBLIC') && <Route path="/healthz" element={<HealthCheck />} />}
             
             {/* Demo Routes */}
             {getFlag('DEMOS_ENABLED') && (
