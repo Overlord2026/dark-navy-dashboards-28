@@ -130,6 +130,7 @@ import NilDisabled from '@/pages/NilDisabled';
 // Demo Pages
 const RetireeBucketDemo = lazy(() => import('@/pages/demos/retiree-bucket'));
 const AdvisorFeeCompareDemo = lazy(() => import('@/pages/demos/advisor-fee-compare'));
+const SwagAnalyzerPage = lazy(() => import('@/pages/retirement/SwagAnalyzerPage'));
 
 const IPLedgerPage = lazy(() => import('@/pages/admin/hq/ip'));
 
@@ -888,6 +889,11 @@ function App() {
             <Route path="/tools/estate" element={<EstateToolPage />} />
             <Route path="/tools/tax" element={<TaxToolPage />} />
             <Route path="/tools/vault" element={<VaultPage />} />
+            <Route path="/wealth/retirement" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <SwagAnalyzerPage />
+              </Suspense>
+            } />
             
             {/* Persona-Specific Tool Routes */}
             <Route path="/advisors/tools/retirement" element={<RetirementRoadmapTool />} />
