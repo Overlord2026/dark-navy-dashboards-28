@@ -2,7 +2,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { MegaMenu } from '@/components/nav/MegaMenu';
 import { useUser } from '@/context/UserContext';
 import { AdminActions } from '@/components/dashboard/AdminActions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -76,11 +75,8 @@ export function HomePage() {
   ];
 
   return (
-    <>
-      
-      <MegaMenu />
-      <PageTransition>
-        <div className="container mx-auto px-4 py-8">
+    <PageTransition>
+      <div className="container mx-auto px-4 py-8">
           <StaggerContainer className="space-y-8">
             <motion.div
               variants={{
@@ -158,6 +154,5 @@ export function HomePage() {
           </StaggerContainer>
         </div>
       </PageTransition>
-    </>
   );
 }
