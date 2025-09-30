@@ -1,5 +1,5 @@
 import React from "react";
-import { IS_PROD } from "../../lib/flags";
+import { IS_PROD } from "@/config/flags";
 /* React Router v6 guard */
 import { Navigate } from "react-router-dom";
 

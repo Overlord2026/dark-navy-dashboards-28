@@ -1,7 +1,7 @@
 /**
  * Update route map to include new home pages and ensure all advisor/NIL routes are mapped
  */
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 
 export function getKnownRoutes(): string[] {
   const routes: string[] = [

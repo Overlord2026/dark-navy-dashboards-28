@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import SchemaLocalBusiness from '@/components/seo/SchemaLocalBusiness';
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

@@ -153,7 +153,7 @@ import VaultAutofillConsent from '@/pages/family/VaultAutofillConsent';
 import VaultAutofillReview from '@/pages/advisor/VaultAutofillReview';
 import ChecklistExport from '@/pages/supervisor/ChecklistExport';
 import NotFound from '@/pages/NotFound';
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 import '@/features/k401/init'; // Initialize provider rules
 
 // Onboarding Components
@@ -301,7 +301,7 @@ import Health from '@/pages/Health';
 import NonProdBanner from '@/components/system/NonProdBanner';
 import FooterBuildTag from '@/components/system/FooterBuildTag';
 import NonProdOnly from '@/components/guards/NonProdOnly';
-import { ENABLE_DEV_PANEL } from '@/lib/flags';
+import { ENABLE_DEV_PANEL } from '@/config/flags';
 
 // Tax Planning Imports
 import { TaxShell } from '@/features/tax/TaxShell';

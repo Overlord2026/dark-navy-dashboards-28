@@ -39,7 +39,7 @@ import { SWAGDashboardMetrics } from './SWAGDashboardMetrics';
 import { VoiceMicButton } from '@/components/voice/VoiceMicButton';
 import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
 import { AdvisorBenchmarkWidget } from './AdvisorBenchmarkWidget';
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 import { useAdvisorClients } from '@/hooks/useAdvisorClients';
 import { ClientProfileCard } from './ClientProfileCard';
 import { AccountAggregationPanel } from './AccountAggregationPanel';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { getFlag, setFlag } from '@/lib/flags';
+import { getFlag, setFlag } from '@/config/flags';
 import { getRedirectPath } from '@/utils/redirects';
 
 /**

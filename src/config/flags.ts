@@ -12,4 +12,44 @@ export const FLAGS = {
   __REQUIRE_APPROVAL_HIGH_RISK__: true,
 } as const;
 
-export default FLAGS;
+export const BUILD_ID: string =
+  (typeof (globalThis as any).__BUILD_ID__ !== "undefined" ? String((globalThis as any).__BUILD_ID__) : null) ??
+  ((import.meta as any)?.env?.BUILD_ID ?? null) ??
+  new Date().toISOString();
+
+// Simple compatibility exports for code that expects these
+export const IS_PROD = FLAGS.IS_PRODUCTION;
+export const ENABLE_DEV_PANEL = FLAGS.ENABLE_DEV_PANEL;
+export const ENABLE_EXPERIMENTS = FLAGS.ENABLE_EXPERIMENTS;
+
+// Stub functions for feature flag compatibility (always return false for now)
+export type FeatureFlag = string;
+export function getFlag(key: string): boolean {
+  return false;
+}
+export function setFlag(key: string, value: boolean): void {
+  // no-op stub
+}
+export function getFlags(): Record<string, boolean> {
+  return {};
+}
+export function resetFlags(): void {
+  // no-op stub
+}
+export function getBuildInfo() {
+  const env = import.meta as any;
+  return {
+    flavor: env.env.VITE_BUILD_FLAVOR || env.env.MODE || 'dev',
+    mode: env.env.MODE || 'development',
+    timestamp: new Date().toISOString(),
+    dev: !!env.env.DEV,
+    prod: !!env.env.PROD,
+    baseUrl: env.env.VITE_SITE_URL || env.env.BASE_URL || window.location.origin,
+    sha: env.env.VITE_GIT_SHA || undefined,
+    builtAt: env.env.VITE_BUILD_TIMESTAMP || undefined,
+  };
+}
+export const FLAG_DESCRIPTIONS: Record<string, string> = {};
+export const flags: Record<string, boolean> = {};
+
+export default { FLAGS, BUILD_ID };

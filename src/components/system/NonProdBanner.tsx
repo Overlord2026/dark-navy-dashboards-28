@@ -1,6 +1,5 @@
 import React from "react";
-import { BUILD_ID } from "@/lib/flags";
-import { FLAGS } from "@/config/flags";
+import { BUILD_ID, FLAGS } from "@/config/flags";
 
 export default function NonProdBanner() {
   if (FLAGS.IS_PRODUCTION || !FLAGS.showNonProdBanner) return null;

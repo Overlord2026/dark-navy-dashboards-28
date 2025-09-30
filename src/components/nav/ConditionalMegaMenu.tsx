@@ -1,5 +1,5 @@
 import React from 'react';
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 import { MegaMenu } from './MegaMenu';
 import { MegaMenuV2 } from './MegaMenuV2';
 

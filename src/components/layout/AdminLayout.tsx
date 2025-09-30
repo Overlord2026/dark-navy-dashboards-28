@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useUser } from '@/context/UserContext';
 import { Button } from '@/components/ui/button';
 import { Settings, MessageSquare, Home, Users, HelpCircle, CheckCircle, Globe, Monitor } from 'lucide-react';
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 import { AdminHeaderEnvLink } from '@/components/admin/AdminHeaderEnvLink';
 import PublicFlagsBadge from '@/components/admin/PublicFlagsBadge';
 import { cn } from '@/lib/utils';

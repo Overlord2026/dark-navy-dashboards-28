@@ -1,5 +1,5 @@
 import React from 'react';
-import { flags } from '@/lib/flags';
+import { flags } from '@/config/flags';
 import { useNavigate } from 'react-router-dom';
 
 const BRAND = {

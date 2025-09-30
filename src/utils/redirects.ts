@@ -1,4 +1,4 @@
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 
 export interface RedirectRule {
   from: string;

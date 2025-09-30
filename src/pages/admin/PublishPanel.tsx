@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getFlags, setFlag, resetFlags, getBuildInfo, FLAG_DESCRIPTIONS, type FeatureFlag } from '@/lib/flags';
+import { getFlags, setFlag, resetFlags, getBuildInfo, FLAG_DESCRIPTIONS, type FeatureFlag } from '@/config/flags';
 import { purgeCDN } from '@/api/purge';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';

@@ -14,7 +14,7 @@ import { parseJump, toDecisionRdsFromJump, vaultPackForJump } from '@/tools/impo
 import { generateSummaryPdf } from '@/lib/summary/pdf';
 import { recordDecisionRDS } from '@/lib/rds';
 import { recordReceipt } from '@/features/receipts/record';
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 
 interface ImportMeetingModalProps {
   onImportComplete?: () => void;

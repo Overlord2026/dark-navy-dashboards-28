@@ -1,5 +1,5 @@
 import React from "react";
-import { BUILD_ID } from "@/lib/flags";
+import { BUILD_ID } from "@/config/flags";
 
 export default function HealthCheck() {
   return (

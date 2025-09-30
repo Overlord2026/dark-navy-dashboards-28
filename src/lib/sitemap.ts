@@ -1,5 +1,5 @@
 // Dynamic sitemap generation based on feature flags
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 
 export interface SitemapRoute {
   url: string;

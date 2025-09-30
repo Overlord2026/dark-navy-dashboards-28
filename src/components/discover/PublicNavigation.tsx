@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Menu, LogIn, ArrowRight, ChevronDown, Award, Play, Building2, Search } from 'lucide-react';
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 
 export const PublicNavigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);

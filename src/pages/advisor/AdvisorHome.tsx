@@ -9,7 +9,7 @@ import { EmptyReceiptsState } from '@/components/ui/empty-states';
 import { ReceiptsStripSkeleton } from '@/components/ui/skeletons';
 import { useFamilyAnalytics } from '@/lib/familyAnalytics';
 import { AdvisorBenchmarkWidget } from '@/components/advisor/AdvisorBenchmarkWidget';
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 import { FLAGS } from '@/config/flags';
 import AssistedBadge from '@/components/badges/AssistedBadge';
 import { 

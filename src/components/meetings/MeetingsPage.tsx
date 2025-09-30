@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { ImportMeetingModal } from '@/components/meetings/ImportMeetingModal';
 import { Calendar, Users, FileText, Shield, ExternalLink, Eye } from 'lucide-react';
 import { format } from 'date-fns';
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 
 // Mock data for meetings - in real app this would come from a database
 const mockMeetings = [

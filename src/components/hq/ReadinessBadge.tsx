@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { AlertCircle, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 
 interface ReadinessCheck {
   name: string;

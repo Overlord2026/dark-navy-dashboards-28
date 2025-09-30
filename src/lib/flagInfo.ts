@@ -1,5 +1,5 @@
 // Feature flags information utilities
-import { flags, setFlag } from '@/lib/flags';
+import { flags, setFlag } from '@/config/flags';
 
 export function getFlags(): Record<string, boolean> {
   // Return shallow copy to avoid mutations

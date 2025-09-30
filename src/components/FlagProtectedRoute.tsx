@@ -1,7 +1,7 @@
 // Route component that conditionally renders based on feature flags
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { getFlag, type FeatureFlag } from '@/lib/flags';
+import { getFlag, type FeatureFlag } from '@/config/flags';
 
 interface FlagProtectedRouteProps {
   flag: FeatureFlag;

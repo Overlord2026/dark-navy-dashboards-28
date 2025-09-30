@@ -1,6 +1,6 @@
 import React from 'react';
 import { Clock, Shield, CheckCircle, AlertTriangle } from 'lucide-react';
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 import { LegacyReceiptChip } from '@/components/families/ReceiptChip';
 import { FamiliesReadinessButton } from '@/components/families/FamiliesReadinessButton';
 

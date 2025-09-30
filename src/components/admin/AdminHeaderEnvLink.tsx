@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 import { Button } from '@/components/ui/button';
 import { Monitor } from 'lucide-react';
 

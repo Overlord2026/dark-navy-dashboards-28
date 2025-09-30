@@ -1,4 +1,4 @@
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 
 /**
  * Extract all known routes from our App.tsx route definitions

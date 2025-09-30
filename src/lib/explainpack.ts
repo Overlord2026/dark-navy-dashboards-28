@@ -1,6 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import { getProofSlips, type ProofSlip } from './proofs';
-import { BUILD_ID } from './flags';
+import { BUILD_ID } from '@/config/flags';
 import { useRetirementIntake } from '@/store/retirementIntake';
 import type { RetirementAnalysisInput, RetirementAnalysisResults, RetirementPolicy } from '@/types/retirement';
 

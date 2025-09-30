@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { LegacyReceiptChip } from '@/components/families/ReceiptChip';
-import { getFlag } from '@/lib/flags';
+import { getFlag } from '@/config/flags';
 import { callEdgeJSON } from '@/services/aiEdge';
 import { Calculator, TrendingUp, Award, AlertTriangle } from 'lucide-react';
 

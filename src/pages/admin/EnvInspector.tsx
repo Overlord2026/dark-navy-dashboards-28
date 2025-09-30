@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useUser } from '@/context/UserContext';
-import { getFlag, FLAG_DESCRIPTIONS } from '@/lib/flags';
-import { getBuildInfo } from '@/lib/buildInfo';
+import { getFlag, FLAG_DESCRIPTIONS, getBuildInfo } from '@/config/flags';
 import { getPublicEnv } from '@/lib/envInfo';
 import { getFlags } from '@/lib/flagInfo';
 import { Button } from '@/components/ui/button';
