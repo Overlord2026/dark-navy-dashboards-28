@@ -2,13 +2,18 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { ScenarioBar } from '@/components/retirement/ScenarioBar';
 import { PolicyPanel } from '@/components/retirement/PolicyPanel';
 import { createRetirementAnalysis, runStressTest, generateScenarios, PREDEFINED_SCENARIOS } from '@/lib/retirement/engine';
 import type { RetirementAnalysisInput, RetirementAnalysisResults, RetirementPolicy } from '@/types/retirement';
 import { useRetirementIntake } from '@/store/retirementIntake';
 import { buildExplainPackFromState, downloadSwagExplainPack } from '@/lib/explainpack';
-import { FileDown, Play, Plus, Download } from 'lucide-react';
+import { createScenario, createVersion, enqueueRun, pollRunUntilComplete, getResults, type RetirementResults } from '@/data/analyzer';
+import { Play, Plus, Download, Printer, Save, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function SwagAnalyzerPage() {
   const navigate = useNavigate();
@@ -16,6 +21,12 @@ export default function SwagAnalyzerPage() {
   const [activeScenario, setActiveScenario] = useState('base');
   const [results, setResults] = useState<Record<string, RetirementAnalysisResults>>({});
   const [loading, setLoading] = useState(false);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [scenarioName, setScenarioName] = useState('');
+  const [currentScenarioId, setCurrentScenarioId] = useState<string | null>(null);
+  const [currentVersionId, setCurrentVersionId] = useState<string | null>(null);
+  const [mcResults, setMcResults] = useState<RetirementResults | null>(null);
+  const [runStatus, setRunStatus] = useState<'idle' | 'queued' | 'running' | 'completed' | 'failed'>('idle');
   const [policy, setPolicy] = useState<RetirementPolicy>({
     guardrails: {
       method: 'none',
@@ -124,6 +135,73 @@ export default function SwagAnalyzerPage() {
     }
   };
 
+  const handleSaveScenario = async () => {
+    if (!scenarioName.trim()) {
+      toast.error('Please enter a scenario name');
+      return;
+    }
+
+    try {
+      const scenario = await createScenario(scenarioName, `Scenario: ${activeScenario}`);
+      setCurrentScenarioId(scenario.id);
+
+      const version = await createVersion(scenario.id, 'v1', analysisInput, policy);
+      setCurrentVersionId(version.id);
+
+      toast.success('Scenario saved successfully');
+      setSaveDialogOpen(false);
+      setScenarioName('');
+    } catch (error) {
+      console.error('Failed to save scenario:', error);
+      toast.error('Failed to save scenario');
+    }
+  };
+
+  const handleRunSimulation = async () => {
+    if (!currentResult) {
+      toast.error('Please run analysis first');
+      return;
+    }
+
+    try {
+      // Ensure we have a saved scenario/version
+      let versionId = currentVersionId;
+      if (!versionId) {
+        const scenario = await createScenario(`Auto-saved ${new Date().toISOString()}`, `Scenario: ${activeScenario}`);
+        const version = await createVersion(scenario.id, 'v1', analysisInput, policy);
+        versionId = version.id;
+        setCurrentScenarioId(scenario.id);
+        setCurrentVersionId(versionId);
+      }
+
+      // Enqueue the run
+      setRunStatus('queued');
+      const run = await enqueueRun(versionId, 5000);
+      
+      // Poll until complete
+      setRunStatus('running');
+      const completedRun = await pollRunUntilComplete(run.id);
+      
+      if (completedRun.status === 'failed') {
+        setRunStatus('failed');
+        toast.error(`Simulation failed: ${completedRun.error_message}`);
+        return;
+      }
+
+      // Fetch results
+      const simResults = await getResults(run.id);
+      if (simResults) {
+        setMcResults(simResults);
+        setRunStatus('completed');
+        toast.success('Monte Carlo simulation completed');
+      }
+    } catch (error) {
+      console.error('Failed to run simulation:', error);
+      setRunStatus('failed');
+      toast.error('Failed to run simulation');
+    }
+  };
+
   const handleExportJson = async () => {
     try {
       const explainPack = await buildExplainPackFromState(
@@ -134,6 +212,28 @@ export default function SwagAnalyzerPage() {
       downloadSwagExplainPack(explainPack);
     } catch (error) {
       console.error('Failed to export ExplainPack:', error);
+    }
+  };
+
+  const handlePrintPdf = async () => {
+    try {
+      const explainPack = await buildExplainPackFromState(
+        activeScenario,
+        policy,
+        currentResult
+      );
+
+      // Store in sessionStorage
+      sessionStorage.setItem('swag-print-data', JSON.stringify({
+        explainPack,
+        currentResult
+      }));
+
+      // Open print view in new tab
+      window.open('/wealth/retirement/print', '_blank');
+    } catch (error) {
+      console.error('Failed to prepare print view:', error);
+      toast.error('Failed to open print view');
     }
   };
 
@@ -176,14 +276,73 @@ export default function SwagAnalyzerPage() {
               New Analysis
             </Button>
             {Object.keys(results).length > 0 && (
-              <Button
-                variant="outline"
-                onClick={handleExportJson}
-                className="gap-2"
-              >
-                <Download className="h-4 w-4" />
-                Export JSON
-              </Button>
+              <>
+                <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="gap-2">
+                      <Save className="h-4 w-4" />
+                      Save Scenario
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Save Scenario</DialogTitle>
+                      <DialogDescription>
+                        Save this retirement scenario for future reference
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="scenario-name">Scenario Name</Label>
+                        <Input
+                          id="scenario-name"
+                          placeholder="My Retirement Plan"
+                          value={scenarioName}
+                          onChange={(e) => setScenarioName(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <Button onClick={handleSaveScenario}>Save</Button>
+                  </DialogContent>
+                </Dialog>
+
+                <Button
+                  variant="outline"
+                  onClick={handleRunSimulation}
+                  disabled={runStatus === 'running' || runStatus === 'queued'}
+                  className="gap-2"
+                >
+                  {runStatus === 'running' || runStatus === 'queued' ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Running...
+                    </>
+                  ) : (
+                    <>
+                      <Play className="h-4 w-4" />
+                      Run Simulation (5k)
+                    </>
+                  )}
+                </Button>
+
+                <Button
+                  variant="outline"
+                  onClick={handleExportJson}
+                  className="gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  Export JSON
+                </Button>
+
+                <Button
+                  variant="outline"
+                  onClick={handlePrintPdf}
+                  className="gap-2"
+                >
+                  <Printer className="h-4 w-4" />
+                  Print PDF
+                </Button>
+              </>
             )}
           </CardContent>
         </Card>
@@ -278,6 +437,65 @@ export default function SwagAnalyzerPage() {
                     </CardContent>
                   </Card>
 
+                  {mcResults && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Monte Carlo Results</CardTitle>
+                        <CardDescription>5,000 path simulation</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <div>
+                            <div className="text-sm text-muted-foreground">Success Probability</div>
+                            <div className="text-2xl font-bold">
+                              {mcResults.success_probability ? (mcResults.success_probability * 100).toFixed(1) : '—'}%
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-sm text-muted-foreground">Terminal P50</div>
+                            <div className="text-2xl font-bold">
+                              ${mcResults.terminal_p50 ? (mcResults.terminal_p50 / 1000).toFixed(0) : '—'}K
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-sm text-muted-foreground">Breach Rate</div>
+                            <div className="text-2xl font-bold">
+                              {mcResults.breach_rate ? (mcResults.breach_rate * 100).toFixed(1) : '—'}%
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-sm text-muted-foreground">Terminal P10/P90</div>
+                            <div className="text-xl font-bold">
+                              ${mcResults.terminal_p10 ? (mcResults.terminal_p10 / 1000).toFixed(0) : '—'}K / 
+                              ${mcResults.terminal_p90 ? (mcResults.terminal_p90 / 1000).toFixed(0) : '—'}K
+                            </div>
+                          </div>
+                        </div>
+
+                        {(mcResults.etay_value || mcResults.seay_value) && (
+                          <div className="grid grid-cols-2 gap-4 pt-4 border-t">
+                            {mcResults.etay_value && (
+                              <div>
+                                <div className="text-sm text-muted-foreground">ETAY</div>
+                                <div className="text-2xl font-bold">
+                                  {(mcResults.etay_value * 100).toFixed(2)}%
+                                </div>
+                              </div>
+                            )}
+                            {mcResults.seay_value && (
+                              <div>
+                                <div className="text-sm text-muted-foreground">SEAY</div>
+                                <div className="text-2xl font-bold">
+                                  {(mcResults.seay_value * 100).toFixed(2)}%
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  )}
+
                   <Card>
                     <CardHeader>
                       <CardTitle>Recommendations</CardTitle>
@@ -293,11 +511,6 @@ export default function SwagAnalyzerPage() {
                       </div>
                     </CardContent>
                   </Card>
-
-                  <Button className="gap-2">
-                    <FileDown className="h-4 w-4" />
-                    Export PDF Report
-                  </Button>
                 </div>
 
                 {/* RIGHT: Policy Panel */}

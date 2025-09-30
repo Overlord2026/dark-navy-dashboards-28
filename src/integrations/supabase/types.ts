@@ -2547,6 +2547,24 @@ export type Database = {
         }
         Relationships: []
       }
+      advisors: {
+        Row: {
+          created_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       agency_campaigns: {
         Row: {
           advisor_id: string
@@ -17526,6 +17544,35 @@ export type Database = {
             columns: ["professional_id"]
             isOneToOne: false
             referencedRelation: "v_professionals_me"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      households: {
+        Row: {
+          advisor_id: string
+          created_at: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          advisor_id: string
+          created_at?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          advisor_id?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "households_advisor_id_fkey"
+            columns: ["advisor_id"]
+            isOneToOne: false
+            referencedRelation: "advisors"
             referencedColumns: ["id"]
           },
         ]
@@ -32637,6 +32684,162 @@ export type Database = {
         }
         Relationships: []
       }
+      retirement_results: {
+        Row: {
+          breach_rate: number | null
+          created_at: string
+          etay_value: number | null
+          full_results: Json | null
+          id: string
+          run_id: string
+          seay_value: number | null
+          success_probability: number | null
+          terminal_p10: number | null
+          terminal_p50: number | null
+          terminal_p90: number | null
+        }
+        Insert: {
+          breach_rate?: number | null
+          created_at?: string
+          etay_value?: number | null
+          full_results?: Json | null
+          id?: string
+          run_id: string
+          seay_value?: number | null
+          success_probability?: number | null
+          terminal_p10?: number | null
+          terminal_p50?: number | null
+          terminal_p90?: number | null
+        }
+        Update: {
+          breach_rate?: number | null
+          created_at?: string
+          etay_value?: number | null
+          full_results?: Json | null
+          id?: string
+          run_id?: string
+          seay_value?: number | null
+          success_probability?: number | null
+          terminal_p10?: number | null
+          terminal_p50?: number | null
+          terminal_p90?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "retirement_results_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "retirement_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      retirement_runs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          id: string
+          n_paths: number
+          started_at: string | null
+          status: string
+          version_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          n_paths?: number
+          started_at?: string | null
+          status?: string
+          version_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          n_paths?: number
+          started_at?: string | null
+          status?: string
+          version_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "retirement_runs_version_id_fkey"
+            columns: ["version_id"]
+            isOneToOne: false
+            referencedRelation: "retirement_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      retirement_scenarios: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          tags: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          tags?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          tags?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      retirement_versions: {
+        Row: {
+          created_at: string
+          id: string
+          inputs: Json
+          label: string
+          policy: Json
+          scenario_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          inputs?: Json
+          label?: string
+          policy?: Json
+          scenario_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          inputs?: Json
+          label?: string
+          policy?: Json
+          scenario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "retirement_versions_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "retirement_scenarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rev_ledger: {
         Row: {
           created_at: string | null
@@ -33548,6 +33751,158 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      scenario_run_results: {
+        Row: {
+          breach_events: Json | null
+          created_at: string | null
+          distributions: Json | null
+          path_sample: Json | null
+          run_id: string
+          summary: Json
+        }
+        Insert: {
+          breach_events?: Json | null
+          created_at?: string | null
+          distributions?: Json | null
+          path_sample?: Json | null
+          run_id: string
+          summary: Json
+        }
+        Update: {
+          breach_events?: Json | null
+          created_at?: string | null
+          distributions?: Json | null
+          path_sample?: Json | null
+          run_id?: string
+          summary?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scenario_run_results_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: true
+            referencedRelation: "scenario_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scenario_runs: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          engine: string
+          error: string | null
+          id: string
+          paths: number
+          requested_by: string
+          scenario_version_id: string
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          engine?: string
+          error?: string | null
+          id?: string
+          paths?: number
+          requested_by: string
+          scenario_version_id: string
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          engine?: string
+          error?: string | null
+          id?: string
+          paths?: number
+          requested_by?: string
+          scenario_version_id?: string
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scenario_runs_scenario_version_id_fkey"
+            columns: ["scenario_version_id"]
+            isOneToOne: false
+            referencedRelation: "scenario_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scenario_versions: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          id: string
+          inputs: Json
+          label: string
+          policy: Json
+          scenario_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          id?: string
+          inputs: Json
+          label: string
+          policy: Json
+          scenario_id: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          id?: string
+          inputs?: Json
+          label?: string
+          policy?: Json
+          scenario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scenario_versions_scenario_id_fkey"
+            columns: ["scenario_id"]
+            isOneToOne: false
+            referencedRelation: "scenarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scenarios: {
+        Row: {
+          created_at: string | null
+          created_by: string
+          household_id: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          created_by: string
+          household_id: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string
+          household_id?: string
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scenarios_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       scheduled_meetings: {
         Row: {
@@ -56437,6 +56792,10 @@ export type Database = {
           p_tenant_id?: string
           p_title: string
         }
+        Returns: string
+      }
+      current_advisor_id: {
+        Args: Record<PropertyKey, never>
         Returns: string
       }
       current_tenant_id: {

@@ -31,6 +31,8 @@ export interface SwagExplainPack {
     years_sustained?: number;
     monthly_income_gap?: number;
     recommendations_count?: number;
+    etay_value?: number;
+    seay_value?: number;
   };
   metadata: {
     export_reason: string;
