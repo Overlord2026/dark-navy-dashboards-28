@@ -7,7 +7,8 @@ import { PolicyPanel } from '@/components/retirement/PolicyPanel';
 import { createRetirementAnalysis, runStressTest, generateScenarios, PREDEFINED_SCENARIOS } from '@/lib/retirement/engine';
 import type { RetirementAnalysisInput, RetirementAnalysisResults, RetirementPolicy } from '@/types/retirement';
 import { useRetirementIntake } from '@/store/retirementIntake';
-import { FileDown, Play, Plus } from 'lucide-react';
+import { buildExplainPackFromState, downloadSwagExplainPack } from '@/lib/explainpack';
+import { FileDown, Play, Plus, Download } from 'lucide-react';
 
 export default function SwagAnalyzerPage() {
   const navigate = useNavigate();
@@ -123,6 +124,19 @@ export default function SwagAnalyzerPage() {
     }
   };
 
+  const handleExportJson = async () => {
+    try {
+      const explainPack = await buildExplainPackFromState(
+        activeScenario,
+        policy,
+        currentResult
+      );
+      downloadSwagExplainPack(explainPack);
+    } catch (error) {
+      console.error('Failed to export ExplainPack:', error);
+    }
+  };
+
   const currentResult = results[activeScenario];
   const scenarioResults = Object.entries(results).reduce((acc, [id, result]) => {
     acc[id] = { swagScore: result.monteCarlo.swagScore };
@@ -144,7 +158,7 @@ export default function SwagAnalyzerPage() {
             <CardTitle>Analysis Controls</CardTitle>
             <CardDescription>Run comprehensive retirement analysis</CardDescription>
           </CardHeader>
-          <CardContent className="flex gap-4">
+          <CardContent className="flex flex-wrap gap-4">
             <Button 
               onClick={handleRunAnalysis} 
               disabled={loading}
@@ -161,6 +175,16 @@ export default function SwagAnalyzerPage() {
               <Plus className="h-4 w-4" />
               New Analysis
             </Button>
+            {Object.keys(results).length > 0 && (
+              <Button
+                variant="outline"
+                onClick={handleExportJson}
+                className="gap-2"
+              >
+                <Download className="h-4 w-4" />
+                Export JSON
+              </Button>
+            )}
           </CardContent>
         </Card>
 
