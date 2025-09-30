@@ -448,11 +448,7 @@ function App() {
             <Route path="/linkedin-callback" element={<LinkedInCallback />} />
             
             {/* Family Routes */}
-            <Route path="/families" element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <FamiliesOverview />
-              </Suspense>
-            } />
+            <Route path="/families" element={<FamiliesIndex />} />
             <Route path="/families/start/aspiring" element={
               <Suspense fallback={<div>Loading...</div>}>
                 <AspiringStart />
@@ -465,11 +461,7 @@ function App() {
             } />
             <Route path="/families/:type" element={<FamilyTypeDashboard />} />
             <Route path="/family/home" element={<FamilyDashboard />} />
-            <Route path="/pros" element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <ProsOverview />
-              </Suspense>
-            } />
+            <Route path="/pros" element={<ProsIndex />} />
             <Route path="/pros/accountants" element={<Accountants />} />
             <Route path="/pros/accountants/access" element={<AccountantsAccess />} />
             <Route path="/pros/attorneys" element={<Attorneys />} />
@@ -489,11 +481,7 @@ function App() {
               <Route path="advice" element={<Stub title="Advisory Services - Coming Soon" />} />
             </Route>
         
-        <Route path="/healthcare" element={
-          <Suspense fallback={<div>Loading...</div>}>
-            <HealthcareNew />
-          </Suspense>
-        } />
+        <Route path="/healthcare" element={<HealthcareNew />} />
         <Route path="/solutions" element={<SolutionsLanding />} />
         <Route path="/learn" element={<LearnLanding />} />
         <Route path="/pros/cpa" element={<Stub title="CPA Services" />} />
