@@ -1,12 +1,16 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScenarioBar } from '@/components/retirement/ScenarioBar';
 import { createRetirementAnalysis, runStressTest, generateScenarios, PREDEFINED_SCENARIOS } from '@/lib/retirement/engine';
 import type { RetirementAnalysisInput, RetirementAnalysisResults } from '@/types/retirement';
-import { FileDown, Play } from 'lucide-react';
+import { useRetirementIntake } from '@/store/retirementIntake';
+import { FileDown, Play, Plus } from 'lucide-react';
 
 export default function SwagAnalyzerPage() {
+  const navigate = useNavigate();
+  const { inputs: storedInputs } = useRetirementIntake();
   const [activeScenario, setActiveScenario] = useState('base');
   const [results, setResults] = useState<Record<string, RetirementAnalysisResults>>({});
   const [loading, setLoading] = useState(false);
@@ -80,17 +84,20 @@ export default function SwagAnalyzerPage() {
     }
   };
 
+  // Use stored inputs from intake or fallback to sample
+  const analysisInput = (storedInputs as RetirementAnalysisInput) || sampleInput;
+
   const handleRunAnalysis = async () => {
     setLoading(true);
     try {
-      const scenarios = generateScenarios(sampleInput);
+      const scenarios = generateScenarios(analysisInput);
       const newResults: Record<string, RetirementAnalysisResults> = {};
       
       for (const scenario of scenarios) {
         if (scenario.id === 'base') {
-          newResults[scenario.id] = await createRetirementAnalysis(sampleInput);
+          newResults[scenario.id] = await createRetirementAnalysis(analysisInput);
         } else {
-          newResults[scenario.id] = await runStressTest(sampleInput, scenario);
+          newResults[scenario.id] = await runStressTest(analysisInput, scenario);
         }
       }
       
@@ -121,7 +128,7 @@ export default function SwagAnalyzerPage() {
             <CardTitle>Analysis Controls</CardTitle>
             <CardDescription>Run comprehensive retirement analysis</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex gap-4">
             <Button 
               onClick={handleRunAnalysis} 
               disabled={loading}
@@ -129,6 +136,14 @@ export default function SwagAnalyzerPage() {
             >
               <Play className="h-4 w-4" />
               {loading ? 'Running Analysis...' : 'Run Analysis'}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => navigate('/wealth/retirement/start')}
+              className="gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              New Analysis
             </Button>
           </CardContent>
         </Card>
