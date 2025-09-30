@@ -481,8 +481,6 @@ function App() {
             </Route>
         
         <Route path="/healthcare" element={<HealthcareNew />} />
-        <Route path="/pros/cpa" element={<Stub title="CPA Services" />} />
-        <Route path="/pros/attorney" element={<Stub title="Attorney Services" />} />
             <Route path="/solutions" element={
               <Suspense fallback={<div>Loading...</div>}>
                 <SolutionsLanding />
