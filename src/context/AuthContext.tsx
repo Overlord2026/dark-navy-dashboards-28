@@ -45,10 +45,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    if (!user) return;
     // Defer to next tick so React tree & Toaster are mounted
     const id = setTimeout(() => runFirstLoginToolInstaller(), 0);
     return () => clearTimeout(id);
-  }, []);
+  }, [user]);
 
   // Legacy compatibility methods (no-op implementations)
   const mockMethod = async () => ({ success: false, error: 'Not implemented' });
