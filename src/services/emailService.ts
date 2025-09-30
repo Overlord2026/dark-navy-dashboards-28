@@ -1,6 +1,6 @@
 
 import emailjs from '@emailjs/browser';
-import { CONFIG } from '@/config/flags';
+import { FLAGS } from '@/config/flags';
 import { withDemoFallback } from './demoService';
 
 // EmailJS configuration - using environment variables for security

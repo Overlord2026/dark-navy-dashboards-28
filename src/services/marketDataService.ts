@@ -1,7 +1,7 @@
 
 // Service to fetch market data from free APIs
 import { supabase } from '@/integrations/supabase/client';
-import { CONFIG } from '@/config/flags';
+import { FLAGS } from '@/config/flags';
 import { withDemoFallback } from './demoService';
 
 interface FinnhubStockStats {

@@ -1,7 +1,7 @@
 
 import { supabase } from '@/lib/supabase';
 import type { InvestmentOffering } from '@/hooks/useInvestmentData';
-import { CONFIG } from '@/config/flags';
+import { FLAGS } from '@/config/flags';
 import { withDemoFallback } from './demoService';
 
 export const investmentService = {

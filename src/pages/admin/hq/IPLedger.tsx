@@ -16,7 +16,7 @@ import { Download, Search, Filter } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { exportToCSV } from '@/utils/csv';
-import { CONFIG } from '@/config/flags';
+import { FLAGS } from '@/config/flags';
 import { demoService } from '@/services/demoService';
 
 interface IPFiling {
@@ -69,7 +69,7 @@ export default function IPLedger() {
     const loadIPFilings = async () => {
       setLoading(true);
       try {
-        if (CONFIG.DEMO_MODE) {
+        if (FLAGS.IS_DEVELOPMENT) {
           // Load demo fixture data
           const demoData = await loadDemoIPFilings();
           setFilings(demoData);
@@ -443,7 +443,7 @@ export default function IPLedger() {
 
 // Demo data loader
 async function loadDemoIPFilings(): Promise<IPFiling[]> {
-  if (CONFIG.DEMO_MODE) {
+  if (FLAGS.IS_DEVELOPMENT) {
     return demoService.mockNetworkCall('/ip-filings', [
       {
         id: 'ip_001',

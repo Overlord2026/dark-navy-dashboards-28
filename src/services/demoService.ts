@@ -1,5 +1,5 @@
 // Demo service to manage fixture loading and network call mocking
-import { CONFIG } from '@/config/flags';
+import { FLAGS } from '@/config/flags';
 import { loadFamilyFixtures } from '@/fixtures/families.fixtures';
 import { loadAdvisorFixtures } from '@/fixtures/advisors.fixtures';
 import { loadHealthcareFixtures } from '@/fixtures/healthcare.fixtures';
@@ -20,7 +20,7 @@ export class DemoService {
 
   // Check if we should use demo mode
   isDemoMode(): boolean {
-    return CONFIG.DEMO_MODE;
+    return FLAGS.IS_DEVELOPMENT;
   }
 
   // Load all demo fixtures
@@ -151,7 +151,7 @@ export class DemoService {
       demo_mode: this.isDemoMode(),
       fixtures_loaded: demoCache.size > 0,
       cached_fixtures: Array.from(demoCache.keys()),
-      config: CONFIG
+      flags: FLAGS
     };
   }
 
@@ -182,7 +182,7 @@ export async function withDemoFallback<T>(
   endpoint: string,
   fallbackData?: T
 ): Promise<T> {
-  if (CONFIG.DEMO_MODE) {
+  if (FLAGS.IS_DEVELOPMENT) {
     return demoService.mockNetworkCall(endpoint, fallbackData);
   }
   
@@ -191,5 +191,5 @@ export async function withDemoFallback<T>(
 
 // Utility to check if a service should use live connectors
 export function shouldUseLiveConnectors(): boolean {
-  return !CONFIG.DISABLE_LIVE_CONNECTORS;
+  return !FLAGS.IS_DEVELOPMENT;
 }

@@ -1,9 +1,9 @@
-import { CONFIG } from '@/config/flags';
+import { FLAGS } from '@/config/flags';
 import { demoService } from '@/services/demoService';
 import { Badge } from '@/components/ui/badge';
 
 export const DemoStatus = () => {
-  if (!CONFIG.DEMO_MODE) return null;
+  if (!FLAGS.IS_DEVELOPMENT) return null;
 
   return (
     <div className="fixed top-4 right-4 z-50">

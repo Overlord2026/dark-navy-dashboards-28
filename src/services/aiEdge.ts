@@ -1,5 +1,5 @@
 // src/services/aiEdge.ts
-import { CONFIG } from '@/config/flags';
+import { FLAGS } from '@/config/flags';
 import { demoService } from './demoService';
 
 // Supabase project configuration
@@ -8,7 +8,7 @@ const SUPABASE_FUNCTIONS_URL = `https://${SUPABASE_PROJECT_ID}.functions.supabas
 
 export async function callEdgeJSON(fn: string, payload: unknown, init?: RequestInit) {
   // In demo mode, return mock data instead of calling live edge functions
-  if (CONFIG.DEMO_MODE) {
+  if (FLAGS.IS_DEVELOPMENT) {
     console.log(`[DEMO] Mocking edge function call: ${fn}`, payload);
     return demoService.mockNetworkCall(`/functions/v1/${fn}`, {
       success: true,

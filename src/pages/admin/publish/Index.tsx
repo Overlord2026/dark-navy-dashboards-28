@@ -29,13 +29,13 @@ export default function PublishIndex() {
     
     // Check 1: Demo Mode Validation
     try {
-      const { CONFIG } = await import('@/config/flags');
+      const { FLAGS } = await import('@/config/flags');
       results.push({
         id: 'demo-mode',
         name: 'Demo Mode Configuration',
-        status: CONFIG.DEMO_MODE ? 'pass' : 'warn',
-        message: CONFIG.DEMO_MODE ? 'Demo mode enabled correctly' : 'Demo mode not enabled',
-        details: [`DEMO_MODE: ${CONFIG.DEMO_MODE}`, `HQ_BOOT: ${CONFIG.HQ_BOOT}`]
+        status: FLAGS.IS_DEVELOPMENT ? 'pass' : 'warn',
+        message: FLAGS.IS_DEVELOPMENT ? 'Demo mode enabled correctly' : 'Demo mode not enabled',
+        details: [`IS_DEVELOPMENT: ${FLAGS.IS_DEVELOPMENT}`]
       });
     } catch (error) {
       results.push({
