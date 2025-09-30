@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { SafeToastProvider } from "@/providers/SafeToastProvider";
 import { AuthProvider } from "@/context/AuthContext";
+import { UserProvider } from "@/context/UserContext";
 import { EntitlementsProvider } from "@/context/EntitlementsContext";
 import { ToolsProvider } from "@/contexts/ToolsContext";
 
@@ -15,11 +16,13 @@ createRoot(el).render(
     <BrowserRouter>
       <SafeToastProvider>
         <AuthProvider>
-          <EntitlementsProvider>
-            <ToolsProvider>
-              <App />
-            </ToolsProvider>
-          </EntitlementsProvider>
+          <UserProvider>
+            <EntitlementsProvider>
+              <ToolsProvider>
+                <App />
+              </ToolsProvider>
+            </EntitlementsProvider>
+          </UserProvider>
         </AuthProvider>
       </SafeToastProvider>
     </BrowserRouter>

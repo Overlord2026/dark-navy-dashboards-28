@@ -240,7 +240,19 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useUser = (): UserContextType => {
   const context = useContext(UserContext);
   if (context === undefined) {
-    throw new Error('useUser must be used within a UserProvider');
+    if (import.meta.env.DEV) {
+      console.warn("useUser() called outside <UserProvider>. Returning empty user.");
+    }
+    return {
+      userProfile: null,
+      supabaseUser: null,
+      isAuthenticated: false,
+      isLoading: true,
+      login: async () => ({ success: false, error: 'UserProvider not mounted' }),
+      logout: () => {},
+      updateUserProfile: () => {},
+      refreshUserProfile: async () => null
+    };
   }
   return context;
 };
