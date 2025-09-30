@@ -1,7 +1,10 @@
+// Global type declaration for Vite-injected build ID
+declare const __BUILD_ID__: string;
+
 type Mode = "staging" | "prod";
 
 export const FLAGS = {
-  PUBLIC_MODE: ((import.meta as any)?.env?.PUBLIC_MODE as Mode) ?? "staging",
+  PUBLIC_MODE: (import.meta as any)?.env?.PUBLIC_MODE as Mode ?? "staging",
   ENABLE_EXPERIMENTS: ((import.meta as any)?.env?.ENABLE_EXPERIMENTS ?? "false") === "true",
   ENABLE_DEV_PANEL: ((import.meta as any)?.env?.ENABLE_DEV_PANEL ?? "true") !== "false",
   IS_DEVELOPMENT: !!(import.meta as any)?.env?.DEV,
@@ -13,16 +16,16 @@ export const FLAGS = {
 } as const;
 
 export const BUILD_ID: string =
-  (typeof (globalThis as any).__BUILD_ID__ !== "undefined" ? String((globalThis as any).__BUILD_ID__) : null) ??
+  (typeof __BUILD_ID__ !== "undefined" ? String(__BUILD_ID__) : null) ??
   ((import.meta as any)?.env?.BUILD_ID ?? null) ??
   new Date().toISOString();
 
-// Simple compatibility exports for code that expects these
+// Compatibility exports
 export const IS_PROD = FLAGS.IS_PRODUCTION;
 export const ENABLE_DEV_PANEL = FLAGS.ENABLE_DEV_PANEL;
 export const ENABLE_EXPERIMENTS = FLAGS.ENABLE_EXPERIMENTS;
 
-// Stub functions for feature flag compatibility (always return false for now)
+// Stub functions for feature flag compatibility
 export type FeatureFlag = string;
 export function getFlag(key: string): boolean {
   return false;
