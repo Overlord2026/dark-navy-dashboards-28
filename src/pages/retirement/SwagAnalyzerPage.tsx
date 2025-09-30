@@ -14,7 +14,7 @@ import { createRetirementAnalysis, runStressTest, generateScenarios, PREDEFINED_
 import type { RetirementAnalysisInput, RetirementAnalysisResults, RetirementPolicy } from '@/types/retirement';
 import { useRetirementIntake } from '@/store/retirementIntake';
 import { buildExplainPackFromState, downloadSwagExplainPack } from '@/lib/explainpack';
-import { createScenario, createVersion, enqueueRun, pollRunUntilComplete, getResults, type RetirementResults } from '@/data/analyzer';
+import { createScenario, createVersion, enqueueRunAndInvoke, waitForRun, fetchRunSummary, type RetirementResults } from '@/data/analyzer';
 import { Play, Plus, Download, Printer, Save, Loader2, Send } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -178,13 +178,13 @@ export default function SwagAnalyzerPage() {
         setCurrentVersionId(versionId);
       }
 
-      // Enqueue the run
+      // Enqueue the run and invoke edge function
       setRunStatus('queued');
-      const run = await enqueueRun(versionId, 5000);
+      const runId = await enqueueRunAndInvoke(versionId, 5000);
       
-      // Poll until complete
+      // Wait for completion
       setRunStatus('running');
-      const completedRun = await pollRunUntilComplete(run.id);
+      const completedRun = await waitForRun(runId);
       
       if (completedRun.status === 'failed') {
         setRunStatus('failed');
@@ -193,7 +193,7 @@ export default function SwagAnalyzerPage() {
       }
 
       // Fetch results
-      const simResults = await getResults(run.id);
+      const simResults = await fetchRunSummary(runId);
       if (simResults) {
         setMcResults(simResults);
         setRunStatus('completed');

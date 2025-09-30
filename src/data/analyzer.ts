@@ -1,5 +1,5 @@
 /**
- * Retirement Analysis Data Access Layer
+ * SWAG Analyzer Data Access Layer
  * CRUD operations for scenarios, versions, runs, and results
  */
 
@@ -128,13 +128,16 @@ export async function getVersions(scenarioId: string): Promise<RetirementVersion
 }
 
 /**
- * Enqueue a Monte Carlo simulation run
+ * Enqueue a run and invoke swag-sim edge function directly
  */
-export async function enqueueRun(
+export async function enqueueRunAndInvoke(
   versionId: string,
   nPaths: number = 5000
-): Promise<RetirementRun> {
-  // Create the run record
+): Promise<string> {
+  // 1) Create the run record
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('User not authenticated');
+
   const { data: run, error: runError } = await supabase
     .from('retirement_runs')
     .insert({
@@ -147,14 +150,25 @@ export async function enqueueRun(
 
   if (runError) throw runError;
 
-  // Trigger the edge function asynchronously
-  supabase.functions.invoke('run-mc-simulation', {
-    body: { runId: run.id }
-  }).catch(err => {
-    console.error('Failed to invoke MC simulation:', err);
+  // 2) Invoke edge function directly with the run data
+  const { error: fnErr } = await supabase.functions.invoke('swag-sim', {
+    body: { record: run }
   });
 
-  return run as RetirementRun;
+  if (fnErr) {
+    // Update run status to failed
+    await supabase
+      .from('retirement_runs')
+      .update({ 
+        status: 'failed', 
+        error_message: fnErr.message,
+        completed_at: new Date().toISOString()
+      })
+      .eq('id', run.id);
+    throw fnErr;
+  }
+
+  return run.id;
 }
 
 /**
@@ -189,25 +203,49 @@ export async function getResults(runId: string): Promise<RetirementResults | nul
 }
 
 /**
- * Poll a run until it completes or fails
+ * Wait for a run to complete with configurable timeout
  */
-export async function pollRunUntilComplete(
+export async function waitForRun(
   runId: string,
-  maxWaitMs: number = 120000, // 2 minutes
-  pollIntervalMs: number = 2000
+  options: { timeoutMs?: number; intervalMs?: number } = {}
 ): Promise<RetirementRun> {
+  const { timeoutMs = 20000, intervalMs = 600 } = options;
   const startTime = Date.now();
 
-  while (Date.now() - startTime < maxWaitMs) {
-    const run = await getRun(runId);
+  while (Date.now() - startTime < timeoutMs) {
+    const { data, error } = await supabase
+      .from('retirement_runs')
+      .select('*')
+      .eq('id', runId)
+      .single();
+
+    if (error) throw error;
     
+    const run = data as RetirementRun;
     if (run.status === 'completed' || run.status === 'failed') {
       return run;
     }
 
-    // Wait before polling again
-    await new Promise(resolve => setTimeout(resolve, pollIntervalMs));
+    await new Promise(resolve => setTimeout(resolve, intervalMs));
   }
 
-  throw new Error('Simulation timed out');
+  throw new Error('Timed out waiting for run');
+}
+
+/**
+ * Fetch run summary from results table
+ */
+export async function fetchRunSummary(runId: string) {
+  const { data, error } = await supabase
+    .from('retirement_results')
+    .select('*')
+    .eq('run_id', runId)
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') return null;
+    throw error;
+  }
+  
+  return data;
 }
