@@ -30,14 +30,13 @@ export default defineConfig(({ mode }) => ({
       "react/jsx-runtime": path.resolve(__dirname, "node_modules/react/jsx-runtime.js"),
       "react/jsx-dev-runtime": path.resolve(__dirname, "node_modules/react/jsx-dev-runtime.js"),
       "react-dom/client": path.resolve(__dirname, "node_modules/react-dom/client.js"),
-      // keep if you previously shimmed Radix:
-      // "@radix-ui/react-toast": path.resolve(__dirname, "src/shims/radix-toast-shim.tsx"),
+      "@radix-ui/react-toast": path.resolve(__dirname, "src/shims/radix-toast-shim.tsx"),
     },
     dedupe: ["react","react-dom"]
   },
   optimizeDeps: {
     include: ["react","react-dom","react/jsx-runtime","react/jsx-dev-runtime","sonner"],
-    // exclude: ["@radix-ui/react-toast"], // uncomment if shim in use
+    exclude: ["@radix-ui/react-toast"],
   },
   define: {
     "__BUILD_ID__": JSON.stringify(BUILD_ID),
