@@ -188,10 +188,8 @@ import { IPTracker } from '@/components/bfo/IPTracker';
 import AdminHQ from '@/pages/admin/AdminHQ';
 import IPHQ from '@/pages/admin/IPHQ';
 import FamiliesStart from '@/pages/families/start';
-const FamiliesOverview = lazy(() => import('@/pages/families/Overview'));
 const AspiringStart = lazy(() => import('@/pages/families/onboarding/AspiringStart'));
 const RetireesStart = lazy(() => import('@/pages/families/onboarding/RetireesStart'));
-const ProsOverview = lazy(() => import('@/pages/pros/Overview'));
 import RequireAdmin from '@/components/auth/RequireAdmin';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { PersonaGuard } from '@/components/auth/PersonaGuard';
@@ -482,8 +480,6 @@ function App() {
             </Route>
         
         <Route path="/healthcare" element={<HealthcareNew />} />
-        <Route path="/solutions" element={<SolutionsLanding />} />
-        <Route path="/learn" element={<LearnLanding />} />
         <Route path="/pros/cpa" element={<Stub title="CPA Services" />} />
         <Route path="/pros/attorney" element={<Stub title="Attorney Services" />} />
             <Route path="/solutions" element={
