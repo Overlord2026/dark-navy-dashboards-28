@@ -1,4 +1,4 @@
-// Enhanced feature flags with environment & build protections
+// Feature flags system with simplified BUILD_ID
 import def from '@/config/featureFlags.default.json';
 import devFlags from '@/config/featureFlags.dev.json';
 import stagingFlags from '@/config/featureFlags.staging.json';
@@ -21,9 +21,12 @@ export const ENABLE_DEV_PANEL = toBool(env.VITE_ENABLE_DEV_PANEL) && !IS_PROD;
 
 export const APP_NAME = (env.VITE_APP_NAME as string) || 'BFO Platform';
 
-/* __BUILD_ID__ is provided by Vite define() at build time */
+/* Simplified BUILD_ID - single source of truth */
 declare const __BUILD_ID__: string;
-export const BUILD_ID = typeof __BUILD_ID__ !== 'undefined' ? __BUILD_ID__ : 'dev-local';
+export const BUILD_ID: string =
+  (typeof __BUILD_ID__ !== 'undefined' ? String(__BUILD_ID__) : "") ||
+  ((import.meta as any)?.env?.VITE_BUILD_ID as string) ||
+  new Date().toISOString();
 
 // Determine environment flags synchronously  
 function getEnvironmentFlags() {

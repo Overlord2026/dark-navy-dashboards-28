@@ -1,5 +1,5 @@
 import React from "react";
-import { BUILD_ID } from "@/lib/build";
+import { BUILD_ID } from "@/lib/flags";
 import { FLAGS } from "@/config/flags";
 
 export default function NonProdBanner() {
