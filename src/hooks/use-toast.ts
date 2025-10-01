@@ -1,6 +1,10 @@
+"use client";
 import { toast as sonner } from "sonner";
 
-/** Provider-free toast shim (NO React hooks). */
+/**
+ * Plain toast wrapper — NO React hooks or providers.
+ * Handles both object and string formats.
+ */
 function createToast(input: any, options?: any) {
   // Handle object format: toast({ title: "...", description: "..." })
   if (typeof input === "object" && input !== null && !Array.isArray(input)) {
@@ -27,9 +31,9 @@ export const toast = Object.assign(createToast, {
   promise: sonner.promise
 });
 
-/** Back-compat for sites doing: const { toast } = useToast() */
+// Legacy signature some code may expect:
 export function useToast() {
   return { toast };
 }
 
-export default useToast;
+export default toast;

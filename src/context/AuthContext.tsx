@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
-import runFirstLoginToolInstaller from "@/hooks/useFirstLoginToolInstaller";
+import useFirstLoginToolInstaller from "@/hooks/useFirstLoginToolInstaller";
 
 type AuthState = { 
   user: any | null; 
@@ -44,12 +44,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })();
   }, []);
 
-  useEffect(() => {
-    if (!user) return;
-    // Defer to next tick so React tree & Toaster are mounted
-    const id = setTimeout(() => runFirstLoginToolInstaller(), 0);
-    return () => clearTimeout(id);
-  }, [user]);
+  // Run first-login installer only after user is authenticated
+  useFirstLoginToolInstaller(user);
 
   // Legacy compatibility methods (no-op implementations)
   const mockMethod = async () => ({ success: false, error: 'Not implemented' });
