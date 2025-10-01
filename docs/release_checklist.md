@@ -21,6 +21,7 @@
 Open `/_smoke` and verify:
 - [ ] PUBLIC_MODE & BUILD_ID are present and correct
 - [ ] /healthz status shows **ok** (green)
+- [ ] NonProd banner shows Health: ok (green dot) in staging
 - [ ] "Trigger Toast" displays a Sonner toast notification
 - [ ] "Go to Pricing (Families)" opens **/pricing#families** with Families section visible
 - [ ] "Home" shows **Hero → Catalog → Pricing** in correct order
