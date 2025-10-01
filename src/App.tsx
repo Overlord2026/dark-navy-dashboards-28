@@ -67,6 +67,7 @@ import AdminPanel from '@/pages/stubs/AdminPanel';
 // New persona landing pages - eager loaded for instant navigation
 import FamiliesIndex from '@/pages/families/index';
 import ProsIndex from '@/pages/pros/index';
+import ProfessionalsHub from '@/pages/professionals/index';
 import ProsHub from '@/pages/pros/ProsHub';
 import ToolsLauncher from '@/pages/pros/ToolsLauncher';
 import AccountantsCTA from '@/pages/pros/AccountantsCTA';
@@ -466,7 +467,7 @@ function App() {
             <Route path="/pros/attorneys-cta" element={<AttorneysCTA />} />
             
             {/* New /professionals routes - reusing existing components */}
-            <Route path="/professionals" element={<ProsIndex />} />
+            <Route path="/professionals" element={<ProfessionalsHub />} />
             <Route path="/professionals/financial-advisors" element={<Advisors />} />
             <Route path="/professionals/accountants" element={<Accountants />} />
             <Route path="/professionals/accountants/access" element={<AccountantsAccess />} />
