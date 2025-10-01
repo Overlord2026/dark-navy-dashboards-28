@@ -1,0 +1,48 @@
+name: Release Smoke (Staging)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+
+    env:
+      # Set your staging base URL here (or define as Github Secrets and reference)
+      STAGING_BASE_URL: ${{ secrets.STAGING_BASE_URL }}   # e.g., https://staging.my.bfocfo.com
+      BUILD_ID: ${{ github.sha }}
+      PUBLIC_MODE: staging
+      HEALTH_URL: ${{ secrets.STAGING_BASE_URL }}/healthz
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install (if needed for script or any preflight Node tools)
+        run: npm ci --no-audit --no-fund
+
+      - name: Ensure release script is executable
+        run: chmod +x scripts/release.sh
+
+      - name: Run release preflight (healthz + BUILD/MODE echo)
+        run: ./scripts/release.sh staging
+
+      - name: Check /_smoke is reachable (200)
+        run: |
+          set -e
+          code=$(curl -s -o /dev/null -w "%{http_code}" "${STAGING_BASE_URL}/_smoke")
+          if [ "$code" != "200" ]; then
+            echo "/_smoke not reachable. HTTP $code" >&2
+            exit 1
+          fi
+          echo "/_smoke reachable (200)"
+
+      - name: Print success banner
+        run: echo "✅ Smoke passed on ${STAGING_BASE_URL} (BUILD_ID=${BUILD_ID})"
