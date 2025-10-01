@@ -130,6 +130,7 @@ import NilDisabled from '@/pages/NilDisabled';
 const RetireeBucketDemo = lazy(() => import('@/pages/demos/retiree-bucket'));
 const AdvisorFeeCompareDemo = lazy(() => import('@/pages/demos/advisor-fee-compare'));
 const SwagAnalyzerPage = lazy(() => import('@/pages/retirement/SwagAnalyzerPage'));
+const SwagMinimalPage = lazy(() => import('@/pages/retirement/SwagMinimalPage'));
 const PreRetirement = lazy(() => import('@/pages/retirement/PreRetirement'));
 
 const IPLedgerPage = lazy(() => import('@/pages/admin/hq/ip'));
@@ -898,6 +899,11 @@ function App() {
             <Route path="/wealth/retirement/start" element={
               <Suspense fallback={<div>Loading...</div>}>
                 <PreRetirement />
+              </Suspense>
+            } />
+            <Route path="/wealth/retirement/minimal" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <SwagMinimalPage />
               </Suspense>
             } />
             <Route path="/wealth/retirement" element={

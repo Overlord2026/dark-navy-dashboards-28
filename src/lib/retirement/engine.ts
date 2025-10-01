@@ -146,3 +146,16 @@ export async function runStressTest(
 export function generateScenarios(baseInput: RetirementAnalysisInput): StressScenario[] {
   return PREDEFINED_SCENARIOS;
 }
+
+// Minimal SWAG analysis function
+export async function runSwagAnalysis(inputs: { horizonYears: number; spendFloor: number; spendCeiling: number; taxBand?: string; seed?: number }): Promise<{ successProb: number; guardrailFlags: string[]; summary: string; generatedAt: string }> {
+  // Deterministic stub for immediate testing
+  const p = Math.max(0, Math.min(1, ((inputs.seed ?? 42) % 97) / 100));
+  const flags = p < 0.6 ? ["review_plan"] : [];
+  return { 
+    successProb: p, 
+    guardrailFlags: flags, 
+    summary: p < 0.6 ? "Consider adjustments." : "On track.", 
+    generatedAt: new Date().toISOString() 
+  };
+}

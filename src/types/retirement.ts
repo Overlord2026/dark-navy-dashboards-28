@@ -172,3 +172,27 @@ export interface RetirementCalculatorState {
   loading: boolean;
   error: string | null;
 }
+
+// Minimal SWAG types for quick analysis
+export type SwagInputs = { 
+  horizonYears: number; 
+  spendFloor: number; 
+  spendCeiling: number; 
+  taxBand?: string; 
+  seed?: number; 
+};
+
+export type SwagResult = { 
+  successProb: number; 
+  guardrailFlags: string[]; 
+  summary: string; 
+  generatedAt: string; 
+};
+
+export type SwagScenario = { 
+  id: string; 
+  name: string; 
+  inputs: SwagInputs; 
+  result?: SwagResult; 
+  tags?: string[]; 
+};
