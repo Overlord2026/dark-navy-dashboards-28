@@ -47,37 +47,46 @@ import EducationPage from "./pages/EducationPage";
 import ReadyCheck from "./pages/admin/ReadyCheck";
 import { QAPlaybookPage } from "./pages/qa/QAPlaybookPage";
 
+// Lazy-loaded components
+import {
+  StartBrandPage, BrandHomePage, SupervisorHomePage,
+  ProLeadsAdvisor, ProLeadsCPA, ProLeadsAttorney, ProLeadsInsurance, ProLeadsHealthcare, ProLeadsRealtor,
+  ProDashboardCPA, ProDashboardAttorney, ProDashboardInsurance, ProDashboardHealthcare, ProDashboardRealtor,
+  Accountants, AccountantsAccess, Attorneys, AttorneysAccess,
+  InsuranceHomePage, InsuranceMeetingsPage, InsurancePipelinePage, InsuranceProofPage,
+  AdvisorsLayout, AdvisorHomePage, AdvisorLeadsPage, AdvisorMeetingsPage, AdvisorCampaignsPage, AdvisorPipelinePage, AdvisorToolsPage, AdvisorProofPage,
+  AttorneyHomePage, AttorneyLeadsPage, AttorneyMeetingsPage, AttorneyMattersPage, AttorneyProofPage,
+  InsuranceLifeHomePage, InsuranceLifeLeadsPage, InsuranceLifeToolsPage, InsuranceLifeProofPage,
+  MedicareHomePage, MedicareLeadsPage, MedicareSOAPage, MedicareProofPage,
+  HealthcareHomePage, HealthcareLeadsPage, HealthcareToolsPage, HealthcareProofPage,
+  RealtorHomePage, RealtorLeadsPage, RealtorToolsPage, RealtorProofPage,
+  SolutionsPage, InviteAdvisor, InviteRedemption
+} from "./routes-lazy";
+
 // QA pages removed for production
 // All QA routes, checklists, and testing components removed for production security
+
+const LandingNew = React.lazy(() => import("@/pages/LandingNew"));
+const OldHomePage = React.lazy(() => import("./pages/TabPages").then(m => ({ default: m.HomePage })));
+const FamilyOnboarding = React.lazy(() => import('./pages/family/FamilyOnboarding').then(m => ({ default: m.FamilyOnboarding })));
+const FamilyHomePage = React.lazy(() => import('./pages/family/FamilyHomePage').then(m => ({ default: m.FamilyHomePage })));
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: React.createElement(() => {
-      const C = require("@/pages/LandingNew").default;
-      return React.createElement(C);
-    }),
+    element: <Suspense fallback={<div>Loading...</div>}><LandingNew /></Suspense>,
   },
   {
     path: "/old-home",
-    element: React.createElement(() => {
-      const C = require("./pages/TabPages").HomePage;
-      return React.createElement(C);
-    }),
+    element: <Suspense fallback={<div>Loading...</div>}><OldHomePage /></Suspense>,
   },
   {
     path: "/start/families",
-    element: React.createElement(() => {
-      const { FamilyOnboarding } = require('./pages/family/FamilyOnboarding');
-      return React.createElement(FamilyOnboarding);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><FamilyOnboarding /></Suspense>
   },
   {
     path: "/family/home",
-    element: React.createElement(() => {
-      const { FamilyHomePage } = require('./pages/family/FamilyHomePage');
-      return React.createElement(FamilyHomePage);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><FamilyHomePage /></Suspense>
   },
   {
     path: "/annuities",
@@ -257,215 +266,125 @@ export const router = createBrowserRouter([
   },
   {
     path: "/start/brand",
-    element: React.createElement(() => {
-      const { default: StartBrandPage } = require('./pages/start/StartBrandPage');
-      return React.createElement(StartBrandPage);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><StartBrandPage /></Suspense>
   },
   {
     path: "/brand/home",
-    element: React.createElement(() => {
-      const { default: BrandHomePage } = require('./pages/brand/BrandHomePage');
-      return React.createElement(BrandHomePage);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><BrandHomePage /></Suspense>
   },
   {
     path: "/supervisor",
-    element: React.createElement(() => {
-      const { default: SupervisorHomePage } = require('./pages/supervisor/SupervisorHomePage');
-      return React.createElement(SupervisorHomePage);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><SupervisorHomePage /></Suspense>
   },
   {
     path: "/advisor/leads",
-    element: React.createElement(() => {
-      const { ProLeadsPage } = require('./pages/pro/ProLeadsPage');
-      return React.createElement(ProLeadsPage, { persona: 'advisor' });
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><ProLeadsAdvisor /></Suspense>
   },
   {
     path: "/cpa/leads", 
-    element: React.createElement(() => {
-      const { ProLeadsPage } = require('./pages/pro/ProLeadsPage');
-      return React.createElement(ProLeadsPage, { persona: 'cpa' });
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><ProLeadsCPA /></Suspense>
   },
   {
     path: "/attorney/leads",
-    element: React.createElement(() => {
-      const { ProLeadsPage } = require('./pages/pro/ProLeadsPage');
-      return React.createElement(ProLeadsPage, { persona: 'attorney' });
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><ProLeadsAttorney /></Suspense>
   },
   {
     path: "/insurance/leads",
-    element: React.createElement(() => {
-      const { ProLeadsPage } = require('./pages/pro/ProLeadsPage');
-      return React.createElement(ProLeadsPage, { persona: 'insurance' });
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><ProLeadsInsurance /></Suspense>
   },
   {
     path: "/healthcare/leads", 
-    element: React.createElement(() => {
-      const { ProLeadsPage } = require('./pages/pro/ProLeadsPage');
-      return React.createElement(ProLeadsPage, { persona: 'healthcare' });
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><ProLeadsHealthcare /></Suspense>
   },
   {
     path: "/realtor/leads",
-    element: React.createElement(() => {
-      const { ProLeadsPage } = require('./pages/pro/ProLeadsPage');
-      return React.createElement(ProLeadsPage, { persona: 'realtor' });
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><ProLeadsRealtor /></Suspense>
   },
   // Pro dashboard routes
   {
     path: "/cpa",
-    element: React.createElement(() => {
-      const { ProDashboard } = require('./pages/pro/ProDashboard');
-      return React.createElement(ProDashboard, { persona: 'cpa' });
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><ProDashboardCPA /></Suspense>
   },
   {
     path: "/pros/accountants",
-    element: React.createElement(() => {
-      const C = require("./pages/pros/Accountants").default;
-      return React.createElement(C);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><Accountants /></Suspense>
   },
   {
     path: "/pros/accountants/access",
-    element: React.createElement(() => {
-      const C = require("./pages/pros/AccountantsAccess").default;
-      return React.createElement(C);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><AccountantsAccess /></Suspense>
   },
   {
     path: "/pros/attorneys",
-    element: React.createElement(() => {
-      const C = require("./pages/pros/Attorneys").default;
-      return React.createElement(C);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><Attorneys /></Suspense>
   },
   {
     path: "/pros/attorneys/access",
-    element: React.createElement(() => {
-      const C = require("./pages/pros/AttorneysAccess").default;
-      return React.createElement(C);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><AttorneysAccess /></Suspense>
   },
   {
     path: "/attorney",
-    element: React.createElement(() => {
-      const { ProDashboard } = require('./pages/pro/ProDashboard');
-      return React.createElement(ProDashboard, { persona: 'attorney' });
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><ProDashboardAttorney /></Suspense>
   },
   {
     path: "/insurance/home",
-    element: React.createElement(() => {
-      const { InsuranceHomePage } = require('./pages/insurance/InsuranceHomePage');
-      return React.createElement(InsuranceHomePage);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><InsuranceHomePage /></Suspense>
   },
   {
     path: "/insurance/meetings",
-    element: React.createElement(() => {
-      const { InsuranceMeetingsPage } = require('./pages/insurance/InsuranceMeetingsPage');
-      return React.createElement(InsuranceMeetingsPage);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><InsuranceMeetingsPage /></Suspense>
   },
   {
     path: "/insurance/pipeline",
-    element: React.createElement(() => {
-      const { InsurancePipelinePage } = require('./pages/insurance/InsurancePipelinePage');
-      return React.createElement(InsurancePipelinePage);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><InsurancePipelinePage /></Suspense>
   },
   {
     path: "/insurance/proof",
-    element: React.createElement(() => {
-      const { InsuranceProofPage } = require('./pages/insurance/InsuranceProofPage');
-      return React.createElement(InsuranceProofPage);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><InsuranceProofPage /></Suspense>
   },
   {
     path: "/insurance",
-    element: React.createElement(() => {
-      const { ProDashboard } = require('./pages/pro/ProDashboard');
-      return React.createElement(ProDashboard, { persona: 'insurance' });
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><ProDashboardInsurance /></Suspense>
   },
   {
     path: "/healthcare",
-    element: React.createElement(() => {
-      const { ProDashboard } = require('./pages/pro/ProDashboard');
-      return React.createElement(ProDashboard, { persona: 'healthcare' });
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><ProDashboardHealthcare /></Suspense>
   },
   {
     path: "/realtor",
-    element: React.createElement(() => {
-      const { ProDashboard } = require('./pages/pro/ProDashboard');
-      return React.createElement(ProDashboard, { persona: 'realtor' });
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><ProDashboardRealtor /></Suspense>
   },
   // Advisor workspace routes
   {
     path: "/advisors",
-    element: React.createElement(() => {
-      const { AdvisorsLayout } = require('./layouts/AdvisorsLayout');
-      return React.createElement(AdvisorsLayout);
-    }),
+    element: <Suspense fallback={<div>Loading...</div>}><AdvisorsLayout /></Suspense>,
     children: [
       {
         path: "home",
-        element: React.createElement(() => {
-          const { AdvisorHomePage } = require('./pages/advisors/AdvisorHomePage');
-          return React.createElement(AdvisorHomePage);
-        })
+        element: <Suspense fallback={<div>Loading...</div>}><AdvisorHomePage /></Suspense>
       },
       {
         path: "leads",
-        element: React.createElement(() => {
-          const { AdvisorLeadsPage } = require('./pages/advisors/AdvisorLeadsPage');
-          return React.createElement(AdvisorLeadsPage);
-        })
+        element: <Suspense fallback={<div>Loading...</div>}><AdvisorLeadsPage /></Suspense>
       },
       {
         path: "meetings",
-        element: React.createElement(() => {
-          const { AdvisorMeetingsPage } = require('./pages/advisors/AdvisorMeetingsPage');
-          return React.createElement(AdvisorMeetingsPage);
-        })
+        element: <Suspense fallback={<div>Loading...</div>}><AdvisorMeetingsPage /></Suspense>
       },
       {
         path: "campaigns",
-        element: React.createElement(() => {
-          const { AdvisorCampaignsPage } = require('./pages/advisors/AdvisorCampaignsPage');
-          return React.createElement(AdvisorCampaignsPage);
-        })
+        element: <Suspense fallback={<div>Loading...</div>}><AdvisorCampaignsPage /></Suspense>
       },
       {
         path: "pipeline",
-        element: React.createElement(() => {
-          const { AdvisorPipelinePage } = require('./pages/advisors/AdvisorPipelinePage');
-          return React.createElement(AdvisorPipelinePage);
-        })
+        element: <Suspense fallback={<div>Loading...</div>}><AdvisorPipelinePage /></Suspense>
       },
       {
         path: "tools",
-        element: React.createElement(() => {
-          const { AdvisorToolsPage } = require('./pages/advisors/AdvisorToolsPage');
-          return React.createElement(AdvisorToolsPage);
-        })
+        element: <Suspense fallback={<div>Loading...</div>}><AdvisorToolsPage /></Suspense>
       },
       {
         path: "proof",
-        element: React.createElement(() => {
-          const { AdvisorProofPage } = require('./pages/advisors/AdvisorProofPage');
-          return React.createElement(AdvisorProofPage);
-        })
+        element: <Suspense fallback={<div>Loading...</div>}><AdvisorProofPage /></Suspense>
       }
     ]
   },
@@ -498,26 +417,11 @@ export const router = createBrowserRouter([
         </div>
         <Routes>
           <Route index element={<Navigate to="home" replace />} />
-          <Route path="home" element={React.createElement(() => {
-            const { AttorneyHomePage } = require('./pages/attorneys/AttorneyHomePage');
-            return React.createElement(AttorneyHomePage);
-          })} />
-          <Route path="leads" element={React.createElement(() => {
-            const { AttorneyLeadsPage } = require('./pages/attorneys/AttorneyLeadsPage');
-            return React.createElement(AttorneyLeadsPage);
-          })} />
-          <Route path="meetings" element={React.createElement(() => {
-            const { AttorneyMeetingsPage } = require('./pages/attorneys/AttorneyMeetingsPage');
-            return React.createElement(AttorneyMeetingsPage);
-          })} />
-          <Route path="matters" element={React.createElement(() => {
-            const { AttorneyMattersPage } = require('./pages/attorneys/AttorneyMattersPage');
-            return React.createElement(AttorneyMattersPage);
-          })} />
-          <Route path="proof" element={React.createElement(() => {
-            const { AttorneyProofPage } = require('./pages/attorneys/AttorneyProofPage');
-            return React.createElement(AttorneyProofPage);
-          })} />
+          <Route path="home" element={<Suspense fallback={<div>Loading...</div>}><AttorneyHomePage /></Suspense>} />
+          <Route path="leads" element={<Suspense fallback={<div>Loading...</div>}><AttorneyLeadsPage /></Suspense>} />
+          <Route path="meetings" element={<Suspense fallback={<div>Loading...</div>}><AttorneyMeetingsPage /></Suspense>} />
+          <Route path="matters" element={<Suspense fallback={<div>Loading...</div>}><AttorneyMattersPage /></Suspense>} />
+          <Route path="proof" element={<Suspense fallback={<div>Loading...</div>}><AttorneyProofPage /></Suspense>} />
         </Routes>
       </div>
     )
@@ -528,22 +432,10 @@ export const router = createBrowserRouter([
       <div className="min-h-screen bg-background">
         <Routes>
           <Route index element={<Navigate to="home" replace />} />
-          <Route path="home" element={React.createElement(() => {
-            const { default: InsuranceLifeHomePage } = require('./pages/insurance/life/InsuranceLifeHomePage');
-            return React.createElement(InsuranceLifeHomePage);
-          })} />
-          <Route path="leads" element={React.createElement(() => {
-            const { default: InsuranceLifeLeadsPage } = require('./pages/insurance/life/InsuranceLifeLeadsPage');
-            return React.createElement(InsuranceLifeLeadsPage);
-          })} />
-          <Route path="tools" element={React.createElement(() => {
-            const { default: InsuranceLifeToolsPage } = require('./pages/insurance/life/InsuranceLifeToolsPage');
-            return React.createElement(InsuranceLifeToolsPage);
-          })} />
-          <Route path="proof" element={React.createElement(() => {
-            const { default: InsuranceLifeProofPage } = require('./pages/insurance/life/InsuranceLifeProofPage');
-            return React.createElement(InsuranceLifeProofPage);
-          })} />
+          <Route path="home" element={<Suspense fallback={<div>Loading...</div>}><InsuranceLifeHomePage /></Suspense>} />
+          <Route path="leads" element={<Suspense fallback={<div>Loading...</div>}><InsuranceLifeLeadsPage /></Suspense>} />
+          <Route path="tools" element={<Suspense fallback={<div>Loading...</div>}><InsuranceLifeToolsPage /></Suspense>} />
+          <Route path="proof" element={<Suspense fallback={<div>Loading...</div>}><InsuranceLifeProofPage /></Suspense>} />
         </Routes>
       </div>
     )
@@ -554,22 +446,10 @@ export const router = createBrowserRouter([
       <div className="min-h-screen bg-background">
         <Routes>
           <Route index element={<Navigate to="home" replace />} />
-          <Route path="home" element={React.createElement(() => {
-            const { default: MedicareHomePage } = require('./pages/medicare/MedicareHomePage');
-            return React.createElement(MedicareHomePage);
-          })} />
-          <Route path="leads" element={React.createElement(() => {
-            const { default: MedicareLeadsPage } = require('./pages/medicare/MedicareLeadsPage');
-            return React.createElement(MedicareLeadsPage);
-          })} />
-          <Route path="soa" element={React.createElement(() => {
-            const { default: MedicareSOAPage } = require('./pages/medicare/MedicareSOAPage');
-            return React.createElement(MedicareSOAPage);
-          })} />
-          <Route path="proof" element={React.createElement(() => {
-            const { default: MedicareProofPage } = require('./pages/medicare/MedicareProofPage');
-            return React.createElement(MedicareProofPage);
-          })} />
+          <Route path="home" element={<Suspense fallback={<div>Loading...</div>}><MedicareHomePage /></Suspense>} />
+          <Route path="leads" element={<Suspense fallback={<div>Loading...</div>}><MedicareLeadsPage /></Suspense>} />
+          <Route path="soa" element={<Suspense fallback={<div>Loading...</div>}><MedicareSOAPage /></Suspense>} />
+          <Route path="proof" element={<Suspense fallback={<div>Loading...</div>}><MedicareProofPage /></Suspense>} />
         </Routes>
       </div>
     )
@@ -580,22 +460,10 @@ export const router = createBrowserRouter([
       <div className="min-h-screen bg-background">
         <Routes>
           <Route index element={<Navigate to="home" replace />} />
-          <Route path="home" element={React.createElement(() => {
-            const { default: HealthcareHomePage } = require('./pages/health/HealthcareHomePage');
-            return React.createElement(HealthcareHomePage);
-          })} />
-          <Route path="leads" element={React.createElement(() => {
-            const { default: HealthcareLeadsPage } = require('./pages/health/HealthcareLeadsPage');
-            return React.createElement(HealthcareLeadsPage);
-          })} />
-          <Route path="tools" element={React.createElement(() => {
-            const { default: HealthcareToolsPage } = require('./pages/health/HealthcareToolsPage');
-            return React.createElement(HealthcareToolsPage);
-          })} />
-          <Route path="proof" element={React.createElement(() => {
-            const { default: HealthcareProofPage } = require('./pages/health/HealthcareProofPage');
-            return React.createElement(HealthcareProofPage);
-          })} />
+          <Route path="home" element={<Suspense fallback={<div>Loading...</div>}><HealthcareHomePage /></Suspense>} />
+          <Route path="leads" element={<Suspense fallback={<div>Loading...</div>}><HealthcareLeadsPage /></Suspense>} />
+          <Route path="tools" element={<Suspense fallback={<div>Loading...</div>}><HealthcareToolsPage /></Suspense>} />
+          <Route path="proof" element={<Suspense fallback={<div>Loading...</div>}><HealthcareProofPage /></Suspense>} />
         </Routes>
       </div>
     )
@@ -606,22 +474,10 @@ export const router = createBrowserRouter([
       <div className="min-h-screen bg-background">
         <Routes>
           <Route index element={<Navigate to="home" replace />} />
-          <Route path="home" element={React.createElement(() => {
-            const { default: RealtorHomePage } = require('./pages/realtor/RealtorHomePage');
-            return React.createElement(RealtorHomePage);
-          })} />
-          <Route path="leads" element={React.createElement(() => {
-            const { default: RealtorLeadsPage } = require('./pages/realtor/RealtorLeadsPage');
-            return React.createElement(RealtorLeadsPage);
-          })} />
-          <Route path="tools" element={React.createElement(() => {
-            const { default: RealtorToolsPage } = require('./pages/realtor/RealtorToolsPage');
-            return React.createElement(RealtorToolsPage);
-          })} />
-          <Route path="proof" element={React.createElement(() => {
-            const { default: RealtorProofPage } = require('./pages/realtor/RealtorProofPage');
-            return React.createElement(RealtorProofPage);
-          })} />
+          <Route path="home" element={<Suspense fallback={<div>Loading...</div>}><RealtorHomePage /></Suspense>} />
+          <Route path="leads" element={<Suspense fallback={<div>Loading...</div>}><RealtorLeadsPage /></Suspense>} />
+          <Route path="tools" element={<Suspense fallback={<div>Loading...</div>}><RealtorToolsPage /></Suspense>} />
+          <Route path="proof" element={<Suspense fallback={<div>Loading...</div>}><RealtorProofPage /></Suspense>} />
         </Routes>
       </div>
     )
@@ -637,10 +493,7 @@ export const router = createBrowserRouter([
   // Solutions routes
   {
     path: "/solutions/:slug",
-    element: React.createElement(() => {
-      const C = require("@/pages/solutions/SolutionsPage").default;
-      return React.createElement(C);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><SolutionsPage /></Suspense>
   },
   // Legal routes
   {
@@ -682,17 +535,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/invite/advisor",
-    element: React.createElement(() => {
-      const { default: InviteAdvisor } = require('./pages/invite/InviteAdvisor');
-      return React.createElement(InviteAdvisor);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><InviteAdvisor /></Suspense>
   },
   {
     path: "/invite/:token",
-    element: React.createElement(() => {
-      const { default: InviteRedemption } = require('./pages/invite/InviteRedemption');
-      return React.createElement(InviteRedemption);
-    })
+    element: <Suspense fallback={<div>Loading...</div>}><InviteRedemption /></Suspense>
   },
   {
     path: "/qa-playbook",
