@@ -1,5 +1,12 @@
 # Patch Log
 
+## 2025-10-01 — SWAG Analyzer PR2: Persistence + Guardrails Config
+- Created `swag_scenarios` table with RLS policies for user-specific scenario storage.
+- Added `src/lib/retirement/scenarioStore.ts` with save/list/delete functions.
+- Added `src/config/swag_guardrails.json` for analysis thresholds.
+- Wired `SwagScenarioBar` to persist scenarios and restore inputs on click.
+- Scenarios now persist across sessions and can be restored by clicking.
+
 ## 2025-10-01 — Tools Audit (SWAG, Legacy, Team Hub, Pricing, System)
 - Added docs/audits/TOOLS_AUDIT_2025-10-01.md with Verified flags for each surface.
 - SWAG Analyzer: Working (MC + UI), persistence scheduled PR2.

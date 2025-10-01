@@ -1,0 +1,7 @@
+{
+  "default": {
+    "minSuccess": 0.65,
+    "warnBelow": 0.6,
+    "floorRaisePct": 0.05
+  }
+}

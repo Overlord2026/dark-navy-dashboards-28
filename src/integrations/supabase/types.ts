@@ -33836,8 +33836,11 @@ export type Database = {
       }
       scenario_versions: {
         Row: {
+          assumptions: Json
           created_at: string | null
           created_by: string
+          custom_metrics: Json
+          guardrails: Json
           id: string
           inputs: Json
           label: string
@@ -33845,8 +33848,11 @@ export type Database = {
           scenario_id: string
         }
         Insert: {
+          assumptions?: Json
           created_at?: string | null
           created_by: string
+          custom_metrics?: Json
+          guardrails?: Json
           id?: string
           inputs: Json
           label: string
@@ -33854,8 +33860,11 @@ export type Database = {
           scenario_id: string
         }
         Update: {
+          assumptions?: Json
           created_at?: string | null
           created_by?: string
+          custom_metrics?: Json
+          guardrails?: Json
           id?: string
           inputs?: Json
           label?: string
@@ -35744,6 +35753,36 @@ export type Database = {
           status?: string
           tenant_id?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      swag_scenarios: {
+        Row: {
+          created_at: string | null
+          household_id: string | null
+          id: string
+          inputs: Json
+          name: string
+          result: Json | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          household_id?: string | null
+          id?: string
+          inputs: Json
+          name: string
+          result?: Json | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          household_id?: string | null
+          id?: string
+          inputs?: Json
+          name?: string
+          result?: Json | null
+          user_id?: string
         }
         Relationships: []
       }
