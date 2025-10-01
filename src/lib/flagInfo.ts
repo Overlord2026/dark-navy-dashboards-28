@@ -1,15 +1,15 @@
 // Feature flags information utilities
-import { flags, setFlag } from '@/config/flags';
+import { FLAGS } from '@/config/flags';
 
-export function getFlags(): Record<string, boolean> {
-  // Return shallow copy to avoid mutations
-  return { ...flags };
+export function getFlags(): Record<string, any> {
+  // Return FLAGS as a plain object for compatibility
+  // Note: FLAGS is read-only, so mutations won't persist
+  return { ...FLAGS };
 }
 
-export function setFlagSafe(key: string, val: boolean): Record<string, boolean> {
-  // Only allow setting if key exists in current flags
-  if (key in flags) {
-    setFlag(key, val);
-  }
+export function setFlagSafe(key: string, val: boolean): Record<string, any> {
+  // FLAGS is read-only (const), so this is a no-op
+  // Return current flags state
+  console.warn('setFlagSafe: FLAGS is read-only, cannot set', key, val);
   return getFlags();
 }

@@ -53,6 +53,6 @@ export function getBuildInfo() {
   };
 }
 export const FLAG_DESCRIPTIONS: Record<string, string> = {};
-export const flags: Record<string, boolean> = {};
 
+// Default export for legacy compatibility
 export default { FLAGS, BUILD_ID };

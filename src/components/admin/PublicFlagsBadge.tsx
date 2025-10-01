@@ -1,5 +1,5 @@
 import React from 'react';
-import { flags } from '@/config/flags';
+import { FLAGS } from '@/config/flags';
 import { useNavigate } from 'react-router-dom';
 
 const BRAND = {
@@ -30,7 +30,7 @@ function computeStatus(f: any) {
 
 export default function PublicFlagsBadge() {
   const nav = useNavigate();
-  const { status, trues, total, falses } = computeStatus(flags);
+  const { status, trues, total, falses } = computeStatus(FLAGS);
   const color = status === 'ON' ? BRAND.green : status === 'OFF' ? BRAND.red : BRAND.gold;
   const label = status === 'ON' ? 'Public: ON' : status === 'OFF' ? 'Public: OFF' : 'Public: MIXED';
   const sr = `Public routes status ${status}. ${trues} of ${total} flags enabled. ${falses.length ? 'Disabled: '+falses.join(', ') : ''}`;
