@@ -37,6 +37,7 @@ import { TransactionsPage } from '@/features/transactions/pages/TransactionsPage
 import CatalogPage from '@/pages/landing/CatalogPage';
 import HealthcareLanding from '@/pages/landing/HealthcareLanding';
 import FixturesPanel from '@/pages/dev/FixturesPanel';
+import SmokeCheck from '@/pages/_smoke/SmokeCheck';
 import Discover from '@/pages/Discover';
 import SearchPage from '@/pages/SearchPage';
 import { HowItWorks } from '@/pages/HowItWorks';
@@ -1136,9 +1137,12 @@ function App() {
                {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/db/migrations" element={<DbMigrations />} />}
                {getFlag('ADMIN_TOOLS_ENABLED') && <Route path="/admin/migration" element={<MigrationHub />} />}
                
-                 {/* Public Health Check Routes */}
-                 {getFlag('HEALTH_PUBLIC') && <Route path="/__health" element={<HealthCheck />} />}
-                 {getFlag('HEALTH_PUBLIC') && <Route path="/healthz" element={<HealthCheck />} />}
+                  {/* Public Health Check Routes */}
+                  {getFlag('HEALTH_PUBLIC') && <Route path="/__health" element={<HealthCheck />} />}
+                  {getFlag('HEALTH_PUBLIC') && <Route path="/healthz" element={<HealthCheck />} />}
+                  
+                  {/* Smoke Test Route */}
+                  <Route path="/_smoke" element={<SmokeCheck />} />
             
             {/* Demo Routes */}
             {getFlag('DEMOS_ENABLED') && (
