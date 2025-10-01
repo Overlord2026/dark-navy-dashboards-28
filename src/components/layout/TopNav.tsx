@@ -1,148 +1,91 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 
-interface DropdownItem {
-  label: string;
-  href: string;
-  description?: string;
-}
-
-interface NavItem {
-  label: string;
-  href?: string;
-  dropdown?: DropdownItem[];
-}
-
-const navItems: NavItem[] = [
-  {
-    label: 'Families',
-    href: '/families'
-  },
-  {
-    label: 'Professionals',
-    href: '/pros'
-  },
-  {
-    label: 'Pricing',
-    href: '/pricing'
-  },
-  {
-    label: 'Learn',
-    href: '/learn'
-  }
-];
-
-interface DropdownMenuProps {
-  items: DropdownItem[];
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-function DropdownMenu({ items, isOpen, onClose }: DropdownMenuProps) {
-  if (!isOpen) return null;
-
+function ButtonLink({ to, children, className = "" }: { to: string; children: React.ReactNode; className?: string }) {
   return (
-    <div className="absolute top-full left-0 mt-1 w-64 bg-bfo-black border border-bfo-gold rounded-lg shadow-xl z-50">
-      <div className="py-2">
-        {items.map((item, index) => (
-          <Link
-            key={index}
-            to={item.href}
-            className="block px-4 py-3 text-bfo-ivory hover:bg-bfo-gold/10 transition-colors"
-            onClick={onClose}
-          >
-            <div className="font-medium">{item.label}</div>
-            {item.description && (
-              <div className="text-sm text-bfo-gold/70 mt-1">{item.description}</div>
-            )}
-          </Link>
-        ))}
-      </div>
-    </div>
+    <Link
+      to={to}
+      className={`inline-flex items-center rounded-lg px-3 py-2 text-sm text-bfo-ivory hover:text-bfo-gold focus:outline-none focus:ring-2 focus:ring-bfo-gold/40 ${className}`}
+    >
+      {children}
+    </Link>
   );
 }
 
-interface NavDropdownProps {
-  item: NavItem;
-}
+export default function TopNav() {
+  const [open, setOpen] = useState(false);
 
-function NavDropdown({ item }: NavDropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+  const NavItem = ({ to, label }: { to: string; label: string }) => (
+    <NavLink
+      to={to}
+      className={({ isActive }) =>
+        `rounded-md px-3 py-2 text-sm ${isActive ? "text-bfo-gold" : "text-bfo-ivory hover:text-bfo-gold"}`
       }
-    }
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
-
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      setIsOpen(!isOpen);
-    } else if (event.key === 'Escape') {
-      setIsOpen(false);
-    }
-  };
-
-  if (item.href) {
-    return (
-      <Link
-        to={item.href}
-        className="text-bfo-ivory hover:text-bfo-gold transition-colors whitespace-nowrap"
-      >
-        {item.label}
-      </Link>
-    );
-  }
+      onClick={() => setOpen(false)}
+    >
+      {label}
+    </NavLink>
+  );
 
   return (
-    <div ref={dropdownRef} className="relative">
-      <button
-        className={cn(
-          "flex items-center gap-1 text-bfo-ivory hover:text-bfo-gold transition-colors whitespace-nowrap",
-          isOpen && "text-bfo-gold"
+    <header className="w-full bg-bfo-navy/95 border-b border-white/10">
+      {/* accessibility */}
+      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 z-50 bg-bfo-gold/20 text-bfo-ivory px-3 py-1 rounded">
+        Skip to main content
+      </a>
+
+      <div className="mx-auto max-w-7xl px-3 sm:px-4">
+        <div className="flex h-14 items-center justify-between gap-3">
+          {/* Brand (never truncates on desktop; truncates safely on very small widths) */}
+          <Link to="/" className="min-w-0 flex-1">
+            <h1 className="truncate text-base sm:text-lg font-bold text-bfo-ivory">
+              Boutique Family Office
+            </h1>
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-4">
+            <NavItem to="/families" label="Families" />
+            <NavItem to="/pros" label="Professionals" />
+            <NavItem to="/pricing#families" label="Pricing" />
+            <NavItem to="/learn" label="Learn" />
+            <NavItem to="/marketplace" label="Marketplace" />
+            {/* optional links; remove if not used */}
+            {/* <NavItem to="/hq" label="HQ" /> */}
+            {/* <NavItem to="/book-demo" label="Book Demo" /> */}
+            {/* <NavItem to="/login" label="Log In" /> */}
+          </nav>
+
+          {/* Quick actions (desktop) */}
+          <div className="hidden md:flex items-center gap-2">
+            <ButtonLink to="/families" className="border border-white/10 hover:border-bfo-gold/40">Home</ButtonLink>
+          </div>
+
+          {/* Mobile menu button */}
+          <button
+            className="md:hidden inline-flex items-center justify-center rounded-md border border-white/10 bg-white/5 px-2.5 py-2 text-bfo-ivory hover:text-bfo-gold"
+            aria-label="Toggle menu"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? "✕" : "☰"}
+          </button>
+        </div>
+
+        {/* Mobile menu panel */}
+        {open && (
+          <div className="md:hidden pb-3">
+            <div className="mt-2 grid gap-1 rounded-lg border border-white/10 bg-white/5 p-2">
+              <NavItem to="/families" label="Families" />
+              <NavItem to="/pros" label="Professionals" />
+              <NavItem to="/pricing#families" label="Pricing" />
+              <NavItem to="/learn" label="Learn" />
+              <NavItem to="/marketplace" label="Marketplace" />
+            </div>
+          </div>
         )}
-        onClick={() => setIsOpen(!isOpen)}
-        onKeyDown={handleKeyDown}
-        aria-expanded={isOpen}
-        aria-haspopup="true"
-      >
-        {item.label}
-        <ChevronDown 
-          className={cn("h-4 w-4 transition-transform", isOpen && "rotate-180")} 
-        />
-      </button>
-      
-      {item.dropdown && (
-        <DropdownMenu
-          items={item.dropdown}
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-        />
-      )}
-    </div>
+      </div>
+    </header>
   );
 }
 
-export function TopNav() {
-  return (
-    <nav className="hidden md:flex items-center gap-4">
-      {navItems.map((item, index) => (
-        <NavDropdown key={index} item={item} />
-      ))}
-    </nav>
-  );
-}
+export { TopNav };
