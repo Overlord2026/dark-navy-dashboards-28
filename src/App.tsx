@@ -463,6 +463,7 @@ function App() {
             <Route path="/families/:type" element={<FamilyTypeDashboard />} />
             <Route path="/family/home" element={<FamilyDashboard />} />
             <Route path="/pros" element={<ProsIndex />} />
+            <Route path="/pros/financial-advisors" element={<Advisors />} />
             <Route path="/pros/accountants" element={<Accountants />} />
             <Route path="/pros/accountants/access" element={<AccountantsAccess />} />
             <Route path="/pros/attorneys" element={<Attorneys />} />
