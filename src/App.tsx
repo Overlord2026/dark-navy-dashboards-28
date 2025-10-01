@@ -296,6 +296,7 @@ import { toast } from 'sonner';
 import DevTryPage from './pages/DevTryPage';
 import LegacyDoc from '@/pages/docs/LegacyDoc';
 import Health from '@/pages/Health';
+import Healthz from '@/pages/Healthz';
 
 // System protection components
 import NonProdBanner from '@/components/system/NonProdBanner';
@@ -557,6 +558,7 @@ function App() {
             <Route path="/tools/transactions" element={<Navigate to="/transactions" replace />} />
             
             <Route path="/health" element={<Health />} />
+            <Route path="/healthz" element={<Healthz />} />
             
             {/* Family Routes */}
             <Route path="/family/roadmap" element={<FamilyRoadmap />} />
