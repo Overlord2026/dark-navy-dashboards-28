@@ -43,7 +43,7 @@ export default function Advisors() {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold tracking-tight mb-4">
-            Financial Advisory Platform
+            For Financial Advisors
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
             Streamline client management, automate compliance workflows, and deliver personalized 

@@ -24,16 +24,11 @@ const navItems: NavItem[] = [
     ]
   },
   {
-    label: 'Service Pros',
+    label: 'Professionals',
     dropdown: [
-      { label: 'Advisors', href: '/pros/advisors', description: 'Financial advisory professionals' },
-      { label: 'CPA', href: '/pros/cpa', description: 'Tax and accounting professionals' },
-      { label: 'Attorney', href: '/pros/attorney', description: 'Legal and estate planning' },
-      { 
-        label: 'Insurance', 
-        href: '/pros/insurance', 
-        description: 'Life/Annuity, P&C, Medicare/LTC'
-      },
+      { label: 'Financial Advisors', href: '/professionals/financial-advisors', description: 'Financial advisory professionals' },
+      { label: 'Accountants (CPAs)', href: '/professionals/accountants', description: 'Tax and accounting professionals' },
+      { label: 'Attorneys', href: '/professionals/attorneys', description: 'Legal and estate planning' },
     ]
   },
   {

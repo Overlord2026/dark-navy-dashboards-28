@@ -10,15 +10,24 @@ export interface RedirectRule {
 export const REDIRECT_RULES: RedirectRule[] = [
   { from: '/families/home', to: '/families/dashboard', permanent: true },
   { from: '/families/index', to: '/families', permanent: true },
-  { from: '/advisors', to: '/pros/advisors', permanent: true },
+  // Redirect old /pros paths to new /professionals paths
+  { from: '/pros', to: '/professionals', permanent: true },
+  { from: '/pros/advisors', to: '/professionals/financial-advisors', permanent: true },
+  { from: '/pros/accountants', to: '/professionals/accountants', permanent: true },
+  { from: '/pros/cpas', to: '/professionals/accountants', permanent: true },
+  { from: '/pros/attorneys', to: '/professionals/attorneys', permanent: true },
+  // Legacy advisor paths
+  { from: '/advisors', to: '/professionals/financial-advisors', permanent: true },
   { from: '/advisors/home', to: '/pros/advisors/dashboard', permanent: true },
   { from: '/advisors/leads', to: '/pros/leads', permanent: true },
   { from: '/advisors/meetings', to: '/pros/meetings', permanent: true },
   { from: '/advisors/campaigns', to: '/pros/campaigns', permanent: true },
   { from: '/advisors/pipeline', to: '/pros/pipeline', permanent: true },
   { from: '/advisors/tools', to: '/pros/tools', permanent: true },
-  { from: '/cpa', to: '/pros/cpas', permanent: true },
-  { from: '/attorney', to: '/pros/attorneys', permanent: true },
+  // Legacy persona paths
+  { from: '/cpa', to: '/professionals/accountants', permanent: true },
+  { from: '/attorney', to: '/professionals/attorneys', permanent: true },
+  { from: '/accountants', to: '/professionals/accountants', permanent: true },
   { from: '/insurance', to: '/pros/insurance', permanent: true },
   { from: '/healthcare', to: '/pros/healthcare', permanent: true },
   { from: '/realtor', to: '/pros/realtors', permanent: true },
@@ -26,8 +35,6 @@ export const REDIRECT_RULES: RedirectRule[] = [
   { from: '/marketplace/cpas', to: '/pros/marketplace?type=cpas', permanent: true },
   { from: '/marketplace/attorneys', to: '/pros/marketplace?type=attorneys', permanent: true },
   { from: '/marketplace/insurance', to: '/pros/marketplace?type=insurance', permanent: true },
-  { from: '/accountants', to: '/pros/cpas', permanent: true },
-  { from: '/pros/accountants', to: '/pros/cpas', permanent: true },
   { from: '/accountant-dashboard', to: '/pros/cpas/dashboard', permanent: true },
   { from: '/advisor-dashboard', to: '/pros/advisors/dashboard', permanent: true },
   { from: '/attorney-dashboard', to: '/pros/attorneys/dashboard', permanent: true }

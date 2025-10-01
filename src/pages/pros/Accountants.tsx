@@ -11,7 +11,7 @@ export default function Accountants() {
         <PersonaSideNav />
         <main className="space-y-6">
           <div className="space-y-4">
-            <h1 className="text-3xl font-bold text-bfo-gold">Accountant Dashboard</h1>
+            <h1 className="text-3xl font-bold text-bfo-gold">For Accountants</h1>
             <p className="text-white/80">Tax & accounting practice management tools.</p>
           </div>
           {/* Quick Access Cards */}

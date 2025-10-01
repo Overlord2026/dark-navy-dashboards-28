@@ -469,6 +469,15 @@ function App() {
             <Route path="/pros/attorneys/access" element={<AttorneysAccess />} />
             <Route path="/pros/accountants-cta" element={<AccountantsCTA />} />
             <Route path="/pros/attorneys-cta" element={<AttorneysCTA />} />
+            
+            {/* New /professionals routes - reusing existing components */}
+            <Route path="/professionals" element={<ProsIndex />} />
+            <Route path="/professionals/financial-advisors" element={<Advisors />} />
+            <Route path="/professionals/accountants" element={<Accountants />} />
+            <Route path="/professionals/accountants/access" element={<AccountantsAccess />} />
+            <Route path="/professionals/attorneys" element={<Attorneys />} />
+            <Route path="/professionals/attorneys/access" element={<AttorneysAccess />} />
+            
             <Route path="/pros/:role" element={<ProWorkspaceLayout />}>
               <Route index element={<ToolsLauncher />} />
               <Route path="reports" element={<ReportsPage />} />
