@@ -3,8 +3,8 @@ declare const __BUILD_ID__: string;
 
 type Mode = "staging" | "prod";
 
-export const FLAGS = {
-  PUBLIC_MODE: (import.meta as any)?.env?.PUBLIC_MODE as Mode ?? "staging",
+const FLAGS = {
+  PUBLIC_MODE: ((import.meta as any)?.env?.PUBLIC_MODE as Mode) ?? "staging",
   ENABLE_EXPERIMENTS: ((import.meta as any)?.env?.ENABLE_EXPERIMENTS ?? "false") === "true",
   ENABLE_DEV_PANEL: ((import.meta as any)?.env?.ENABLE_DEV_PANEL ?? "true") !== "false",
   IS_DEVELOPMENT: !!(import.meta as any)?.env?.DEV,
@@ -14,6 +14,8 @@ export const FLAGS = {
   __ENABLE_AGENT_AUTOMATIONS__: false,
   __REQUIRE_APPROVAL_HIGH_RISK__: true,
 } as const;
+
+export { FLAGS };
 
 export const BUILD_ID: string =
   (typeof __BUILD_ID__ !== "undefined" ? String(__BUILD_ID__) : null) ??
