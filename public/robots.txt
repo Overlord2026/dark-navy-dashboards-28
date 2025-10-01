@@ -8,6 +8,7 @@ Disallow: /nil/agent/
 Disallow: /nil/school/
 Disallow: /nil/admin/
 Disallow: /dev/
+Disallow: /_smoke
 Disallow: /api/
 
 # Public routes - controlled by feature flags
