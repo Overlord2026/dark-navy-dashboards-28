@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Users, FileText, Shield, TrendingUp, Calendar, Building } from 'lucide-react';
+import HeaderSpacer from '@/components/layout/HeaderSpacer';
 
 const prosTools = [
   {
@@ -49,6 +50,7 @@ export default function ProsIndex() {
 
   return (
     <div className="page-surface">
+      <HeaderSpacer />
       {/* Hero Section */}
       <section className="py-16 px-4 text-center">
         <div className="max-w-4xl mx-auto">

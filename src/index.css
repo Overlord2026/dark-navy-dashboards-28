@@ -30,7 +30,7 @@
 @layer base {
   :root, .dark-theme {
     /* Header Stack Height for Sticky Navigation */
-    --header-stack: 112px;
+    --header-stack: 56px;
     
     /* Luxury Family Stage Colors */
     --luxury-navy: 210 100% 12%;
@@ -378,11 +378,18 @@
   }
 
   /* Brand Utility Classes */
-  .brand-bg { @apply bg-[#0B2239] text-bfo-white; }
-  .icon-black { @apply text-bfo-black; }
-  .icon-gold { @apply text-bfo-gold; }
+  .brand-bg { 
+    background-color: #0B2239;
+    color: var(--bfo-white);
+  }
+  .icon-black { color: var(--bfo-black); }
+  .icon-gold { color: var(--bfo-gold); }
   /* Prevent regressions: */
-  .page-surface { @apply min-h-screen brand-bg; }
+  .page-surface { 
+    min-height: 100vh;
+    background-color: #0B2239;
+    color: var(--bfo-white);
+  }
   
   .bg-brand-black { background-color: var(--bfo-black); }
   .text-brand-gold { color: var(--bfo-gold); }

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Heart, Users, BookOpen } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { GoldButton } from '@/components/ui/brandButtons';
+import HeaderSpacer from '@/components/layout/HeaderSpacer';
 
 const HealthcareIndex = () => {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ const HealthcareIndex = () => {
 
   return (
     <div className="min-h-screen bg-bfo-black">
+      <HeaderSpacer />
       <div className="container mx-auto px-4 py-16">
         {/* Hero Section */}
         <div className="text-center mb-16">

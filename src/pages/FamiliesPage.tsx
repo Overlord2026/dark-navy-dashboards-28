@@ -7,6 +7,7 @@ import { FamilyHero } from '@/components/families/FamilyHero';
 import { FAMILY_SEGMENTS } from '@/data/familySegments';
 import { analytics } from '@/lib/analytics';
 import BrandIcon from '@/components/ui/BrandIcon';
+import HeaderSpacer from '@/components/layout/HeaderSpacer';
 import { 
   Users, 
   Clock, 
@@ -101,7 +102,8 @@ const FamiliesPage = () => {
 
   return (
     <div className="page-surface">
-      <main className="pt-[var(--header-stack)] scroll-mt-[var(--header-stack)]">
+      <HeaderSpacer />
+      <main>
         <FamilyHero />
         
         <div className="container mx-auto px-4 py-12 space-y-12">

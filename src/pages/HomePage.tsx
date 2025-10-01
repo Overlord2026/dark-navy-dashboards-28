@@ -1,8 +1,11 @@
 import React from 'react';
+import HeaderSpacer from '@/components/layout/HeaderSpacer';
 
 export function HomePage() {
   return (
-    <main className="container mx-auto px-4 py-12 space-y-12 text-bfo-ivory">
+    <>
+      <HeaderSpacer />
+      <main className="container mx-auto px-4 py-12 space-y-12 text-bfo-ivory">
       
       <section className="text-center space-y-4">
         <h1 className="text-3xl lg:text-4xl font-semibold">
@@ -68,5 +71,6 @@ export function HomePage() {
       </section>
 
     </main>
+    </>
   );
 }

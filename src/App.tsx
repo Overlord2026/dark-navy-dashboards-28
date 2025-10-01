@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from "next-themes";
 import { HelmetProvider } from 'react-helmet-async';
 import '@/styles/brand.css';
-import { TopBanner } from '@/components/layout/TopBanner';
 import BrandHeader from '@/components/layout/BrandHeader';
 import { ConditionalMegaMenu } from '@/components/nav/ConditionalMegaMenu';
 import { RedirectHandler } from '@/components/RedirectHandler';
@@ -18,7 +17,6 @@ import DevPanel from '@/components/dev/DevPanel';
 import { AutoLoadDemo } from '@/components/AutoLoadDemo';
 import { DemoStatus } from '@/components/DemoStatus';
 import CTAStickyBar from '@/components/ui/CTAStickyBar';
-import SecondaryNav from '@/components/layout/SecondaryNav';
 import ReceiptsListPage from '@/pages/ReceiptsListPage';
 import ReceiptDetailPage from '@/pages/ReceiptDetailPage';
 import SamplesPage from '@/pages/SamplesPage';
@@ -425,13 +423,9 @@ function App() {
     <HelmetProvider>
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
         <NonProdBanner />
+        <BrandHeader />
         <div className="min-h-screen bg-background text-foreground">
-            {/* Permanent Top Banner on ALL pages */}
-            <TopBanner />
-            {/* Secondary Navigation on ALL pages */}
-            <SecondaryNav />
             <RedirectHandler />
-            <div style={{ paddingTop: '160px' }}>
             <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/old-home" element={
@@ -1208,12 +1202,11 @@ function App() {
             <BehaviorTracker>
               <div /> {/* Empty children since tracker runs in background */}
             </BehaviorTracker>
-           </div>
            {/* Build tag footer - always visible */}
            <div className="fixed bottom-1 right-2">
              <FooterBuildTag />
            </div>
-          </div>
+         </div>
         </ThemeProvider>
       </HelmetProvider>
   );
