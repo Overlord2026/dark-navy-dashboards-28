@@ -14,6 +14,10 @@ module.exports = {
       {
         selector: 'CallExpression[callee.object.name="sessionStorage"][callee.property.name="setItem"]',
         message: 'Do not store sensitive data in sessionStorage.',
+      },
+      {
+        selector: 'CallExpression[callee.name=/^(AuthProvider|SafeToastProvider|RedirectHandler|SecondaryNav|CTAStickyBar|FamilyOnboardingWelcome)$/]',
+        message: 'Components must be used as JSX, not called as functions. Use <ComponentName /> instead of ComponentName({...}).',
       }
     ],
     'no-console': ['warn', { allow: ['warn','error'] }],
