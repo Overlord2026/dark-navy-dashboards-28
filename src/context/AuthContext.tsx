@@ -1,5 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
 import useFirstLoginToolInstaller from "@/hooks/useFirstLoginToolInstaller";
+import { logReactIdentity } from "@/debug/reactInspector";
+
+logReactIdentity("AuthContext");
 
 type AuthState = { 
   user: any | null; 

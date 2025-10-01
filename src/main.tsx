@@ -3,6 +3,9 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { SafeToastProvider } from "@/providers/SafeToastProvider";
+import { logReactIdentity } from "@/debug/reactInspector";
+
+logReactIdentity("main");
 
 // Lazy Providers component: import provider modules at render time
 function Providers({ children }: { children: React.ReactNode }) {
