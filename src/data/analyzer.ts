@@ -131,44 +131,40 @@ export async function getVersions(scenarioId: string): Promise<RetirementVersion
  * Enqueue a run and invoke swag-sim edge function directly
  */
 export async function enqueueRunAndInvoke(
-  versionId: string,
-  nPaths: number = 5000
+  scenarioVersionId: string,
+  paths: number = 5000
 ): Promise<string> {
-  // 1) Create the run record
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('User not authenticated');
 
-  const { data: run, error: runError } = await supabase
-    .from('retirement_runs')
+  const { data: runRow, error: insErr } = await supabase
+    .from('scenario_runs')
     .insert({
-      version_id: versionId,
-      status: 'queued',
-      n_paths: nPaths
+      scenario_version_id: scenarioVersionId,
+      paths,
+      requested_by: user.id
     })
-    .select()
+    .select('*')
     .single();
 
-  if (runError) throw runError;
+  if (insErr) throw insErr;
 
-  // 2) Invoke edge function directly with the run data
   const { error: fnErr } = await supabase.functions.invoke('swag-sim', {
-    body: { record: run }
+    body: { record: runRow }
   });
 
   if (fnErr) {
-    // Update run status to failed
     await supabase
-      .from('retirement_runs')
+      .from('scenario_runs')
       .update({ 
         status: 'failed', 
-        error_message: fnErr.message,
-        completed_at: new Date().toISOString()
+        error: String(fnErr)
       })
-      .eq('id', run.id);
+      .eq('id', runRow.id);
     throw fnErr;
   }
 
-  return run.id;
+  return runRow.id;
 }
 
 /**
@@ -208,44 +204,37 @@ export async function getResults(runId: string): Promise<RetirementResults | nul
 export async function waitForRun(
   runId: string,
   options: { timeoutMs?: number; intervalMs?: number } = {}
-): Promise<RetirementRun> {
-  const { timeoutMs = 20000, intervalMs = 600 } = options;
-  const startTime = Date.now();
+): Promise<{ id: string; status: string; error?: string }> {
+  const { timeoutMs = 30000, intervalMs = 800 } = options;
+  const start = Date.now();
 
-  while (Date.now() - startTime < timeoutMs) {
+  while (Date.now() - start < timeoutMs) {
     const { data, error } = await supabase
-      .from('retirement_runs')
-      .select('*')
+      .from('scenario_runs')
+      .select('id,status,error')
       .eq('id', runId)
-      .single();
+      .limit(1);
 
     if (error) throw error;
-    
-    const run = data as RetirementRun;
-    if (run.status === 'completed' || run.status === 'failed') {
-      return run;
-    }
-
+    const r = data?.[0];
+    if (!r) throw new Error('Run not found');
+    if (r.status === 'succeeded' || r.status === 'failed') return r;
     await new Promise(resolve => setTimeout(resolve, intervalMs));
   }
 
-  throw new Error('Timed out waiting for run');
+  throw new Error('Timed out');
 }
 
 /**
- * Fetch run summary from results table
+ * Fetch run summary from scenario_run_results table
  */
 export async function fetchRunSummary(runId: string) {
   const { data, error } = await supabase
-    .from('retirement_results')
-    .select('*')
+    .from('scenario_run_results')
+    .select('summary,distributions,breach_events,path_sample')
     .eq('run_id', runId)
     .single();
 
-  if (error) {
-    if (error.code === 'PGRST116') return null;
-    throw error;
-  }
-  
+  if (error) throw error;
   return data;
 }

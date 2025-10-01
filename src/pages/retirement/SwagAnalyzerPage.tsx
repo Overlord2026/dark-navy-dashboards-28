@@ -180,29 +180,42 @@ export default function SwagAnalyzerPage() {
 
       // Enqueue the run and invoke edge function
       setRunStatus('queued');
+      toast.info('Queueing simulation...');
       const runId = await enqueueRunAndInvoke(versionId, 5000);
       
       // Wait for completion
       setRunStatus('running');
-      const completedRun = await waitForRun(runId);
+      toast.info('Running simulation...');
+      const done = await waitForRun(runId);
       
-      if (completedRun.status === 'failed') {
+      if (done.status === 'failed') {
         setRunStatus('failed');
-        toast.error(`Simulation failed: ${completedRun.error_message}`);
+        toast.error(`Simulation failed: ${done.error || 'Unknown error'}`);
         return;
       }
 
       // Fetch results
-      const simResults = await fetchRunSummary(runId);
-      if (simResults) {
-        setMcResults(simResults);
-        setRunStatus('completed');
-        toast.success('Monte Carlo simulation completed');
+      if (done.status === 'succeeded') {
+        const result = await fetchRunSummary(runId);
+        if (result?.summary) {
+          const summary = result.summary as any;
+          const kpis = summary.kpis || {};
+          setMcResults({
+            success_probability: kpis.success_prob,
+            terminal_p10: kpis.terminal_p10,
+            terminal_p50: kpis.terminal_p50,
+            terminal_p90: kpis.terminal_p90,
+            breach_rate: kpis.breach_rate,
+            etay_value: kpis.years_above_floor_p50
+          } as any);
+          setRunStatus('completed');
+          toast.success('Monte Carlo simulation completed');
+        }
       }
     } catch (error) {
       console.error('Failed to run simulation:', error);
       setRunStatus('failed');
-      toast.error('Failed to run simulation');
+      toast.error(`Failed to run simulation: ${error}`);
     }
   };
 
