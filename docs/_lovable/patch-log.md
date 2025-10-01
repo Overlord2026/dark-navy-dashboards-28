@@ -1,5 +1,13 @@
 # Patch Log
 
+## 2025-10-01 — Tools Audit (SWAG, Legacy, Team Hub, Pricing, System)
+- Added docs/audits/TOOLS_AUDIT_2025-10-01.md with Verified flags for each surface.
+- SWAG Analyzer: Working (MC + UI), persistence scheduled PR2.
+- Legacy: Wizard/RON present; save/resume + attorney request scheduled PR2.
+- Team Hub: UI live; persistence + ProofSlips scheduled PR2.
+- Pricing: site complete; entitlement util to wire.
+- System: /_smoke, /healthz, banner health dot verified.
+
 ## 2025-09-22 — KYC & Lead Routing Build Fix
 **Problem:** Missing KYC verification and lead routing components causing build failures.
 **Solution:** Created mock implementations and safe wrappers for Supabase calls.
