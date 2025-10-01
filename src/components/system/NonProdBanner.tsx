@@ -51,14 +51,26 @@ export default function NonProdBanner() {
       <div className="mx-auto max-w-7xl flex items-center gap-2 justify-center">
         <span className={`inline-block h-2.5 w-2.5 rounded-full ${dotClass}`} aria-hidden="true" />
         <span className="opacity-80">STAGING</span>
-        <span>•</span>
+        <span aria-hidden="true">•</span>
         <span className="opacity-80">
           Build <span className="font-medium">{BUILD_ID}</span>
         </span>
-        <span>•</span>
+        <span aria-hidden="true">•</span>
         <span className="opacity-80">
           Health: <span className="font-medium">{health}</span>
         </span>
+
+        {/* subtle divider */}
+        <span aria-hidden="true">•</span>
+
+        {/* Accessible link to /_smoke */}
+        <a
+          href="/_smoke"
+          className="rounded px-2 py-0.5 text-bfo-gold hover:text-bfo-black hover:bg-bfo-gold/80 focus:outline-none focus:ring-2 focus:ring-bfo-gold/40"
+          aria-label="Open Smoke Check page"
+        >
+          Verify
+        </a>
       </div>
     </div>
   );
