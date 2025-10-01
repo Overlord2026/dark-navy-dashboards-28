@@ -1,62 +1,45 @@
 import { Link } from "react-router-dom";
 
-function Hero() {
+function PrimaryCTA({ to, children }: { to: string; children: React.ReactNode }) {
   return (
-    <section className="relative overflow-hidden bg-bfo-navy text-bfo-ivory">
-      <div className="container mx-auto px-4 py-16 md:py-24">
+    <Link
+      to={to}
+      className="inline-flex items-center rounded-lg bg-bfo-gold text-bfo-black px-5 py-3 text-sm font-semibold hover:bg-bfo-gold/90 focus:outline-none focus:ring-2 focus:ring-bfo-gold/40"
+    >
+      {children}
+    </Link>
+  );
+}
+function SecondaryCTA({ to, children }: { to: string; children: React.ReactNode }) {
+  return (
+    <Link
+      to={to}
+      className="inline-flex items-center rounded-lg border border-white/15 bg-white/5 px-5 py-3 text-sm text-bfo-ivory hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-bfo-gold/40"
+    >
+      {children}
+    </Link>
+  );
+}
+
+export default function Hero() {
+  return (
+    <section className="relative bg-bfo-navy text-bfo-ivory">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:py-14">
         <div className="max-w-3xl">
-          <h1 className="text-3xl md:text-5xl font-extrabold leading-tight">
-            Your Boutique Family Office —
-            <span className="text-bfo-gold"> plan better, learn faster,</span> work with trusted pros.
-          </h1>
-          <p className="mt-4 text-lg md:text-xl text-white/80">
-            Explore our free catalog, take pro-led courses, and upgrade anytime to unlock advanced tools for
-            families and service professionals.
+          <h2 className="text-3xl sm:text-4xl font-extrabold leading-tight">
+            Your Boutique Family Office—one secure place for families and professionals to work together.
+          </h2>
+          <p className="mt-4 text-base sm:text-lg text-white/80">
+            Bring your financial picture, documents, and trusted team into a single, compliant workspace—so decisions get made and life keeps moving.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              to="/catalog"
-              className="inline-flex items-center rounded-lg bg-bfo-gold text-bfo-black px-5 py-3 font-medium hover:bg-bfo-gold/90"
-            >
-              Explore the Catalog
-            </Link>
-            <Link
-              to="/pricing"
-              className="inline-flex items-center rounded-lg border border-bfo-gold/40 px-5 py-3 font-medium hover:bg-white/5"
-            >
-              See Plans
-            </Link>
-            <Link
-              to="/learn"
-              className="inline-flex items-center rounded-lg border border-white/15 px-5 py-3 font-medium hover:bg-white/5"
-            >
-              Education Center
-            </Link>
-          </div>
-
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Link
-              to="/families"
-              className="rounded-xl border border-white/10 bg-white/5 px-5 py-4 hover:bg-white/10"
-            >
-              <div className="text-sm uppercase tracking-widest opacity-60">For Families</div>
-              <div className="text-lg font-semibold">Choose your path: Aspiring or Retirees →</div>
-            </Link>
-            <Link
-              to="/pros"
-              className="rounded-xl border border-white/10 bg-white/5 px-5 py-4 hover:bg-white/10"
-            >
-              <div className="text-sm uppercase tracking-widest opacity-60">For Service Professionals</div>
-              <div className="text-lg font-semibold">Advisors →</div>
-              <div className="text-sm text-white/70 mt-1">Marketplace: Realtors, Insurance, Healthcare & More</div>
-            </Link>
+          {/* CTAs */}
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <PrimaryCTA to="/families">Get started (Family)</PrimaryCTA>
+            <SecondaryCTA to="/pros">For Professionals</SecondaryCTA>
           </div>
         </div>
       </div>
     </section>
   );
 }
-
-export default Hero;
-export { Hero };
