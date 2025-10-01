@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { SwagScenario, SwagInputs } from "@/types/retirement";
 import { runSwagAnalysis } from "@/lib/retirement/engine";
+import ResultCard from "./ResultCard";
 
 export default function SwagScenarioBar() {
   const [scenarios, setScenarios] = useState<SwagScenario[]>([]);
@@ -60,14 +61,12 @@ export default function SwagScenarioBar() {
         </button>
       </div>
       
-      <div className="mt-4 space-y-2">
+      <div className="mt-4 space-y-3">
         {scenarios.map(s => (
-          <div key={s.id} className="rounded-lg border border-white/10 p-3">
+          <div key={s.id} className="rounded-lg border border-white/10 p-3 space-y-2">
             <div className="font-semibold">{s.name}</div>
             {s.result && (
-              <div className="text-sm opacity-80">
-                Success {(s.result.successProb * 100).toFixed(0)}% — {s.result.summary}
-              </div>
+              <ResultCard p={s.result.successProb} flags={s.result.guardrailFlags} />
             )}
           </div>
         ))}

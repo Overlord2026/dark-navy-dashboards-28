@@ -3,7 +3,7 @@
  * Wrapper for @swag/analyzer package
  */
 
-import type { RetirementAnalysisInput, RetirementAnalysisResults, CashFlowProjection, RetirementPolicy } from '@/types/retirement';
+import type { RetirementAnalysisInput, RetirementAnalysisResults, CashFlowProjection, RetirementPolicy, SwagInputs, SwagResult } from '@/types/retirement';
 
 export interface StressScenario {
   id: string;
@@ -147,15 +147,41 @@ export function generateScenarios(baseInput: RetirementAnalysisInput): StressSce
   return PREDEFINED_SCENARIOS;
 }
 
-// Minimal SWAG analysis function
-export async function runSwagAnalysis(inputs: { horizonYears: number; spendFloor: number; spendCeiling: number; taxBand?: string; seed?: number }): Promise<{ successProb: number; guardrailFlags: string[]; summary: string; generatedAt: string }> {
-  // Deterministic stub for immediate testing
-  const p = Math.max(0, Math.min(1, ((inputs.seed ?? 42) % 97) / 100));
-  const flags = p < 0.6 ? ["review_plan"] : [];
-  return { 
-    successProb: p, 
-    guardrailFlags: flags, 
-    summary: p < 0.6 ? "Consider adjustments." : "On track.", 
-    generatedAt: new Date().toISOString() 
+// Monte Carlo SWAG analysis function
+export async function runSwagAnalysis(i: SwagInputs): Promise<SwagResult> {
+  const trials = 500;
+  const years = i.horizonYears || 30;
+  const mu = 0.05;
+  const sigma = 0.12;
+  
+  function randn() {
+    let u = 0, v = 0;
+    while (!u) u = Math.random();
+    while (!v) v = Math.random();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+  
+  let ok = 0;
+  for (let t = 0; t < trials; t++) {
+    let bal = (i.spendCeiling || 0) * 30;
+    for (let y = 0; y < years; y++) {
+      const r = Math.exp(mu - 0.5 * sigma * sigma + sigma * randn()) - 1;
+      bal = bal * (1 + r) - ((i.spendFloor + i.spendCeiling) / 2);
+      if (bal <= 0) {
+        bal = 0;
+        break;
+      }
+    }
+    if (bal > 0) ok++;
+  }
+  
+  const p = ok / trials;
+  const flags = p < 0.5 ? ["raise_floor"] : p < 0.6 ? ["review_plan"] : [];
+  
+  return {
+    successProb: p,
+    guardrailFlags: flags,
+    summary: p < 0.6 ? "Consider adjustments." : "On track.",
+    generatedAt: new Date().toISOString()
   };
 }
