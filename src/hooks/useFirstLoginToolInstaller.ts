@@ -1,17 +1,16 @@
-import { useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
 
-/**
- * First-login tool installer hook.
- * Only runs after user is authenticated and mounted.
- */
-export default function useFirstLoginToolInstaller(user?: { id?: string } | null) {
-  useEffect(() => {
-    if (typeof window === "undefined") return; // SSR/preview guard
-    if (!user?.id) return;                      // only after auth resolves
-    if ((window as any).__TOOLS_READY__) return;
-    (window as any).__TOOLS_READY__ = true;
-
-    try { toast.success("Tools ready"); } catch {}
-  }, [user]);
+/** Pure, hook-free installer. Safe to call after mount (once per session). */
+let _installed = false;
+export function runFirstLoginToolInstaller() {
+  if (_installed) return;
+  _installed = true;
+  try {
+    // put your one-time welcome / tool bootstrap here
+    toast.success("Welcome! Tools are ready.");
+  } catch {
+    // swallow, never crash app
+  }
 }
+
+export default runFirstLoginToolInstaller;
