@@ -18,34 +18,15 @@ interface NavItem {
 const navItems: NavItem[] = [
   {
     label: 'Families',
-    dropdown: [
-      { label: 'Retirees', href: '/families/retirees', description: 'Retirement planning and bucket list' },
-      { label: 'Aspiring', href: '/families/aspiring', description: 'Building wealth for the future' },
-    ]
+    href: '/families'
   },
   {
     label: 'Professionals',
-    dropdown: [
-      { label: 'Financial Advisors', href: '/professionals/financial-advisors', description: 'Financial advisory professionals' },
-      { label: 'Accountants (CPAs)', href: '/professionals/accountants', description: 'Tax and accounting professionals' },
-      { label: 'Attorneys', href: '/professionals/attorneys', description: 'Legal and estate planning' },
-    ]
-  },
-  {
-    label: 'NIL',
-    href: '/nil'
-  },
-  {
-    label: 'Healthcare',
-    href: '/healthcare'
-  },
-  {
-    label: 'Solutions',
-    href: '/solutions'
+    href: '/pros'
   },
   {
     label: 'Pricing',
-    href: '/pricing#families'
+    href: '/pricing'
   },
   {
     label: 'Learn',
