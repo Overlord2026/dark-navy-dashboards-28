@@ -5,6 +5,8 @@
     "test:coverage": "vitest --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "lighthouse": "lighthouse http://localhost:5173 --output=html --output-path=./lighthouse-report.html --chrome-flags='--headless' --only-categories=accessibility,performance,best-practices"
+    "lighthouse": "lighthouse http://localhost:5173 --output=html --output-path=./lighthouse-report.html --chrome-flags='--headless' --only-categories=accessibility,performance,best-practices",
+    "smoke:local": "BUILD_ID=local PUBLIC_MODE=staging HEALTH_URL=http://localhost:5173/healthz bash scripts/release.sh",
+    "smoke:staging": "BUILD_ID=local PUBLIC_MODE=staging HEALTH_URL=$STAGING_BASE_URL/healthz bash scripts/release.sh"
   }
 }
