@@ -37,7 +37,7 @@ export default defineConfig(({ mode }) => ({
     include: ["react","react-dom","react/jsx-runtime","react/jsx-dev-runtime","sonner"],
   },
   define: {
-    "__BUILD_ID__": JSON.stringify(BUILD_ID),
+    "__BUILD_ID__": JSON.stringify(Date.now()),
     "process.env.NODE_ENV": JSON.stringify(mode || "development")
   }
 }));
