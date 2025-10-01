@@ -63,18 +63,18 @@ function DropdownMenu({ items, isOpen, onClose }: DropdownMenuProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="absolute top-full left-0 mt-1 w-64 bg-black border border-[#D4AF37] rounded-lg shadow-xl z-50">
+    <div className="absolute top-full left-0 mt-1 w-64 bg-bfo-black border border-bfo-gold rounded-lg shadow-xl z-50">
       <div className="py-2">
         {items.map((item, index) => (
           <Link
             key={index}
             to={item.href}
-            className="block px-4 py-3 text-white hover:bg-[#D4AF37]/10 transition-colors"
+            className="block px-4 py-3 text-bfo-ivory hover:bg-bfo-gold/10 transition-colors"
             onClick={onClose}
           >
             <div className="font-medium">{item.label}</div>
             {item.description && (
-              <div className="text-sm text-[#D4AF37]/70 mt-1">{item.description}</div>
+              <div className="text-sm text-bfo-gold/70 mt-1">{item.description}</div>
             )}
           </Link>
         ))}
@@ -120,7 +120,7 @@ function NavDropdown({ item }: NavDropdownProps) {
     return (
       <Link
         to={item.href}
-        className="text-white hover:text-[#D4AF37] transition-colors px-3 py-2"
+        className="text-bfo-ivory hover:text-bfo-gold transition-colors whitespace-nowrap"
       >
         {item.label}
       </Link>
@@ -131,8 +131,8 @@ function NavDropdown({ item }: NavDropdownProps) {
     <div ref={dropdownRef} className="relative">
       <button
         className={cn(
-          "flex items-center gap-1 text-white hover:text-[#D4AF37] transition-colors px-3 py-2",
-          isOpen && "text-[#D4AF37]"
+          "flex items-center gap-1 text-bfo-ivory hover:text-bfo-gold transition-colors whitespace-nowrap",
+          isOpen && "text-bfo-gold"
         )}
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={handleKeyDown}
@@ -158,7 +158,7 @@ function NavDropdown({ item }: NavDropdownProps) {
 
 export function TopNav() {
   return (
-    <nav className="hidden md:flex items-center gap-2">
+    <nav className="hidden md:flex items-center gap-4">
       {navItems.map((item, index) => (
         <NavDropdown key={index} item={item} />
       ))}

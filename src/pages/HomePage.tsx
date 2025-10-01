@@ -7,18 +7,18 @@ export function HomePage() {
       <HeaderSpacer />
       <main className="container mx-auto px-4 py-12 space-y-12 text-bfo-ivory">
       
-      <section className="text-center space-y-4">
+      <section className="text-center space-y-6">
         <h1 className="text-3xl lg:text-4xl font-semibold">
           Your Boutique Family Office—one secure place for families and professionals to work together.
         </h1>
-        <p className="text-white/80 max-w-3xl mx-auto">
+        <p className="text-bfo-ivory/80 max-w-3xl mx-auto text-lg">
           We bring your financial picture, your documents, and your trusted team into a single, compliant workspace—so decisions get made and life keeps moving.
         </p>
-        <div className="flex justify-center gap-3">
-          <a href="/families" className="rounded-lg bg-bfo-gold text-bfo-black px-4 py-2 hover:bg-bfo-gold/90 transition-colors">
-            For Families
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="/families" className="rounded-lg bg-bfo-gold text-bfo-black px-6 py-3 text-lg font-medium hover:bg-bfo-gold/90 transition-colors min-h-[44px] flex items-center justify-center">
+            Get Started as Family
           </a>
-          <a href="/professionals" className="rounded-lg border border-white/30 px-4 py-2 hover:bg-white/10 transition-colors">
+          <a href="/professionals" className="rounded-lg border border-bfo-gold/30 text-bfo-ivory px-6 py-3 text-lg font-medium hover:bg-bfo-gold/10 transition-colors min-h-[44px] flex items-center justify-center">
             For Professionals
           </a>
         </div>
