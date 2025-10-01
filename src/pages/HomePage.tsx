@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import HeaderSpacer from '@/components/layout/HeaderSpacer';
 
 export function HomePage() {
@@ -15,12 +16,12 @@ export function HomePage() {
           We bring your financial picture, your documents, and your trusted team into a single, compliant workspace—so decisions get made and life keeps moving.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <a href="/families" className="rounded-lg bg-bfo-gold text-bfo-black px-6 py-3 text-lg font-medium hover:bg-bfo-gold/90 transition-colors min-h-[44px] flex items-center justify-center">
-            Get Started as Family
-          </a>
-          <a href="/professionals" className="rounded-lg border border-bfo-gold/30 text-bfo-ivory px-6 py-3 text-lg font-medium hover:bg-bfo-gold/10 transition-colors min-h-[44px] flex items-center justify-center">
+          <Link className="btn-primary-gold min-h-[44px] px-6 py-3 text-lg font-medium rounded-lg flex items-center justify-center" to="/families">
+            Get Started (Family)
+          </Link>
+          <Link className="rounded-lg border border-bfo-gold/30 text-bfo-ivory px-6 py-3 text-lg font-medium hover:bg-bfo-gold/10 transition-colors min-h-[44px] flex items-center justify-center" to="/pros">
             For Professionals
-          </a>
+          </Link>
         </div>
       </section>
 
