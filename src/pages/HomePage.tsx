@@ -1,158 +1,72 @@
-
 import React from 'react';
-import { Link } from 'react-router-dom';
-
-import { useUser } from '@/context/UserContext';
-import { AdminActions } from '@/components/dashboard/AdminActions';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { PageTransition, StaggerContainer } from '@/components/animations/PageTransition';
-import { motion } from 'framer-motion';
-import { 
-  Home, 
-  Target, 
-  CreditCard, 
-  GraduationCap, 
-  Users, 
-  MessageSquare, 
-  Settings,
-  ArrowRight 
-} from 'lucide-react';
 
 export function HomePage() {
-  const { userProfile } = useUser();
-
-  const navigationItems = [
-    {
-      title: "Home Dashboard",
-      description: "Overview of your family office",
-      href: "/home-tab",
-      icon: Home,
-      color: "bg-blue-500"
-    },
-    {
-      title: "Goals & Aspirations",
-      description: "Set and track financial goals",
-      href: "/goals",
-      icon: Target,
-      color: "bg-green-500"
-    },
-    {
-      title: "Accounts",
-      description: "Portfolio and account management",
-      href: "/accounts-tab",
-      icon: CreditCard,
-      color: "bg-purple-500"
-    },
-    {
-      title: "Education",
-      description: "Financial education resources",
-      href: "/education-tab",
-      icon: GraduationCap,
-      color: "bg-orange-500"
-    },
-    {
-      title: "Family Wealth",
-      description: "Wealth management tools",
-      href: "/family-wealth-tab",
-      icon: Users,
-      color: "bg-indigo-500"
-    },
-    {
-      title: "Collaboration",
-      description: "Family member collaboration",
-      href: "/collaboration-tab",
-      icon: MessageSquare,
-      color: "bg-pink-500"
-    },
-    {
-      title: "Settings",
-      description: "Account and system settings",
-      href: "/settings-tab",
-      icon: Settings,
-      color: "bg-gray-500"
-    }
-  ];
-
   return (
-    <PageTransition>
-      <div className="container mx-auto px-4 py-8">
-          <StaggerContainer className="space-y-8">
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0 }
-              }}
-            >
-              <h1 className="text-4xl font-bold mb-2">Welcome to <img src="/brand/bfo-logo-gold.svg" alt="BFO" className="inline h-8 w-auto" /></h1>
-              <p className="text-xl text-muted-foreground">
-                Comprehensive wealth management and family office solutions
-              </p>
-            </motion.div>
-
-            {userProfile && (
-              <motion.div
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 }
-                }}
-              >
-                <Card className="mb-8">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <div className="h-2 w-2 bg-green-500 rounded-full"></div>
-                      Welcome back, {userProfile.name || userProfile.email}
-                    </CardTitle>
-                    <CardDescription>
-                      Role: {userProfile.role} • Last login: Today
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              </motion.div>
-            )}
-
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0 }
-              }}
-            >
-              <h2 className="text-2xl font-semibold mb-6">Navigate Your Platform</h2>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {navigationItems.map((item) => (
-                  <Button
-                    key={item.href}
-                    variant="outline"
-                    className="h-auto p-6 flex flex-col items-start space-y-3 hover:shadow-lg transition-all duration-200 group"
-                    asChild
-                  >
-                    <Link to={item.href}>
-                      <div className={`p-3 rounded-lg ${item.color} text-white group-hover:scale-110 transition-transform`}>
-                        <item.icon className="h-6 w-6" />
-                      </div>
-                      <div className="text-left">
-                        <h3 className="font-semibold text-base">{item.title}</h3>
-                        <p className="text-sm text-muted-foreground">{item.description}</p>
-                      </div>
-                      <ArrowRight className="h-4 w-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </Link>
-                  </Button>
-                ))}
-              </div>
-            </motion.div>
-
-            {userProfile && (
-              <motion.div
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 }
-                }}
-              >
-                <AdminActions />
-              </motion.div>
-            )}
-          </StaggerContainer>
+    <main className="container mx-auto px-4 py-12 space-y-12 text-bfo-ivory">
+      
+      <section className="text-center space-y-4">
+        <h1 className="text-3xl lg:text-4xl font-semibold">
+          Your Boutique Family Office—one secure place for families and professionals to work together.
+        </h1>
+        <p className="text-white/80 max-w-3xl mx-auto">
+          We bring your financial picture, your documents, and your trusted team into a single, compliant workspace—so decisions get made and life keeps moving.
+        </p>
+        <div className="flex justify-center gap-3">
+          <a href="/families" className="rounded-lg bg-bfo-gold text-bfo-black px-4 py-2 hover:bg-bfo-gold/90 transition-colors">
+            For Families
+          </a>
+          <a href="/professionals" className="rounded-lg border border-white/30 px-4 py-2 hover:bg-white/10 transition-colors">
+            For Professionals
+          </a>
         </div>
-      </PageTransition>
+      </section>
+
+      <section className="grid lg:grid-cols-3 gap-6">
+        <div className="rounded-xl border border-white/15 p-5">
+          <h3 className="font-semibold mb-2">Families first</h3>
+          <p className="text-white/70">Accounts, goals, tasks, and documents—organized in one place, with permissions you control.</p>
+        </div>
+        <div className="rounded-xl border border-white/15 p-5">
+          <h3 className="font-semibold mb-2">Work together, not by email</h3>
+          <p className="text-white/70">Requests, uploads, signatures, and approvals—tracked with a timestamp and a receipt.</p>
+        </div>
+        <div className="rounded-xl border border-white/15 p-5">
+          <h3 className="font-semibold mb-2">Decisions you can trust</h3>
+          <p className="text-white/70">Rule-based tools with advisor oversight and plain-English outputs.</p>
+        </div>
+      </section>
+
+      <section className="grid lg:grid-cols-2 gap-6">
+        <div className="rounded-xl border border-white/15 p-5">
+          <h3 className="font-semibold mb-2">For Families</h3>
+          <p className="text-white/70">Start with the essentials—accounts, goals, documents—and invite the professionals you already trust.</p>
+          <a href="/families" className="inline-block mt-3 underline hover:text-bfo-gold transition-colors">
+            Explore families →
+          </a>
+        </div>
+        <div className="rounded-xl border border-white/15 p-5">
+          <h3 className="font-semibold mb-2">For Professionals</h3>
+          <ul className="text-white/70 list-disc pl-5 space-y-1">
+            <li><strong>Financial Advisors:</strong> scenarios with guardrails, artifacts clients understand.</li>
+            <li><strong>Accountants (CPAs):</strong> organized requests, receipts, and retirement outputs for tax planning.</li>
+            <li><strong>Attorneys:</strong> estate/entity workflows with jurisdiction checks and review trail.</li>
+          </ul>
+          <a href="/professionals" className="inline-block mt-3 underline hover:text-bfo-gold transition-colors">
+            See professional tools →
+          </a>
+        </div>
+      </section>
+
+      <section className="rounded-xl border border-white/15 p-5">
+        <h3 className="font-semibold mb-2">How it works</h3>
+        <ol className="text-white/70 list-decimal pl-5 space-y-1">
+          <li>Connect & organize (secure links and the Family Vault)</li>
+          <li>Model & choose (retirement, tax, estate—plain-English outputs)</li>
+          <li>Execute & track (tasks, signatures, ProofSlips)</li>
+          <li>Review & adjust (versioned, audit-friendly)</li>
+        </ol>
+      </section>
+
+    </main>
   );
 }
