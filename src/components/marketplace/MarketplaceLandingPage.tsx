@@ -51,12 +51,15 @@ export const MarketplaceLandingPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-navy via-background to-navy">
       <LandingNavigation />
       
+      {/* Header Spacer */}
+      <div className="h-16 lg:h-20" />
+      
       {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center">
+      <section className="relative max-h-[70vh] overflow-hidden flex flex-col items-center justify-center">
         {layoutOption === 'full-tree' ? (
           <div className="w-full">
             {/* Full-Page Animated Tree Hero */}
-            <div className="relative h-[80vh] flex flex-col items-center justify-center">
+            <div className="relative h-[60vh] max-h-[70vh] flex flex-col items-center justify-center">
               <AnimatedTreeHero />
               
               {/* Centered Headlines */}
@@ -81,9 +84,9 @@ export const MarketplaceLandingPage: React.FC = () => {
         ) : (
           <div className="container mx-auto px-4 py-16">
             {/* Split Layout */}
-            <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
+            <div className="grid lg:grid-cols-2 gap-12 items-center max-h-[70vh]">
               {/* Left: Tree Animation */}
-              <div className="relative h-[60vh] lg:h-[80vh]">
+              <div className="relative h-[50vh] max-h-[60vh]">
                 <AnimatedTreeHero />
               </div>
               

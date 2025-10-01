@@ -51,11 +51,12 @@ export const AnimatedTreeHero: React.FC = () => {
   ];
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
+    <div className="relative w-full h-full max-h-[60vh] flex items-center justify-center">
       <svg
         ref={svgRef}
-        className="w-full h-full max-w-4xl max-h-[600px]"
+        className="w-full h-full max-w-4xl object-contain"
         viewBox="0 0 800 600"
+        preserveAspectRatio="xMidYMid meet"
         xmlns="http://www.w3.org/2000/svg"
       >
         {/* Tree Trunk */}
