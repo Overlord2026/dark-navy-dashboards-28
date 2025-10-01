@@ -320,3 +320,54 @@ QA:
 - `src/providers/SafeToastProvider.tsx` - Enhanced with React runtime guards
 - `src/components/ui/toast.tsx` - Updated to prevent Radix UI usage
 - `src/components/ui/use-toast.ts` - Cleaned up imports to use Sonner only
+
+## 2025-10-01 — Release smoke page + Pricing anchor consistency
+- Added /_smoke page for pre-publish checks (flags, health, toast, anchor).
+- Codemod: all "Pricing" links target `/pricing#families`.
+- Release script now probes /healthz and fails fast if not `ok`.
+- Added docs/release_checklist.md (automated + manual checks).
+
+**Smoke Test Page:**
+- `src/pages/_smoke/SmokeCheck.tsx` - Comprehensive pre-publish validation page with:
+  - Environment flags display (PUBLIC_MODE, BUILD_ID)
+  - Real-time /healthz endpoint health check with visual status indicators
+  - Toast functionality verification button
+  - Pricing anchor test link (/pricing#families)
+  - Landing page structure verification (Hero → Catalog → Pricing order)
+
+**Pricing Anchor Consistency:**
+- Verified all navigation components use consistent `/pricing#families` anchor
+- Components verified: TopNav, MegaMenu, MegaMenuV2
+- /_smoke page includes dedicated anchor validation test
+
+**Enhanced Release Script:**
+- `scripts/release.sh` - Added comprehensive audit logging and health checks:
+  - Structured audit log output (BUILD_ID, MODE, timestamp)
+  - Optional health check integration via `HEALTH_URL` environment variable
+  - Fail-fast behavior if health check doesn't return `ok <BUILD_ID>`
+  - Enhanced release summary output with patchlog reference
+
+**Release Checklist:**
+- `docs/release_checklist.md` - Structured pre-publish workflow including:
+  - Preflight checks (npm ci, lint, typecheck, environment variables)
+  - Build & tag procedures with patchlog verification
+  - Automated checks (script validation, /healthz endpoint)
+  - Manual checks using /_smoke page
+  - Functional spot checks across critical routes
+  - Post-deploy validation and rollback procedures
+
+**Patchlog Automation:**
+- `scripts/patchlog.mjs` - Automated patchlog entry generation
+- `ops/release/PATCHLOG.md` - Append-only release history tracking
+
+**QA Checklist:**
+- [x] /_smoke page displays correct PUBLIC_MODE and BUILD_ID
+- [x] /healthz endpoint returns `ok <BUILD_ID>` format
+- [x] Toast trigger button works correctly
+- [x] Pricing anchor navigates to /pricing#families with correct section scroll
+- [x] Release script health check validates response format
+- [x] Release script fails fast on health check failure
+- [x] Patchlog automatically updated on release
+- [x] Release checklist covers all critical validation steps
+
+**Impact:** Production release confidence improved through automated health checks, comprehensive smoke testing page, and structured release workflow. All changes are infrastructure additions with zero impact on existing functionality.
