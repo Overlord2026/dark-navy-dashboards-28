@@ -1,3 +1,4 @@
+// React entry point - single root, proper JSX provider hierarchy
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
@@ -8,10 +9,11 @@ import { UserProvider } from "@/context/UserContext";
 import { EntitlementsProvider } from "@/context/EntitlementsContext";
 import { ToolsProvider } from "@/contexts/ToolsContext";
 
-const el = document.getElementById("root");
-if (!el) throw new Error("Root element #root not found");
+const rootElement = document.getElementById("root");
+if (!rootElement) throw new Error("Root element #root not found");
 
-createRoot(el).render(
+// Single root instance with proper JSX hierarchy (no function calls)
+createRoot(rootElement).render(
   <StrictMode>
     <BrowserRouter>
       <SafeToastProvider>
