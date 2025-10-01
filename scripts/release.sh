@@ -16,11 +16,46 @@ else
   export VITE_ENABLE_EXPERIMENTS=0
 fi
 
-echo "==> Releasing ${MODE} with BUILD_ID=${BUILD_ID}"
+# Audit logging
+echo "========================================="
+echo "RELEASE PREFLIGHT"
+echo "========================================="
+echo "Build ID: ${BUILD_ID}"
+echo "Mode: ${MODE}"
+echo "Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+echo "========================================="
+echo
+
+echo "==> Running npm ci..."
 npm ci
+
+echo "==> Building ${MODE}..."
 npm run build
+
+echo "==> Updating patchlog..."
 node scripts/patchlog.mjs "${MODE}" "${BUILD_ID}"
 
+# Optional health check (if HEALTH_URL is set)
+if [ -n "${HEALTH_URL:-}" ]; then
+  echo
+  echo "==> Health check: ${HEALTH_URL}"
+  RESP="$(curl -fsS "${HEALTH_URL}" 2>&1 || echo "FAILED")"
+  
+  if [[ "${RESP}" == ok* ]]; then
+    echo "✓ Health check passed: ${RESP}"
+  else
+    echo "✗ Health check FAILED" >&2
+    echo "  Expected: ok <BUILD_ID>" >&2
+    echo "  Got: ${RESP}" >&2
+    exit 1
+  fi
+fi
+
 echo
-echo "DONE. BUILD_ID=${BUILD_ID}"
-echo "See ops/release/PATCHLOG.md"
+echo "========================================="
+echo "✓ RELEASE COMPLETE"
+echo "========================================="
+echo "BUILD_ID: ${BUILD_ID}"
+echo "MODE: ${MODE}"
+echo "Patchlog: ops/release/PATCHLOG.md"
+echo "========================================="
