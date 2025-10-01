@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { TopNav } from '@/components/layout/TopNav';
+import { MobileNav } from '@/components/layout/MobileNav';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Home, VolumeX, Volume2, TestTube } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -88,6 +89,7 @@ function BrandHeader() {
         <Logo />
         <NavigationButtons />
 
+        {/* Desktop Navigation */}
         <nav className="ml-auto hidden md:flex items-center gap-4 text-sm">
           <TopNav />
           <div className="border-l border-bfo-gold/30 pl-4 ml-4 flex items-center gap-4">
@@ -106,6 +108,11 @@ function BrandHeader() {
             )}
           </div>
         </nav>
+
+        {/* Mobile Navigation */}
+        <div className="ml-auto md:hidden">
+          <MobileNav />
+        </div>
       </div>
     </header>
   );
