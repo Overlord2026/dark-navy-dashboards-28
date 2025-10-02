@@ -15,6 +15,9 @@ export function HomePage() {
         <p className="text-bfo-ivory/80 max-w-3xl mx-auto text-lg">
           We bring your financial picture, your documents, and your trusted team into a single, compliant workspace—so decisions get made and life keeps moving.
         </p>
+        <p className="text-bfo-ivory/70 max-w-3xl mx-auto text-base border-t border-white/10 pt-4 mt-4">
+          Built for families—designed for collaboration. Advisors, CPAs, and attorneys work together in one place so you don't have to run point.
+        </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Link className="btn-primary-gold min-h-[44px] px-6 py-3 text-lg font-medium rounded-lg flex items-center justify-center" to="/families">
             Get Started (Family)
