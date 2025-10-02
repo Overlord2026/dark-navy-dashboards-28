@@ -3,8 +3,8 @@
 /* Core Brand Variables */
 :root {
   --bfo-black: #000000;
-  --bfo-gold: #FFD700;
-  --bfo-gold-alt: #D4AF37;
+  --bfo-gold: #D4AF37;
+  --bfo-gold-alt: #C6A15B;
   --bfo-white: #FFFFFF;
   --bfo-navy: #1e3a8a;
   --bfo-navy-light: #1e40af;
@@ -41,7 +41,7 @@
 /* Professional Advisor Platform Cards */
 .bfo-card {
   background-color: var(--bfo-navy);
-  border: 1px solid rgba(255, 215, 0, 0.2);
+  border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -50,15 +50,15 @@
 }
 
 .bfo-card:hover {
-  box-shadow: 0 8px 32px rgba(255, 215, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.1);
   transform: translateY(-2px);
-  border-color: rgba(255, 215, 0, 0.3);
+  border-color: rgba(212, 175, 55, 0.3);
 }
 
 /* Professional Metric Cards */
 .bfo-metric-card {
   background: linear-gradient(145deg, var(--bfo-navy), var(--bfo-navy-light));
-  border: 1px solid rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.15);
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
@@ -75,35 +75,36 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, transparent 0%, rgba(255, 215, 0, 0.02) 50%, transparent 100%);
+  background: linear-gradient(135deg, transparent 0%, rgba(212, 175, 55, 0.02) 50%, transparent 100%);
   pointer-events: none;
 }
 
 .bfo-metric-card:hover {
-  box-shadow: 0 12px 48px rgba(255, 215, 0, 0.08);
+  box-shadow: 0 12px 48px rgba(212, 175, 55, 0.08);
   transform: translateY(-3px);
-  border-color: rgba(255, 215, 0, 0.25);
+  border-color: rgba(212, 175, 55, 0.25);
 }
 
 /* Professional Button System */
 .bfo-btn-gold {
-  background: linear-gradient(145deg, var(--bfo-gold), #ffed4e);
+  background: linear-gradient(145deg, #D4AF37, #E5C158);
   color: var(--bfo-navy);
-  border: none;
+  border: 1px solid #D4AF37;
   border-radius: 12px;
   padding: 0.75rem 1.5rem;
   font-weight: 600;
   font-size: 0.95rem;
-  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
   transition: all 0.3s ease-in-out;
   text-transform: none;
 }
 
 .bfo-btn-gold:hover {
-  background: linear-gradient(145deg, #ffed4e, var(--bfo-gold));
-  box-shadow: 0 6px 24px rgba(255, 215, 0, 0.4);
+  background: linear-gradient(145deg, #E5C158, #D4AF37);
+  box-shadow: 0 6px 24px rgba(212, 175, 55, 0.4);
   transform: translateY(-1px);
   color: var(--bfo-navy);
+  border-color: #E5C158;
 }
 
 .bfo-btn-outline {
@@ -173,25 +174,25 @@ header[role="banner"] {
 .bfo-icon-container {
   width: 3rem;
   height: 3rem;
-  background: rgba(255, 215, 0, 0.15);
-  border: 1px solid rgba(255, 215, 0, 0.3);
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.3);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--bfo-gold);
+  color: #D4AF37;
   transition: all 0.3s ease-in-out;
 }
 
 .bfo-icon-container:hover {
-  background: rgba(255, 215, 0, 0.25);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+  background: rgba(212, 175, 55, 0.25);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
 }
 
 /* Luxury Purple & Gold Card styling for NIL */
 .bfo-card-luxury-purple {
   background: hsl(var(--luxury-purple));
-  border: 2px solid var(--bfo-gold);
+  border: 2px solid #D4AF37;
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
@@ -221,7 +222,7 @@ header[role="banner"] {
 
 .bfo-card-luxury-purple .icon-container {
   background: rgba(212, 175, 55, 0.15);
-  border: 1px solid var(--bfo-gold);
+  border: 1px solid #D4AF37;
 }
 
 .bfo-card-luxury-purple:hover .icon-container {
@@ -242,7 +243,7 @@ header[role="banner"] {
 /* Legacy luxury card styling */
 .bfo-card-luxury {
   background: linear-gradient(135deg, var(--bfo-navy), rgba(0, 31, 63, 0.95));
-  border: 2px solid var(--bfo-gold);
+  border: 2px solid #D4AF37;
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);

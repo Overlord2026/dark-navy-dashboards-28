@@ -848,6 +848,36 @@
     }
   }
 
+  /* Metallic Gold Button - Standard CTA */
+  .btn-gold {
+    background: linear-gradient(145deg, #D4AF37, #E5C158);
+    color: #0A0A0A; /* Ink black text */
+    border: 1px solid #D4AF37;
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+    transition: all 0.3s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: none;
+  }
+
+  .btn-gold:hover {
+    background: linear-gradient(145deg, #E5C158, #D4AF37);
+    box-shadow: 0 6px 24px rgba(212, 175, 55, 0.4);
+    transform: translateY(-1px);
+    border-color: #E5C158;
+  }
+
+  .btn-gold:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
   /* Reduced motion accessibility */
   @media (prefers-reduced-motion: reduce) {
     * {
