@@ -1,3 +1,4 @@
+import React from "react";
 import { Toaster } from "sonner";
 
 export function SafeToastProvider({ children }: { children: React.ReactNode }) {
