@@ -32,7 +32,7 @@ export default defineConfig(({ mode }) => ({
       "react/jsx-dev-runtime": path.resolve(__dirname, "node_modules/react/jsx-dev-runtime.js"),
       "react-dom/client": path.resolve(__dirname, "node_modules/react-dom/client.js"),
     },
-    dedupe: ["react","react-dom"]
+    dedupe: ["react", "react-dom"]
   },
   optimizeDeps: {
     include: ["react","react-dom","react/jsx-runtime","react/jsx-dev-runtime","sonner"],
