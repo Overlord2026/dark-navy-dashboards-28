@@ -293,7 +293,7 @@ import { MeetingsPage as ProMeetingsPage } from './pages/pros/MeetingsPage';
 import { AgentsPage } from './pages/marketplace/AgentsPage';
 import { QuoteStartPage } from './pages/marketplace/QuoteStartPage';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { toast, Toaster } from 'sonner';
 import DevTryPage from './pages/DevTryPage';
 import LegacyDoc from '@/pages/docs/LegacyDoc';
 import Health from '@/pages/Health';
@@ -1217,6 +1217,7 @@ function App() {
            <div className="fixed bottom-1 right-2">
              <FooterBuildTag />
            </div>
+           <Toaster richColors />
          </div>
         </ThemeProvider>
       </HelmetProvider>
