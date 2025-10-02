@@ -261,7 +261,7 @@ export const SubscriptionSettings: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {Object.entries(subscriptionPlan.usage_counters).map(([key, used]) => {
                   const limit = subscriptionPlan.usage_limits[`${key}_limit` as keyof typeof subscriptionPlan.usage_limits];
-                  const percentage = getUsagePercentage(used, limit);
+                  const percentage = getUsagePercentage(used as number, limit as number);
                   const isUnlimited = limit === -1;
                   
                   return (
@@ -269,7 +269,7 @@ export const SubscriptionSettings: React.FC = () => {
                       <div className="flex justify-between text-sm">
                         <span className="capitalize">{key.replace('_', ' ')}</span>
                         <span className="text-muted-foreground">
-                          {used}{isUnlimited ? '' : ` / ${limit}`}
+                          {String(used)}{isUnlimited ? '' : ` / ${limit}`}
                         </span>
                       </div>
                       <Progress 

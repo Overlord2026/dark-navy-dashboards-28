@@ -44,7 +44,7 @@ export function PlanSuggestionChip({
     setDismissedSuggestions(dismissed);
     
     const shouldShow = shouldShowUpgradeSuggestion(
-      { persona, segment, wealthBand, currentPlan },
+      { persona, segment, wealthBand, currentPlan: currentPlan as any },
       dismissed
     );
     setIsVisible(shouldShow);
@@ -70,7 +70,7 @@ export function PlanSuggestionChip({
 
   if (!isVisible) return null;
 
-  const recommendation = getPlanRecommendation({ persona, segment, wealthBand, currentPlan });
+  const recommendation = getPlanRecommendation({ persona, segment, wealthBand, currentPlan: currentPlan as any });
   const suggestionText = getUpgradeSuggestionText({ persona, segment, wealthBand });
 
   return (
