@@ -1,14 +1,16 @@
-import React from "react";
+"use client";
+import type { ReactNode } from "react";
 import { Toaster } from "sonner";
 
-export function SafeToastProvider({ children }: { children: React.ReactNode }) {
-  // No hooks, no effects. Single visual provider at the app root.
+/**
+ * Single, hydration-safe toast provider with zero hooks.
+ * Keep exactly one instance at the app root.
+ */
+export default function SafeToastProvider({ children }: { children: ReactNode }) {
   return (
     <>
       {children}
-      <Toaster richColors closeButton />
+      <Toaster richColors />
     </>
   );
 }
-
-export default SafeToastProvider;

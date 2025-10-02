@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-import { SafeToastProvider } from "@/providers/SafeToastProvider";
+import SafeToastProvider from "@/providers/SafeToastProvider";
 import { AuthProvider } from "@/context/AuthContext";
 import { EntitlementsProvider } from "@/context/EntitlementsContext";
 import { ToolsProvider } from "@/contexts/ToolsContext";

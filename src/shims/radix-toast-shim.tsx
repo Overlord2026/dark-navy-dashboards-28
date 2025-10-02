@@ -1,9 +1,9 @@
-import React from "react";
+import type { ReactNode } from "react";
 
 // Shim to prevent @radix-ui/react-toast from being used
 // All toast functionality should use Sonner via @/hooks/use-toast
 
-export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
+export const ToastProvider = ({ children }: { children: ReactNode }) => {
   console.warn('⚠️ Radix ToastProvider blocked. Use Sonner via @/hooks/use-toast');
   return <>{children}</>;
 };

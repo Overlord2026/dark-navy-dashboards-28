@@ -36,6 +36,8 @@ export default defineConfig(({ mode }) => ({
   },
   optimizeDeps: {
     include: ["react","react-dom","react/jsx-runtime","react/jsx-dev-runtime","sonner"],
+    exclude: ["@radix-ui/react-toast"],
+    dedupe: ["react", "react-dom"]
   },
   define: {
     "__BUILD_ID__": JSON.stringify(Date.now()),

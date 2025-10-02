@@ -31,7 +31,10 @@ export const toast = Object.assign(createToast, {
   promise: sonner.promise
 });
 
-// Legacy signature some code may expect:
+/**
+ * Legacy hook signature for compatibility.
+ * Returns the same toast object, not a React hook.
+ */
 export function useToast() {
   return { toast };
 }
