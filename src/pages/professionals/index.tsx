@@ -7,7 +7,7 @@ export default function ProfessionalsHub() {
       <header className="space-y-2">
         <h1 className="text-3xl lg:text-4xl font-semibold">For Professionals</h1>
         <p className="text-white/70 max-w-3xl">
-          Work with families inside a secure, compliant workspace. Model decisions, exchange documents, and keep a clean trail.
+          Work with families in a secure, compliant workspace—model scenarios, exchange documents, and keep a clean trail.
         </p>
       </header>
 
