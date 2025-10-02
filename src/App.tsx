@@ -298,6 +298,7 @@ import DevTryPage from './pages/DevTryPage';
 import LegacyDoc from '@/pages/docs/LegacyDoc';
 import Health from '@/pages/Health';
 import Healthz from '@/pages/Healthz';
+import DebugStatus from '@/pages/DebugStatus';
 
 // System protection components
 import NonProdBanner from '@/components/system/NonProdBanner';
@@ -566,6 +567,7 @@ function App() {
             
             <Route path="/health" element={<Health />} />
             <Route path="/healthz" element={<Healthz />} />
+            <Route path="/__debug" element={<DebugStatus />} />
             
             {/* Family Routes */}
             <Route path="/family/roadmap" element={<FamilyRoadmap />} />
