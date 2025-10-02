@@ -3,10 +3,10 @@ import { toast as sonner } from "sonner";
 
 /**
  * Plain toast wrapper — NO React hooks or providers.
- * Handles both object and string formats.
+ * Handles both object and string formats for backward compatibility.
  */
 function createToast(input: any, options?: any) {
-  // Handle object format: toast({ title: "...", description: "..." })
+  // Handle object format: toast({ title: "...", description: "...", variant: "..." })
   if (typeof input === "object" && input !== null && !Array.isArray(input)) {
     const { title, description, variant, duration } = input;
     const message = title && description ? `${title}: ${description}` : title || description || "Notification";
