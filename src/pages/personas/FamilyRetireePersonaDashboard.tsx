@@ -116,60 +116,60 @@ const FamilyRetireePersonaDashboard = () => {
       <div className="mb-8">
         <button
           onClick={() => toggleSection(sectionId)}
-          className="w-full flex items-center justify-between p-4 bg-[hsl(var(--luxury-navy))] rounded-xl border border-[hsl(var(--luxury-gold))]/30 hover:bg-[hsl(var(--luxury-purple))]/20 transition-all duration-300 mb-4"
+          className="w-full flex items-center justify-between p-4 bg-[#0B2239] rounded-xl border border-[#D4AF37]/30 hover:bg-[#D4AF37]/10 transition-all duration-300 mb-4"
         >
           <div className="text-left">
-            <h3 className="text-xl font-bold text-[hsl(var(--luxury-white))] flex items-center gap-2">
+            <h3 className="text-xl font-bold text-white flex items-center gap-2">
               {title}
               {tools.some(tool => tool.isNew) && (
-                <Badge className="text-xs bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))]">
+                <Badge className="text-xs bg-[#D4AF37] text-black">
                   Enhanced
                 </Badge>
               )}
             </h3>
             {description && (
-              <p className="text-sm text-[hsl(var(--luxury-white))]/70 mt-1">{description}</p>
+              <p className="text-sm text-white/70 mt-1">{description}</p>
             )}
           </div>
           {isExpanded ? (
-            <ChevronDown className="h-6 w-6 text-[hsl(var(--luxury-gold))]" />
+            <ChevronDown className="h-6 w-6 text-[#D4AF37]" />
           ) : (
-            <ChevronRight className="h-6 w-6 text-[hsl(var(--luxury-gold))]" />
+            <ChevronRight className="h-6 w-6 text-[#D4AF37]" />
           )}
         </button>
         
         {isExpanded && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
             {tools.map((tool, index) => (
-              <Card key={index} className="group hover:shadow-[0_12px_48px_rgba(94,23,235,0.4)] transition-all duration-300 hover:-translate-y-1 bg-[hsl(var(--luxury-navy))] border border-[hsl(var(--luxury-gold))]/30 hover:border-[hsl(var(--luxury-gold))] hover:scale-[1.02]">
+              <Card key={index} className="group hover:shadow-[0_8px_24px_rgba(212,175,55,0.4)] transition-all duration-300 hover:-translate-y-1 bg-[#0B2239] border border-[#D4AF37]/30 hover:border-[#D4AF37] hover:scale-[1.02]">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="p-3 rounded-xl bg-[hsl(var(--luxury-gold))]/20 border border-[hsl(var(--luxury-gold))]/30 text-[hsl(var(--luxury-gold))] group-hover:bg-[hsl(var(--luxury-gold))] group-hover:text-[hsl(var(--luxury-navy))] transition-all duration-300">
+                      <div className="p-3 rounded-xl bg-[#D4AF37]/20 border border-[#D4AF37]/30 text-[#D4AF37] group-hover:bg-[#D4AF37] group-hover:text-black transition-all duration-300">
                         {tool.icon}
                       </div>
                       <div>
-                        <CardTitle className="text-lg text-[hsl(var(--luxury-white))] flex items-center gap-2">
+                        <CardTitle className="text-lg text-white flex items-center gap-2">
                           {tool.title}
                           {tool.isNew && (
-                            <Badge className="text-xs bg-[hsl(var(--luxury-purple))] text-white">
+                            <Badge className="text-xs bg-[#D4AF37] text-black">
                               New
                             </Badge>
                           )}
                         </CardTitle>
-                        <Badge variant="secondary" className="text-xs mt-1 bg-[hsl(var(--luxury-gold))]/20 text-[hsl(var(--luxury-gold))] border-[hsl(var(--luxury-gold))]/30">
+                        <Badge variant="secondary" className="text-xs mt-1 bg-[#D4AF37]/20 text-[#D4AF37] border-[#D4AF37]/30">
                           {tool.category}
                         </Badge>
                       </div>
                     </div>
-                    <ArrowRight className="h-4 w-4 text-[hsl(var(--luxury-white))]/60 group-hover:text-[hsl(var(--luxury-gold))] transition-colors" />
+                    <ArrowRight className="h-4 w-4 text-white/60 group-hover:text-[#D4AF37] transition-colors" />
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="mb-4 text-[hsl(var(--luxury-white))]/80">
+                  <CardDescription className="mb-4 text-white/80">
                     {tool.description}
                   </CardDescription>
-                  <Button asChild className="w-full bg-transparent border-2 border-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-gold))] hover:bg-[hsl(var(--luxury-gold))] hover:text-[hsl(var(--luxury-navy))] transition-all duration-300">
+                  <Button asChild className="w-full bg-transparent border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-all duration-300">
                     <Link to={tool.href}>
                       Launch Tool
                     </Link>
@@ -184,7 +184,7 @@ const FamilyRetireePersonaDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--luxury-navy))]">
+    <div className="min-h-screen bg-[#0B2239]">
       {/* Mute Linda Button - Fixed position, always visible */}
       <div className="fixed top-4 right-4 z-50">
         <SilentMuteToggle />
@@ -193,34 +193,34 @@ const FamilyRetireePersonaDashboard = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section - Enhanced but preserved */}
         <div className="text-center max-w-4xl mx-auto mb-12">
-          <Badge className="mb-4 bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] font-semibold">
+          <Badge className="mb-4 bg-[#D4AF37] text-black font-semibold">
             Retiree Families
           </Badge>
           <div className="flex items-center justify-center gap-8 mb-6">
-            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-[hsl(var(--luxury-gold))] to-[hsl(var(--luxury-purple))] bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-[#D4AF37] to-[#E1C04D] bg-clip-text text-transparent">
               Secure Your Golden Years
             </h1>
           </div>
-          <p className="text-xl text-[hsl(var(--luxury-white))]/80 mb-8 leading-relaxed">
+          <p className="text-xl text-white/80 mb-8 leading-relaxed">
             Protect your legacy, manage your health, and ensure your family's financial security 
             with tools designed for retirees and their loved ones.
           </p>
           
           {/* Main CTAs - Enhanced styling but same functionality */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-            <Button className="h-14 flex flex-col items-center justify-center gap-2 bg-transparent border-2 border-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-gold))] hover:bg-[hsl(var(--luxury-gold))] hover:text-[hsl(var(--luxury-navy))] transition-all duration-300">
+            <Button className="h-14 flex flex-col items-center justify-center gap-2 bg-transparent border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-all duration-300">
               <Link to="/discover?persona=family&solutions=estate%2Chealth%2Cannuities" className="flex flex-col items-center gap-2">
                 <BookOpen className="h-5 w-5" />
                 <span>Open Catalog</span>
               </Link>
             </Button>
             
-            <Button onClick={handleDemoLaunch} className="h-14 flex flex-col items-center justify-center gap-2 bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] hover:bg-[hsl(var(--luxury-gold))]/90 shadow-[0_4px_16px_rgba(212,175,55,0.4)] transition-all duration-300">
+            <Button onClick={handleDemoLaunch} className="h-14 flex flex-col items-center justify-center gap-2 bg-[#D4AF37] text-black hover:bg-[#D4AF37]/90 shadow-[0_4px_16px_rgba(212,175,55,0.4)] transition-all duration-300">
               <Play className="h-5 w-5" />
               <span>Run 90-Second Demo</span>
             </Button>
             
-            <Button className="h-14 flex flex-col items-center justify-center gap-2 bg-transparent border-2 border-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-gold))] hover:bg-[hsl(var(--luxury-gold))] hover:text-[hsl(var(--luxury-navy))] transition-all duration-300">
+            <Button className="h-14 flex flex-col items-center justify-center gap-2 bg-transparent border-2 border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-all duration-300">
               <Link to="/learn/family-retiree/starter" className="flex flex-col items-center gap-2">
                 <Calendar className="h-5 w-5" />
                 <span>Book 15-Min Overview</span>
@@ -232,8 +232,8 @@ const FamilyRetireePersonaDashboard = () => {
         {/* Enhanced Tools Sections */}
         <div className="mb-12">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-4 text-[hsl(var(--luxury-white))]">Family Protection Tools</h2>
-            <p className="text-[hsl(var(--luxury-white))]/70">
+            <h2 className="text-3xl font-bold mb-4 text-white">Family Protection Tools</h2>
+            <p className="text-white/70">
               Everything you need to secure your family's future
             </p>
           </div>
@@ -262,15 +262,15 @@ const FamilyRetireePersonaDashboard = () => {
 
         {/* Start Workspace CTA - Enhanced styling but same functionality */}
         <div className="text-center">
-          <Card className="max-w-2xl mx-auto bg-[hsl(var(--luxury-navy))] border-2 border-[hsl(var(--luxury-gold))]/30 shadow-[0_8px_32px_rgba(212,175,55,0.3)]">
+          <Card className="max-w-2xl mx-auto bg-[#0B2239] border-2 border-[#D4AF37]/30 shadow-[0_8px_32px_rgba(212,175,55,0.3)]">
             <CardContent className="p-8">
-              <h3 className="text-2xl font-bold mb-4 text-[hsl(var(--luxury-white))]">Ready to Get Started?</h3>
-              <p className="text-[hsl(var(--luxury-white))]/80 mb-6">
+              <h3 className="text-2xl font-bold mb-4 text-white">Ready to Get Started?</h3>
+              <p className="text-white/80 mb-6">
                 Set up your family workspace with document storage, health planning, and estate management tools.
               </p>
               <Button 
                 asChild
-                className="w-full md:w-auto flex items-center gap-2 px-6 py-3 bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] hover:bg-[hsl(var(--luxury-gold))]/90 font-semibold shadow-[0_4px_16px_rgba(212,175,55,0.4)] transition-all duration-300"
+                className="w-full md:w-auto flex items-center gap-2 px-6 py-3 bg-[#D4AF37] text-black hover:bg-[#D4AF37]/90 font-semibold shadow-[0_4px_16px_rgba(212,175,55,0.4)] transition-all duration-300"
               >
                 <Link to="/start/families">
                   Start Workspace

@@ -145,7 +145,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#0B2239] text-white">
       {/* Sticky Value Calculator Button */}
       <div className="fixed bottom-6 right-6 z-50">
         <Button

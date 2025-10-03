@@ -32,12 +32,6 @@
     /* Header Stack Height for Sticky Navigation */
     --header-stack: 56px;
     
-    /* Luxury Family Stage Colors */
-    --luxury-navy: 210 100% 12%;
-    --luxury-gold: 45 69% 52%;
-    --luxury-purple: 262 84% 45%;
-    --luxury-white: 0 0% 100%;
-    
     /* WCAG AA Compliant Brand Color System - Black & Gold */
     /* Pure Black #000000 for headers/navigation - 21:1 contrast with white */
     --brand-black: 0 0% 0%;
@@ -133,9 +127,9 @@
     --muted: var(--slate);
     --muted-foreground: 210 25% 70%; /* Light text */
 
-    /* Accent - Sky Blue */
-    --accent: var(--sky);
-    --accent-foreground: 0 0% 100%; /* White text on sky */
+    /* Accent - Gold (Brand Color) */
+    --accent: var(--metallic-gold);
+    --accent-foreground: 0 0% 4%; /* Black text on gold */
 
     /* Status Colors */
     --success: var(--mint);

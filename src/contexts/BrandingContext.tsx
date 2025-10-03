@@ -25,9 +25,9 @@ const defaultBranding: BrandingData = {
   name: 'Boutique Family Office',
   logo_url: null,
   colors: {
-    primary: '#0b1a33',
-    secondary: '#d4af37',
-    accent: '#0ea5a5'
+    primary: '#0B2239',
+    secondary: '#D4AF37',
+    accent: '#D4AF37'
   },
   legal_footer: null,
   powered_by_bfo: true

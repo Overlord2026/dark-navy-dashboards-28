@@ -140,30 +140,30 @@ const BuildWorkspacePage = () => {
 
   // Enhanced sidebar with persona-specific features using shadcn sidebar
   const AppSidebar = () => (
-    <Sidebar className="w-64 bg-[hsl(var(--luxury-navy))] border-r border-[hsl(var(--luxury-gold))]/30">
+    <Sidebar className="w-64 bg-[#0B2239] border-r border-[#D4AF37]/30">
       <SidebarContent>
         {/* Persona Header */}
-        <div className="p-4 pb-4 border-b border-[hsl(var(--luxury-gold))]/20">
-          <Badge className="mb-2 bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] font-semibold text-xs">
+        <div className="p-4 pb-4 border-b border-[#D4AF37]/20">
+          <Badge className="mb-2 bg-[#D4AF37] text-black font-semibold text-xs">
             {persona === 'aspiring' ? 'Aspiring Families' : 'Retiree Families'}
           </Badge>
-          <h2 className="text-[hsl(var(--luxury-white))] font-bold text-lg leading-tight">
+          <h2 className="text-white font-bold text-lg leading-tight">
             {config.title}
           </h2>
-          <p className="text-[hsl(var(--luxury-white))]/70 text-xs mt-1">
+          <p className="text-white/70 text-xs mt-1">
             {config.description}
           </p>
         </div>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[hsl(var(--luxury-gold))] font-semibold text-sm uppercase tracking-wide">
+          <SidebarGroupLabel className="text-[#D4AF37] font-semibold text-sm uppercase tracking-wide">
             Core Features
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {coreFeatures.map((feature) => (
                 <SidebarMenuItem key={feature.title}>
-                  <SidebarMenuButton asChild className="text-[hsl(var(--luxury-white))] hover:bg-[hsl(var(--luxury-gold))]/20 hover:text-[hsl(var(--luxury-gold))] transition-colors">
+                  <SidebarMenuButton asChild className="text-white hover:bg-[#D4AF37]/20 hover:text-[#D4AF37] transition-colors">
                     <Link to={feature.href}>
                       <feature.icon className="h-4 w-4 mr-3" />
                       <span className="text-sm font-medium">{feature.title}</span>
@@ -177,7 +177,7 @@ const BuildWorkspacePage = () => {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[hsl(var(--luxury-gold))] font-semibold text-sm uppercase tracking-wide flex items-center gap-2">
+          <SidebarGroupLabel className="text-[#D4AF37] font-semibold text-sm uppercase tracking-wide flex items-center gap-2">
             <Crown className="h-4 w-4" />
             Premium Tools
           </SidebarGroupLabel>
@@ -185,7 +185,7 @@ const BuildWorkspacePage = () => {
             <SidebarMenu>
               {premiumTools.map((tool) => (
                 <SidebarMenuItem key={tool.title}>
-                  <SidebarMenuButton className="text-[hsl(var(--luxury-white))]/60 hover:bg-[hsl(var(--luxury-purple))]/20 cursor-not-allowed">
+                  <SidebarMenuButton className="text-white/60 hover:bg-[#0B2239]/80 cursor-not-allowed">
                     <tool.icon className="h-4 w-4 mr-3 opacity-60" />
                     <span className="text-sm opacity-60">{tool.title}</span>
                     <Lock className="h-3 w-3 ml-auto opacity-60" />
@@ -200,7 +200,7 @@ const BuildWorkspacePage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--luxury-navy))]">
+    <div className="min-h-screen bg-[#0B2239]">
       {/* Mute Linda Button - Fixed position, always visible */}
       <div className="fixed top-4 right-4 z-50">
         <SilentMuteToggle />
@@ -213,20 +213,20 @@ const BuildWorkspacePage = () => {
           <main className="flex-1 p-8">
             {/* Header */}
             <div className="mb-8">
-              <Badge className="mb-4 bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] font-semibold">
+              <Badge className="mb-4 bg-[#D4AF37] text-black font-semibold">
                 {persona === 'aspiring' ? 'Aspiring Families' : 'Retiree Families'}
               </Badge>
-              <h1 className="text-4xl font-bold text-[hsl(var(--luxury-white))] mb-2">
+              <h1 className="text-4xl font-bold text-white mb-2">
                 {config.title}
               </h1>
-              <p className="text-[hsl(var(--luxury-white))]/80 text-lg mb-6">
+              <p className="text-white/80 text-lg mb-6">
                 {config.subtitle}
               </p>
               
               <div className="flex gap-4">
                 <Button 
                   asChild
-                  className="bg-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-navy))] hover:bg-[hsl(var(--luxury-gold))]/90 font-semibold px-6 py-3"
+                  className="bg-[#D4AF37] text-black hover:bg-[#D4AF37]/90 font-semibold px-6 py-3"
                 >
                   <Link to={config.href}>
                     {config.primaryAction}
@@ -235,7 +235,7 @@ const BuildWorkspacePage = () => {
                 </Button>
                 <Button 
                   variant="outline"
-                  className="border-[hsl(var(--luxury-gold))] text-[hsl(var(--luxury-gold))] hover:bg-[hsl(var(--luxury-gold))]/10"
+                  className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10"
                 >
                   Take a Tour
                 </Button>
@@ -244,25 +244,25 @@ const BuildWorkspacePage = () => {
 
             {/* Enhanced Dashboard Preview with Persona-Specific Features */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
-              <Card className="bg-[hsl(var(--luxury-navy))] border-2 border-[hsl(var(--luxury-gold))]/50 shadow-[0_8px_32px_rgba(212,175,55,0.3)]">
+              <Card className="bg-[#0B2239] border-2 border-[#D4AF37]/50 shadow-[0_8px_32px_rgba(212,175,55,0.3)]">
                 <CardHeader>
-                  <CardTitle className="text-[hsl(var(--luxury-white))] flex items-center gap-2">
+                  <CardTitle className="text-white flex items-center gap-2">
                     <CheckCircle className="h-5 w-5 text-green-400" />
                     Available Now - Your {persona === 'aspiring' ? 'Wealth Building' : 'Retirement'} Tools
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-[hsl(var(--luxury-white))]/80 mb-4">
+                  <p className="text-white/80 mb-4">
                     {config.description}
                   </p>
                    <div className="space-y-3">
                      {coreFeatures.map((feature) => (
                        <Link key={feature.title} to={feature.href} className="block">
-                         <div className="flex items-center gap-3 p-3 rounded-lg bg-[hsl(var(--luxury-gold))]/10 hover:bg-[hsl(var(--luxury-gold))]/20 transition-colors cursor-pointer">
-                           <feature.icon className="h-5 w-5 text-[hsl(var(--luxury-gold))]" />
+                         <div className="flex items-center gap-3 p-3 rounded-lg bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 transition-colors cursor-pointer">
+                           <feature.icon className="h-5 w-5 text-[#D4AF37]" />
                            <div className="flex-1">
-                             <span className="text-[hsl(var(--luxury-white))] font-medium block">{feature.title}</span>
-                             <span className="text-[hsl(var(--luxury-white))]/60 text-sm">{feature.description}</span>
+                             <span className="text-white font-medium block">{feature.title}</span>
+                             <span className="text-white/60 text-sm">{feature.description}</span>
                            </div>
                            <CheckCircle className="h-4 w-4 text-green-400" />
                          </div>
@@ -271,12 +271,12 @@ const BuildWorkspacePage = () => {
                   </div>
                   
                   {/* Persona-specific features */}
-                  <div className="mt-4 pt-4 border-t border-[hsl(var(--luxury-gold))]/20">
-                    <h4 className="text-[hsl(var(--luxury-gold))] font-semibold text-sm mb-2">Specialized For You:</h4>
+                  <div className="mt-4 pt-4 border-t border-[#D4AF37]/20">
+                    <h4 className="text-[#D4AF37] font-semibold text-sm mb-2">Specialized For You:</h4>
                     <div className="grid grid-cols-2 gap-2">
                       {config.keyFeatures.map((feature, index) => (
-                        <div key={index} className="text-xs text-[hsl(var(--luxury-white))]/80 flex items-center gap-1">
-                          <Target className="h-3 w-3 text-[hsl(var(--luxury-gold))]" />
+                        <div key={index} className="text-xs text-white/80 flex items-center gap-1">
+                          <Target className="h-3 w-3 text-[#D4AF37]" />
                           {feature}
                         </div>
                       ))}
@@ -285,7 +285,7 @@ const BuildWorkspacePage = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-[hsl(var(--luxury-purple))]/20 to-[hsl(var(--luxury-navy))] border-2 border-[hsl(var(--luxury-gold))] shadow-[0_12px_48px_rgba(94,23,235,0.4)]">
+              <Card className="bg-[#0B2239]/80 border-2 border-[#D4AF37] shadow-[0_8px_24px_rgba(212,175,55,0.4)]">
                 <CardHeader>
                   <CardTitle className="text-[hsl(var(--luxury-white))] flex items-center gap-2">
                     <Crown className="h-5 w-5 text-[hsl(var(--luxury-gold))]" />
