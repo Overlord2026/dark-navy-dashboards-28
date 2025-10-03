@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { AuthProvider } from "@/context/AuthContext";
+import { UserProvider } from "@/context/UserContext";
 import { EntitlementsProvider } from "@/context/EntitlementsContext";
 import { ToolsProvider } from "@/contexts/ToolsContext";
 import { logReactIdentity } from "@/debug/reactInspector";
@@ -16,11 +17,13 @@ createRoot(el).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <EntitlementsProvider>
-          <ToolsProvider>
-            <App />
-          </ToolsProvider>
-        </EntitlementsProvider>
+        <UserProvider>
+          <EntitlementsProvider>
+            <ToolsProvider>
+              <App />
+            </ToolsProvider>
+          </EntitlementsProvider>
+        </UserProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>
