@@ -302,3 +302,18 @@ header[role="banner"] {
 .bfo-footer a:hover {
   color: var(--bfo-white) !important;
 }
+
+/* Enhanced header safety rules with link-specific styles */
+.bfo-header a { 
+  color: #fff !important; 
+}
+
+.bfo-header a:hover { 
+  color: #D4AF37 !important; 
+}
+
+/* Active link styling */
+.bfo-header a[aria-current="page"] {
+  color: #D4AF37 !important;
+  font-weight: 600;
+}

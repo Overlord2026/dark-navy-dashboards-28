@@ -26,7 +26,7 @@ export default {
         'bfo-navy': '#0B2239',
         'bfo-ivory': '#FFFFFF', 
         'bfo-gold': '#D4AF37',
-        'bfo-black': '#0A0A0A',
+        'bfo-black': '#000000',
         
         // Brand Colors - Black & Gold
         'brand-black': 'hsl(var(--brand-black))',
