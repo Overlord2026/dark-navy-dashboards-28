@@ -915,6 +915,9 @@ function App() {
               </Suspense>
             } />
             
+            {/* Legacy route redirects */}
+            <Route path="/retirement-analyzer" element={<Navigate to="/wealth/retirement" replace />} />
+            
             {/* Persona-Specific Tool Routes */}
             <Route path="/advisors/tools/retirement" element={<RetirementRoadmapTool />} />
             <Route path="/advisors/tools/estate" element={<EstateToolPage />} />
@@ -1193,7 +1196,7 @@ function App() {
             <Route path="/marketplace/insurance" element={<Stub title="Insurance Solutions" />} />
             <Route path="/tools/retirement-roadmap" element={<Stub title="Retirement Roadmap Tool" />} />
             <Route path="/tools/tax-projection" element={<Stub title="Tax Projection Tool" />} />
-            <Route path="/tools/estate-planning" element={<Stub title="Estate Planning Tool" />} />
+            <Route path="/tools/estate-planning" element={<Navigate to="/estate/diy" replace />} />
             <Route path="/vault" element={<Stub title="Secure Document Vault" />} />
             {/* Goals route moved to main routes section */}
             <Route path="/discover" element={<Stub title="Discover Solutions" />} />

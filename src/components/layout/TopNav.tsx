@@ -52,7 +52,7 @@ export default function TopNav() {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-2">
+          <nav className="hidden lg:flex items-center gap-6">
             <NavItem to="/families" label="Families" />
             <span className="text-white/30 mx-1">•</span>
             <NavItem to="/pros" label="Professionals" />
@@ -114,6 +114,7 @@ export default function TopNav() {
                   Resources
                 </div>
                 <div className="space-y-0.5">
+                  <NavItem to="/solutions" label="Solutions" />
                   <NavItem to="/learn" label="Learning Center" />
                   <NavItem to="/marketplace" label="Marketplace" />
                   <NavItem to="/pricing" label="Pricing" />
