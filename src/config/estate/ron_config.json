@@ -1,0 +1,14 @@
+{
+  "providers": {
+    "notarize": {
+      "name": "Notarize.com",
+      "url": "https://www.notarize.com"
+    },
+    "proof": {
+      "name": "Proof",
+      "url": "https://www.proof.com"
+    }
+  },
+  "defaultProvider": "notarize",
+  "note": "RON availability determined by state rules in src/features/notary/states/ronRules.ts"
+}
