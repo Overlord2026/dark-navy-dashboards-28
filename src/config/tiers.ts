@@ -1,9 +1,7 @@
-// Plan configuration with BADGES export
 export type FamilyPlanKey = "free" | "premium" | "pro";
 export type AdvisorPlanKey = "advisor_basic" | "advisor_premium";
 export type PlanKey = FamilyPlanKey | AdvisorPlanKey;
 
-// ---------- badges (named + default-friendly) ----------
 export const BADGES: Record<PlanKey, string> = {
   free: "FREE",
   premium: "Premium",
@@ -12,7 +10,6 @@ export const BADGES: Record<PlanKey, string> = {
   advisor_premium: "Premium",
 };
 
-// ---------- tiers (minimal; extend as needed) ----------
 export const TIERS = {
   families: {
     order: ["free", "premium", "pro"] as FamilyPlanKey[],
@@ -31,13 +28,15 @@ export const TIERS = {
   },
 } as const;
 
-// ---------- guards ----------
 export const isFamilyPlan = (k: string): k is FamilyPlanKey =>
-  (["free", "premium", "pro"] as string[]).includes(k);
-export const isAdvisorPlan = (k: string): k is AdvisorPlanKey =>
-  (["advisor_basic", "advisor_premium"] as string[]).includes(k);
-export const isPlanKey = (k: string): k is PlanKey => isFamilyPlan(k) || isAdvisorPlan(k);
+  (["free", "premium", "pro"] as const).includes(k as any);
 
-// Keep a default export too so legacy default imports don't crash
+export const isAdvisorPlan = (k: string): k is AdvisorPlanKey =>
+  (["advisor_basic", "advisor_premium"] as const).includes(k as any);
+
+export const isPlanKey = (k: string): k is PlanKey =>
+  isFamilyPlan(k) || isAdvisorPlan(k);
+
+// Legacy default export for old imports
 const tiersDefault = { BADGES, TIERS, isFamilyPlan, isAdvisorPlan, isPlanKey };
 export default tiersDefault;
