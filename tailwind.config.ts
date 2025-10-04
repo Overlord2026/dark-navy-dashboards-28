@@ -16,48 +16,18 @@ export default {
     },
     extend: {
       colors: {
+        // BFO Premium Brand Palette (Direct Hex)
+        'bfo-black': '#000000',
+        'bfo-navy': '#0B2239',
+        'bfo-gold': '#D4AF37',
+        'bfo-ivory': '#FFFFFF',
+        
+        // Shadcn/Radix Core Theme Colors (HSL)
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        
-        // BFO Premium Brand Colors (HSL for proper theming)
-        'bfo-navy': '#0B2239',
-        'bfo-ivory': '#FFFFFF', 
-        'bfo-gold': '#D4AF37',
-        'bfo-black': '#000000',
-        
-        // Brand Colors - Black & Gold
-        'brand-black': 'hsl(var(--brand-black))',
-        'brand-gold': 'hsl(var(--brand-gold))',
-        'brand-white': 'hsl(var(--brand-white))',
-        
-        // New BFO palette (HSL semantic tokens)
-        'ink': 'hsl(var(--ink-black))',
-        'navy': 'hsl(var(--bfo-navy))', 
-        'gold-base': 'hsl(var(--metallic-gold))',
-        'gold-hi': 'hsl(var(--metallic-gold-highlight))',
-        'gold-lo': 'hsl(var(--metallic-gold-shadow))',
-        'slate': 'hsl(var(--slate))',
-        'sky': 'hsl(var(--sky))',
-        'mint': 'hsl(var(--mint))',
-        'burgundy': 'hsl(var(--burgundy))',
-        'indigo': 'hsl(var(--indigo))',
-        'sand': 'hsl(var(--sand))',
-        'alert': 'hsl(var(--alert-red))',
-        
-        // BFO Color System (HSL)
-        'ink-black': "hsl(var(--ink-black))",
-        'bfo-navy': "hsl(var(--bfo-navy))",
-        'metallic-gold': {
-          DEFAULT: "hsl(var(--metallic-gold))",
-          highlight: "hsl(var(--metallic-gold-highlight))",
-          shadow: "hsl(var(--metallic-gold-shadow))",
-        },
-        'alert-red': "hsl(var(--alert-red))",
-        
-        // Core theme colors
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -93,20 +63,6 @@ export default {
         warning: {
           DEFAULT: "hsl(var(--warning))",
           foreground: "hsl(var(--warning-foreground))",
-        },
-        
-        // Legacy aliases for backward compatibility
-        gold: {
-          DEFAULT: "hsl(var(--metallic-gold))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        navy: {
-          DEFAULT: "hsl(var(--bfo-navy))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        emerald: {
-          DEFAULT: "hsl(var(--mint))",
-          foreground: "hsl(var(--success-foreground))",
         },
       },
       borderRadius: {

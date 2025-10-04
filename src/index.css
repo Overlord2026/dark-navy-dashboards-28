@@ -106,7 +106,7 @@
     --alert-red: 5 63% 58%;  /* #D9534F */
 
     /* Core Theme Variables - Enhanced Contrast */
-    --background: 210 65% 13%; /* Navy #0B2239 - matches header */
+    --background: 0 0% 0%; /* Pure Black #000000 */
     --foreground: var(--text-high-contrast); /* Pure white for maximum contrast */
 
     /* Card contrast improved from slate to lighter shade */
@@ -319,9 +319,9 @@
     color: #fff !important;
   }
 
-  /* Ensure page background matches the header navy */
+  /* Ensure page background is pure black */
   body { 
-    background-color: #0B2239; 
+    background-color: #000000; 
   }
 
   /* Additional kill switches for legacy headers */
@@ -373,16 +373,16 @@
 
   /* Brand Utility Classes */
   .brand-bg { 
-    background-color: #0B2239;
-    color: var(--bfo-white);
+    background-color: #000000;
+    color: #FFFFFF;
   }
-  .icon-black { color: var(--bfo-black); }
-  .icon-gold { color: var(--bfo-gold); }
+  .icon-black { color: #000000; }
+  .icon-gold { color: #D4AF37; }
   /* Prevent regressions: */
   .page-surface { 
     min-height: 100vh;
-    background-color: #0B2239;
-    color: var(--bfo-white);
+    background-color: #000000;
+    color: #FFFFFF;
   }
   
   .bg-brand-black { background-color: var(--bfo-black); }
