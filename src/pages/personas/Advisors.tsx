@@ -4,7 +4,7 @@ import { GoldButton, GoldOutlineButton } from '@/components/ui/brandButtons';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
 import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
 export default function Advisors() {
@@ -32,7 +32,11 @@ export default function Advisors() {
       <PersonaSubHeader>
         <div className="flex items-center justify-between w-full">
           <div>
-            <h2 className="text-lg font-semibold text-bfo-gold">Advisor Control Center</h2>
+            <h2 className="text-lg font-semibold text-bfo-gold">
+              <Link to="/pros/advisors/platform" className="hover:opacity-80 transition-opacity">
+                Advisor Control Center
+              </Link>
+            </h2>
             <p className="opacity-90 text-sm text-white">Streamline your practice with advanced tools and client management</p>
           </div>
           <VoiceDrawer triggerLabel="Voice AI" persona="advisor" />
