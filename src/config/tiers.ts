@@ -1,4 +1,4 @@
-// ---------- types ----------
+// Plan configuration with BADGES export
 export type FamilyPlanKey = "free" | "premium" | "pro";
 export type AdvisorPlanKey = "advisor_basic" | "advisor_premium";
 export type PlanKey = FamilyPlanKey | AdvisorPlanKey;
