@@ -133,6 +133,7 @@ const AdvisorFeeCompareDemo = lazy(() => import('@/pages/demos/advisor-fee-compa
 const SwagAnalyzerPage = lazy(() => import('@/pages/retirement/SwagAnalyzerPage'));
 const SwagMinimalPage = lazy(() => import('@/pages/retirement/SwagMinimalPage'));
 const PreRetirement = lazy(() => import('@/pages/retirement/PreRetirement'));
+const SwagTest = lazy(() => import('@/pages/__debug/SwagTest'));
 
 const IPLedgerPage = lazy(() => import('@/pages/admin/hq/ip'));
 
@@ -1208,6 +1209,13 @@ function App() {
             <Route path="/discover" element={<Stub title="Discover Solutions" />} />
             <Route path="/diag/canonical" element={<CanonicalExports />} />
             <Route path="/react-diag" element={<ReactDiag />} />
+            
+            {/* Debug Routes */}
+            <Route path="/__debug/swag" element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <SwagTest />
+              </Suspense>
+            } />
             
             {/* NotFound Route */}
             <Route path="*" element={<NotFound />} />
