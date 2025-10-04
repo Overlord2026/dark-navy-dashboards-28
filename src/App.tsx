@@ -428,7 +428,13 @@ function App() {
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
         <NonProdBanner />
         <BrandHeader />
-        <div className="min-h-screen bg-background text-foreground">
+        <a 
+          href="#main" 
+          className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 z-50 bg-bfo-gold text-black font-semibold px-4 py-2 rounded shadow-lg"
+        >
+          Skip to main content
+        </a>
+        <div id="main" className="min-h-screen bg-background text-foreground" tabIndex={-1}>
             <RedirectHandler />
             <Routes>
             <Route path="/" element={<HomePage />} />

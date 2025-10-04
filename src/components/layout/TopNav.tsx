@@ -37,11 +37,6 @@ export default function TopNav() {
 
   return (
     <header className="bfo-header w-full border-b-2 border-bfo-gold">
-      {/* accessibility */}
-      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 z-50 bg-bfo-gold text-black font-semibold px-4 py-2 rounded shadow-lg">
-        Skip to main content
-      </a>
-
       <div className="mx-auto max-w-7xl px-3 sm:px-4">
         <div className="flex h-14 items-center justify-between gap-3">
           {/* Brand (never truncates on desktop; truncates safely on very small widths) */}
