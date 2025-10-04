@@ -18,10 +18,16 @@ import {
 import { ProfessionalMetricCard } from '../components/ProfessionalMetricCard';
 import { ProfessionalFeatureCard } from '../components/ProfessionalFeatureCard';
 import { ProfessionalTestimonial } from '../components/ProfessionalTestimonial';
+import Breadcrumbs from '@/components/nav/Breadcrumbs';
 
 export default function AdvisorPlatformDashboard() {
   return (
     <div className="min-h-screen bg-bfo-navy-dark p-4 space-y-8">
+      {/* Breadcrumbs */}
+      <div className="mb-4">
+        <Breadcrumbs />
+      </div>
+      
       {/* Hero Section */}
       <div className="text-center space-y-4 py-8">
         <h1 className="text-white text-4xl font-bold">Advisor Platform</h1>

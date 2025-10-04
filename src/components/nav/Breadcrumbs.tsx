@@ -1,28 +1,24 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
-export type Crumb = { label: string; href?: string };
-
-export default function Breadcrumbs({ items }: { items: Crumb[] }) {
+export default function Breadcrumbs() {
+  const { pathname } = useLocation();
+  const parts = pathname.split("/").filter(Boolean);
+  const trail = [
+    { to: "/", label: "Home" },
+    ...parts.map((_, i) => ({
+      to: "/" + parts.slice(0, i + 1).join("/"),
+      label: parts[i].replace(/-/g, " ")
+    }))
+  ];
+  
   return (
-    <nav aria-label="Breadcrumb" className="mb-4">
-      <ol className="flex flex-wrap items-center gap-1 text-sm text-gray-600 dark:text-white/70">
-        {items.map((it, i) => {
-          const isLast = i === items.length - 1;
-          return (
-            <li key={i} className="flex items-center gap-1">
-              {it.href && !isLast ? (
-                <Link to={it.href} className="underline-offset-4 hover:underline">
-                  {it.label}
-                </Link>
-              ) : (
-                <span className={isLast ? "opacity-100" : "opacity-70"}>{it.label}</span>
-              )}
-              {!isLast && <span className="mx-1 opacity-40">/</span>}
-            </li>
-          );
-        })}
-      </ol>
+    <nav aria-label="Breadcrumb" className="text-sm text-white/70">
+      {trail.map((p, i) => (
+        <span key={p.to}>
+          {i > 0 && <span className="mx-2 text-white/30">/</span>}
+          <Link to={p.to} className="hover:text-bfo-gold capitalize">{p.label}</Link>
+        </span>
+      ))}
     </nav>
   );
 }

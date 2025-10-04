@@ -30,13 +30,9 @@ export default function LegacyDoc() {
       */}
 
       <main className="mx-auto max-w-3xl px-4 py-12 text-gray-900 dark:text-bfo-ivory">
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Docs", href: "/docs/legacy" }, // adjust if you have a docs index
-            { label: "SWAG™ Legacy Planning" }
-          ]}
-        />
+        <div className="mb-4">
+          <Breadcrumbs />
+        </div>
 
         <header className="mb-8">
           <p className="inline-block rounded-md border px-2 py-0.5 text-xs opacity-80">

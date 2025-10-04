@@ -6,6 +6,7 @@ import { VoiceDrawer } from '@/components/voice/VoiceDrawer';
 import { PersonaSubHeader } from '@/components/layout/PersonaSubHeader';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import Breadcrumbs from '@/components/nav/Breadcrumbs';
 
 export default function Advisors() {
   const navigate = useNavigate();
@@ -46,6 +47,9 @@ export default function Advisors() {
 
         {/* Hero Section */}
         <div className="text-center mb-12">
+          <div className="mb-4">
+            <Breadcrumbs />
+          </div>
           <h1 className="text-4xl font-bold tracking-tight mb-4">
             For Financial Advisors
           </h1>
