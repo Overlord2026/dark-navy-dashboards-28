@@ -2,6 +2,7 @@ export type FamilyPlanKey = "free" | "premium" | "pro";
 export type AdvisorPlanKey = "advisor_basic" | "advisor_premium";
 export type PlanKey = FamilyPlanKey | AdvisorPlanKey;
 
+// ✅ Named export required by PricingBadge
 export const BADGES: Record<PlanKey, string> = {
   free: "FREE",
   premium: "Premium",
@@ -29,14 +30,14 @@ export const TIERS = {
 } as const;
 
 export const isFamilyPlan = (k: string): k is FamilyPlanKey =>
-  (["free", "premium", "pro"] as const).includes(k as any);
+  (["free", "premium", "pro"] as string[]).includes(k);
 
 export const isAdvisorPlan = (k: string): k is AdvisorPlanKey =>
-  (["advisor_basic", "advisor_premium"] as const).includes(k as any);
+  (["advisor_basic", "advisor_premium"] as string[]).includes(k);
 
 export const isPlanKey = (k: string): k is PlanKey =>
   isFamilyPlan(k) || isAdvisorPlan(k);
 
-// Legacy default export for old imports
+// ✅ Keep a default export for any legacy default-imports
 const tiersDefault = { BADGES, TIERS, isFamilyPlan, isAdvisorPlan, isPlanKey };
 export default tiersDefault;
