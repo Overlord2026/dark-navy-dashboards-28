@@ -45,10 +45,20 @@ export default function Advisors() {
           <h1 className="text-4xl font-bold tracking-tight mb-4">
             For Financial Advisors
           </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-6">
             Streamline client management, automate compliance workflows, and deliver personalized 
             financial planning with our comprehensive advisor toolkit.
           </p>
+          
+          {/* Primary CTA - Launch Dashboard */}
+          <div className="mb-8">
+            <GoldButton 
+              onClick={() => navigate('/pros/advisors/platform')}
+              className="h-auto px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all animate-fade-in"
+            >
+              Launch Advisor Dashboard
+            </GoldButton>
+          </div>
         </div>
 
         {/* CTAs */}
