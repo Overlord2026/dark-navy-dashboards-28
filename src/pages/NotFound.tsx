@@ -1,44 +1,14 @@
-
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { AlertTriangleIcon } from "lucide-react";
-import { Link } from "react-router-dom";
-
-const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname
-    );
-  }, [location.pathname]);
-
+export default function NotFound(){
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
-      <div className="text-center max-w-md mx-auto">
-        <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-accent/10 text-accent mb-6">
-          <AlertTriangleIcon className="h-8 w-8" />
-        </div>
-        <h1 className="text-4xl font-bold mb-4">404</h1>
-        <p className="text-xl text-muted-foreground mb-6">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="flex gap-4 flex-wrap justify-center">
-          <Button asChild className="bg-accent hover:bg-accent/90 text-white">
-            <Link to="/family/home">Family Dashboard</Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link to="/personas/advisors">Advisors</Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link to="/personas/insurance">Insurance</Link>
-          </Button>
-        </div>
-      </div>
+    <div className="container mx-auto px-4 py-16 text-bfo-ivory">
+      <h1 className="text-3xl font-semibold">We couldn't find that page.</h1>
+      <p className="text-white/70 mt-2">Try one of these hubs:</p>
+      <ul className="mt-3 list-disc pl-5">
+        <li><a className="underline" href="/">Home</a></li>
+        <li><a className="underline" href="/families">Families</a></li>
+        <li><a className="underline" href="/professionals">Professionals</a></li>
+        <li><a className="underline" href="/solutions">Solutions</a></li>
+      </ul>
     </div>
   );
-};
-
-export default NotFound;
+}
