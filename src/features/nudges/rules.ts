@@ -1,4 +1,5 @@
 import { Persona, ComplexityTier, UserFacts } from '@/features/personalization/types';
+import { priorityOrder } from '@/types/goals';
 
 export interface Nudge {
   id: string;
@@ -177,7 +178,9 @@ export function evalNudges({ persona, tier, facts }: NudgeContext): Nudge[] {
   }
 
   return nudges.sort((a, b) => {
-    const priorityOrder = { high: 3, medium: 2, low: 1 };
-    return priorityOrder[b.priority] - priorityOrder[a.priority];
+    // Use centralized priority order
+    const aPriority = priorityOrder[a.priority as keyof typeof priorityOrder] ?? 2;
+    const bPriority = priorityOrder[b.priority as keyof typeof priorityOrder] ?? 2;
+    return aPriority - bPriority;
   });
 }

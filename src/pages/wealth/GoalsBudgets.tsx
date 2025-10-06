@@ -10,6 +10,7 @@ import { useFinancialPlans } from "@/hooks/useFinancialPlans";
 import { BudgetCategoryManager } from "@/components/budget/BudgetCategoryManager";
 import { MonthlyBudgetPlanner } from "@/components/budget/MonthlyBudgetPlanner";
 import { SpendingAnalysis } from "@/components/budget/SpendingAnalysis";
+import { priorityOrder } from "@/types/goals";
 
 const GoalsBudgets = () => {
   const { plans, activePlan, summary, loading } = useFinancialPlans();
@@ -25,11 +26,14 @@ const GoalsBudgets = () => {
 
   // Sort goals by priority and progress
   const prioritizedGoals = allGoals.sort((a, b) => {
-    const priorityOrder = { 'High': 3, 'Medium': 2, 'Low': 1 };
-    const aPriority = priorityOrder[a.priority] || 0;
-    const bPriority = priorityOrder[b.priority] || 0;
+    // Map string priorities to lowercase for consistency
+    const normalizedAPriority = (a.priority?.toLowerCase() || 'medium') as keyof typeof priorityOrder;
+    const normalizedBPriority = (b.priority?.toLowerCase() || 'medium') as keyof typeof priorityOrder;
     
-    if (aPriority !== bPriority) return bPriority - aPriority;
+    const aPriority = priorityOrder[normalizedAPriority] ?? 2;
+    const bPriority = priorityOrder[normalizedBPriority] ?? 2;
+    
+    if (aPriority !== bPriority) return aPriority - bPriority;
     
     // If same priority, sort by progress (closer to completion first)
     const aProgress = a.targetAmount > 0 ? (a.currentAmount / a.targetAmount) : 0;
@@ -161,10 +165,12 @@ const GoalsBudgets = () => {
                     : 0;
                   
                   const getPriorityColor = (priority: string) => {
-                    switch (priority) {
-                      case 'High': return 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900';
-                      case 'Medium': return 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900';
-                      case 'Low': return 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900';
+                    const normalized = priority?.toLowerCase();
+                    switch (normalized) {
+                      case 'top_aspiration': return 'text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900';
+                      case 'high': return 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900';
+                      case 'medium': return 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900';
+                      case 'low': return 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900';
                       default: return 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900';
                     }
                   };

@@ -203,14 +203,10 @@ export async function deleteGoal(goalId: string) {
 export async function getTopGoals(persona?: "aspiring" | "retiree" | "family" | "advisor", limit: number = 3): Promise<Goal[]> {
   const goals = await listActiveGoals(persona);
   
-  // Sort by priority (high > medium > low) then by progress percentage
-  const priorityOrder: Record<string, number> = { 
-    top_aspiration: 0, 
-    high: 1, 
-    medium: 2, 
-    low: 3 
-  };
+  // Import priorityOrder from centralized location
+  const { priorityOrder } = await import('@/types/goals');
   
+  // Sort by priority (top_aspiration > high > medium > low) then by progress percentage
   const sorted = goals.sort((a, b) => {
     const aPriority = priorityOrder[a.priority || "medium"] ?? 2;
     const bPriority = priorityOrder[b.priority || "medium"] ?? 2;

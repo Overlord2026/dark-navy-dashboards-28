@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useEstateRetirementIntegration } from '@/contexts/EstateRetirementIntegrationContext';
 import { formatCurrency } from '@/lib/utils';
+import { priorityOrder } from '@/types/goals';
 
 export function EstateSettlementAnalyzer() {
   const { 
@@ -374,9 +375,9 @@ export function EstateSettlementAnalyzer() {
               <div className="space-y-6">
                 {estateSettlement.recommendations
                   .sort((a, b) => {
-                    const priorityOrder = { high: 1, medium: 2, low: 3 };
-                    return priorityOrder[a.priority as keyof typeof priorityOrder] - 
-                           priorityOrder[b.priority as keyof typeof priorityOrder];
+                    const aPriority = priorityOrder[a.priority as keyof typeof priorityOrder] ?? 2;
+                    const bPriority = priorityOrder[b.priority as keyof typeof priorityOrder] ?? 2;
+                    return aPriority - bPriority;
                   })
                   .map((rec, index) => (
                     <div key={rec.id} className="flex items-start space-x-4">

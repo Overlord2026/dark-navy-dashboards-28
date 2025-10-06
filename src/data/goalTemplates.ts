@@ -4,9 +4,10 @@ import type { Goal } from "./goals";
 
 export async function getPersonaDefaults(persona: Persona): Promise<Partial<Goal>[]> {
   try {
-    const { data, error } = await supabase
-      .from("goal_templates")
-      .select("*")
+    // Cast the table reference to bypass type inference issues
+    const table: any = supabase.from("goal_templates");
+    const { data, error } = await table
+      .select("id, persona, title, description, type, target_amount, monthly_contribution, smartr_data, sort_order, is_active")
       .eq("persona", persona)
       .eq("is_active", true)
       .order("sort_order", { ascending: true });

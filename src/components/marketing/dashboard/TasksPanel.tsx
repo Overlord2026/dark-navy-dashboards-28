@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Clock, CheckCircle, AlertCircle, RefreshCw, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { MarketingCampaign } from '@/marketing/types';
+import { priorityOrder } from '@/types/goals';
 
 interface TasksPanelProps {
   campaigns: MarketingCampaign[];
@@ -67,8 +68,10 @@ export function TasksPanel({ campaigns }: TasksPanelProps) {
     })),
     ...mockTasks,
   ].sort((a, b) => {
-    const priorityOrder = { high: 3, medium: 2, low: 1 };
-    return priorityOrder[b.priority] - priorityOrder[a.priority];
+    // Use centralized priority order (reverse for descending sort)
+    const aPriority = priorityOrder[a.priority as keyof typeof priorityOrder] ?? 2;
+    const bPriority = priorityOrder[b.priority as keyof typeof priorityOrder] ?? 2;
+    return aPriority - bPriority;
   });
 
   const getTaskIcon = (type: string) => {
