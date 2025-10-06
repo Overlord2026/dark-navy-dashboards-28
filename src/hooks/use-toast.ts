@@ -1,6 +1,8 @@
 "use client";
 import { toast as sonner } from "sonner";
 
+// Plain wrapper - no React hooks (Oct 6, 2025)
+
 /**
  * Plain toast wrapper — NO React hooks or providers.
  * Handles both object and string formats for backward compatibility.

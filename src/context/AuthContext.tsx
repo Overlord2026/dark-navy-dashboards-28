@@ -2,6 +2,8 @@
 import type { ReactNode } from "react";
 import { createContext, useContext } from "react";
 
+// Force rebuild - removed useFirstLoginToolInstaller call (Oct 6, 2025)
+
 type AuthValue = {
   user: any | null;
   session?: any | null;
