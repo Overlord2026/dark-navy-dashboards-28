@@ -4,37 +4,88 @@ import type { Database } from "@/integrations/supabase/types";
 type DbGoal = Database["public"]["Tables"]["user_goals"]["Row"];
 type DbGoalInsert = Database["public"]["Tables"]["user_goals"]["Insert"];
 
+// Re-export types from types/goal.ts
+import type { GoalType, Persona, GoalPriority } from '@/types/goal';
+
 export type Goal = {
   id: string;
-  user_id: string;
-  persona?: "aspiring" | "retiree" | "family" | "advisor";
+  persona?: Persona;
+  type: GoalType;
   title: string;
   description?: string | null;
+  imageUrl?: string | null;
+  targetAmount?: number | null;
+  targetDate?: string | null;
+  monthlyContribution?: number | null;
+  priority?: GoalPriority;
+  smartr?: {
+    specific?: string;
+    measurable?: string;
+    achievable?: string;
+    relevant?: string;
+    timeBound?: string;
+    rewards?: string;
+  };
+  progress: {
+    current: number;
+    pct: number;
+  };
+  assignedAccountIds: string[];
+  createdAt: string;
+  updatedAt: string;
+  // Internal fields for data layer
+  user_id?: string;
+  current_amount?: number;
+  status?: string;
+  sort_order?: number;
   category?: string | null;
   target_date?: string | null;
-  target_amount?: number | null;
-  current_amount: number;
-  status: string;
-  sort_order: number;
-  created_at: string;
-  updated_at: string;
 };
 
+// Helper to infer goal type from category
+function inferGoalType(category?: string | null): Goal["type"] {
+  if (!category) return "custom";
+  const mapping: Record<string, Goal["type"]> = {
+    "travel_bucket_list": "bucket_list",
+    "retirement": "retirement",
+    "education": "education",
+    "wedding": "wedding",
+    "emergency_fund": "emergency",
+    "real_estate": "down_payment",
+    "debt_paydown": "debt",
+    "other": "savings",
+  };
+  return mapping[category] || "savings";
+}
+
 function mapDbToGoal(row: DbGoal): Goal {
+  const current = row.current_amount;
+  const target = row.target_amount || 0;
+  const pct = target > 0 ? Math.round((current / target) * 100) : 0;
+
   return {
     id: row.id,
-    user_id: row.user_id,
-    persona: (row as any).persona, // Optional, may not exist yet
+    persona: (row as any).persona,
+    type: inferGoalType(row.category),
     title: row.name,
     description: row.description,
-    category: row.category,
-    target_date: row.target_date,
-    target_amount: row.target_amount,
+    imageUrl: (row as any).image_url,
+    targetAmount: row.target_amount,
+    targetDate: row.target_date,
+    monthlyContribution: (row as any).monthly_contribution,
+    priority: (row as any).priority as Goal["priority"],
+    smartr: (row as any).smartr_data as Goal["smartr"],
+    progress: { current, pct },
+    assignedAccountIds: [], // TODO: Fetch from account assignments table
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    // Internal fields
+    user_id: row.user_id,
     current_amount: row.current_amount,
     status: row.status || "active",
     sort_order: row.sort_order || 999,
-    created_at: row.created_at,
-    updated_at: row.updated_at,
+    category: row.category,
+    target_date: row.target_date,
   };
 }
 
@@ -61,16 +112,28 @@ export async function createGoal(payload: Partial<Goal>) {
     name: payload.title ?? "New goal",
     category: (payload.category as any) ?? "other",
     description: payload.description ?? null,
-    target_date: payload.target_date ?? null,
-    target_amount: payload.target_amount ?? 0,
+    target_date: payload.targetDate ?? null,
+    target_amount: payload.targetAmount ?? 0,
     current_amount: payload.current_amount ?? 0,
     status: (payload.status as any) ?? "active",
     sort_order: payload.sort_order ?? 100,
   };
 
-  // Add persona if DB supports it
+  // Add rich fields
   if (payload.persona) {
     (insertData as any).persona = payload.persona;
+  }
+  if (payload.imageUrl) {
+    (insertData as any).image_url = payload.imageUrl;
+  }
+  if (payload.monthlyContribution !== undefined) {
+    (insertData as any).monthly_contribution = payload.monthlyContribution;
+  }
+  if (payload.priority) {
+    (insertData as any).priority = payload.priority;
+  }
+  if (payload.smartr) {
+    (insertData as any).smartr_data = payload.smartr;
   }
 
   const { data, error } = await supabase
@@ -81,4 +144,54 @@ export async function createGoal(payload: Partial<Goal>) {
 
   if (error) throw error;
   return mapDbToGoal(data);
+}
+
+// Update goal progress (for quick +$100/250/500 buttons)
+export async function updateGoalProgress(goalId: string, newAmount: number) {
+  const { data, error } = await supabase
+    .from("user_goals")
+    .update({ current_amount: newAmount })
+    .eq("id", goalId)
+    .select()
+    .single();
+  
+  if (error) throw error;
+  return mapDbToGoal(data);
+}
+
+// Update goal with rich fields
+export async function updateGoal(goalId: string, payload: Partial<Goal>) {
+  const updateData: any = {};
+  
+  if (payload.title) updateData.name = payload.title;
+  if (payload.description !== undefined) updateData.description = payload.description;
+  if (payload.imageUrl !== undefined) updateData.image_url = payload.imageUrl;
+  if (payload.priority !== undefined) updateData.priority = payload.priority;
+  if (payload.monthlyContribution !== undefined) updateData.monthly_contribution = payload.monthlyContribution;
+  if (payload.targetAmount !== undefined) updateData.target_amount = payload.targetAmount;
+  if (payload.current_amount !== undefined) updateData.current_amount = payload.current_amount;
+  if (payload.targetDate !== undefined) updateData.target_date = payload.targetDate;
+  if (payload.smartr !== undefined) updateData.smartr_data = payload.smartr;
+  if (payload.category !== undefined) updateData.category = payload.category;
+  if (payload.status !== undefined) updateData.status = payload.status;
+
+  const { data, error } = await supabase
+    .from("user_goals")
+    .update(updateData)
+    .eq("id", goalId)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return mapDbToGoal(data);
+}
+
+// Delete goal
+export async function deleteGoal(goalId: string) {
+  const { error } = await supabase
+    .from("user_goals")
+    .delete()
+    .eq("id", goalId);
+  
+  if (error) throw error;
 }

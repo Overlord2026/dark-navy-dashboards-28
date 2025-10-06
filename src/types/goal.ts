@@ -1,7 +1,8 @@
 // Updated Goal types for comprehensive goals management system
 
-export type Persona = "aspiring" | "retiree";
+export type Persona = "aspiring" | "retiree" | "family" | "advisor";
 export type GoalType = 'bucket_list' | 'retirement' | 'savings' | 'education' | 'wedding' | 'emergency' | 'down_payment' | 'debt' | 'custom';
+export type GoalPriority = 'low' | 'medium' | 'high' | 'top_aspiration';
 
 export interface Goal {
   id: string;
@@ -11,21 +12,21 @@ export interface Goal {
   targetAmount?: number;
   targetDate?: string; // ISO
   smartr?: {
-    specific: string;
-    measurable: string;
-    achievable: string;
-    relevant: string;
-    timeBound: string;
+    specific?: string;
+    measurable?: string;
+    achievable?: string;
+    relevant?: string;
+    timeBound?: string;
     rewards?: string;
   };
   assignedAccountIds: string[];
   monthlyContribution?: number;
-  persona: Persona;
+  persona?: Persona;
   progress: {
     current: number;
     pct: number;
   };
-  priority: number; // For top 3 ordering
+  priority?: GoalPriority;
   createdAt: string;
   updatedAt: string;
 }
@@ -75,9 +76,8 @@ export interface SetContributionPlanRequest {
 
 // Legacy types for backward compatibility
 export type GoalStatus = 'active' | 'completed' | 'paused' | 'on_track' | 'at_risk' | 'achieved';
-export type GoalPriority = 'low' | 'medium' | 'high' | 'top_aspiration';
 
-export type GoalCategory = 
+export type GoalCategory =
   | 'retirement'
   | 'healthcare_healthspan'
   | 'travel_bucket_list'

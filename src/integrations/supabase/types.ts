@@ -16666,6 +16666,33 @@ export type Database = {
           },
         ]
       }
+      goal_templates: {
+        Row: {
+          category: string | null
+          description: string | null
+          id: string
+          persona: string
+          sort_order: number
+          title: string
+        }
+        Insert: {
+          category?: string | null
+          description?: string | null
+          id?: string
+          persona: string
+          sort_order?: number
+          title: string
+        }
+        Update: {
+          category?: string | null
+          description?: string | null
+          id?: string
+          persona?: string
+          sort_order?: number
+          title?: string
+        }
+        Relationships: []
+      }
       health_alerts: {
         Row: {
           created_at: string | null
@@ -38828,7 +38855,9 @@ export type Database = {
           linked_account_ids: string[] | null
           monthly_contribution: number | null
           name: string
+          persona: string | null
           priority: Database["public"]["Enums"]["goal_priority"] | null
+          smartr_data: Json | null
           sort_order: number | null
           status: Database["public"]["Enums"]["goal_status"] | null
           target_amount: number
@@ -38856,7 +38885,9 @@ export type Database = {
           linked_account_ids?: string[] | null
           monthly_contribution?: number | null
           name: string
+          persona?: string | null
           priority?: Database["public"]["Enums"]["goal_priority"] | null
+          smartr_data?: Json | null
           sort_order?: number | null
           status?: Database["public"]["Enums"]["goal_status"] | null
           target_amount?: number
@@ -38884,7 +38915,9 @@ export type Database = {
           linked_account_ids?: string[] | null
           monthly_contribution?: number | null
           name?: string
+          persona?: string | null
           priority?: Database["public"]["Enums"]["goal_priority"] | null
+          smartr_data?: Json | null
           sort_order?: number | null
           status?: Database["public"]["Enums"]["goal_status"] | null
           target_amount?: number
