@@ -4,8 +4,11 @@ import type { Database } from "@/integrations/supabase/types";
 type DbGoal = Database["public"]["Tables"]["user_goals"]["Row"];
 type DbGoalInsert = Database["public"]["Tables"]["user_goals"]["Insert"];
 
-// Re-export types from types/goal.ts
-import type { GoalType, Persona, GoalPriority } from '@/types/goal';
+// Re-export types from types/goal.ts and types/goals.ts
+import type { GoalType, Persona } from '@/types/goal';
+export type { GoalPriority } from '@/types/goals';
+
+import type { GoalPriority } from '@/types/goals';
 
 export type Goal = {
   id: string;

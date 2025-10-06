@@ -119,10 +119,13 @@ export const GoalEditorDrawer: React.FC<GoalEditorDrawerProps> = ({
   // Reset form when goal changes
   useEffect(() => {
     if (goal) {
+      // Type guard for persona - default to aspiring if not valid
+      const validPersona = (goal.persona === 'aspiring' || goal.persona === 'retiree') ? goal.persona : 'aspiring';
+      
       form.reset({
         type: goal.type,
         title: goal.title,
-        persona: goal.persona,
+        persona: validPersona,
         targetAmount: goal.targetAmount,
         monthlyContribution: goal.monthlyContribution,
         targetDate: goal.targetDate,
