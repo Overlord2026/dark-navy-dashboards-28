@@ -1,26 +1,29 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
-
-type DbGoal = Database["public"]["Tables"]["user_goals"]["Row"];
-type DbGoalInsert = Database["public"]["Tables"]["user_goals"]["Insert"];
-
-// Re-export types from types/goal.ts and types/goals.ts
-import type { GoalType, Persona } from '@/types/goal';
-export type { GoalPriority } from '@/types/goals';
-
-import type { GoalPriority } from '@/types/goals';
+import type { GoalPriority } from "@/types/goals";
+import { priorityOrder } from "@/types/goals";
+import type { GoalType } from "@/types/goal";
 
 export type Goal = {
   id: string;
-  persona?: Persona;
-  type: GoalType;
-  title: string;
+  user_id: string;
+  persona: "aspiring"|"retiree"|"family"|"advisor";
+  type: GoalType;               // inferred from category
+  title: string;                 // maps from DB name
   description?: string | null;
-  imageUrl?: string | null;
-  targetAmount?: number | null;
-  targetDate?: string | null;
-  monthlyContribution?: number | null;
+  aspirational_description?: string | null;
+  image_url?: string | null;
+  imageUrl?: string | null;      // alias for compatibility
+  category?: string | null;     // DB enum goal_category
+  target_date?: string | null;
+  targetDate?: string | null;    // alias for compatibility
+  target_amount?: number | null;
+  targetAmount?: number | null;  // alias for compatibility
+  current_amount: number;       // required for progress
+  monthly_contribution?: number | null;
+  monthlyContribution?: number | null; // alias for compatibility
   priority?: GoalPriority;
+  status: "active"|"paused"|"done"|"completed";
+  sort_order: number;
   smartr?: {
     specific?: string;
     measurable?: string;
@@ -29,26 +32,39 @@ export type Goal = {
     timeBound?: string;
     rewards?: string;
   };
-  progress: {
-    current: number;
-    pct: number;
-  };
-  assignedAccountIds: string[];
-  createdAt: string;
-  updatedAt: string;
-  // Internal fields for data layer
-  user_id?: string;
-  current_amount?: number;
-  status?: string;
-  sort_order?: number;
+  progress: { current: number; pct: number };
+  assignedAccountIds: string[]; // for compatibility
+  created_at: string;
+  createdAt: string;            // alias for compatibility
+  updated_at: string;
+  updatedAt: string;            // alias for compatibility
+};
+
+type Row = {
+  id: string;
+  user_id: string;
+  persona: string | null;
+  name: string;                      // DB field
+  description?: string | null;
+  aspirational_description?: string | null;
+  image_url?: string | null;
   category?: string | null;
   target_date?: string | null;
+  target_amount?: number | null;
+  current_amount?: number | null;
+  monthly_contribution?: number | null;
+  priority?: string | null;          // stored as text
+  status?: string | null;
+  sort_order?: number | null;
+  smartr_data?: any | null;
+  created_at: string;
+  updated_at: string;
 };
 
 // Helper to infer goal type from category
-function inferGoalType(category?: string | null): Goal["type"] {
+function inferGoalType(category?: string | null): GoalType {
   if (!category) return "custom";
-  const mapping: Record<string, Goal["type"]> = {
+  const mapping: Record<string, GoalType> = {
     "travel_bucket_list": "bucket_list",
     "retirement": "retirement",
     "education": "education",
@@ -61,163 +77,147 @@ function inferGoalType(category?: string | null): Goal["type"] {
   return mapping[category] || "savings";
 }
 
-function mapDbToGoal(row: DbGoal): Goal {
-  const current = row.current_amount;
-  const target = row.target_amount || 0;
+function mapRow(r: Row): Goal {
+  const current = Number(r.current_amount ?? 0);
+  const target = Number(r.target_amount ?? 0);
   const pct = target > 0 ? Math.round((current / target) * 100) : 0;
-
   return {
-    id: row.id,
-    persona: (row as any).persona,
-    type: inferGoalType(row.category),
-    title: row.name,
-    description: row.description,
-    imageUrl: (row as any).image_url,
-    targetAmount: row.target_amount,
-    targetDate: row.target_date,
-    monthlyContribution: (row as any).monthly_contribution,
-    priority: (row as any).priority as Goal["priority"],
-    smartr: (row as any).smartr_data as Goal["smartr"],
+    id: r.id,
+    user_id: r.user_id,
+    persona: (r.persona as any) ?? "family",
+    type: inferGoalType(r.category),
+    title: r.name,
+    description: r.description ?? null,
+    aspirational_description: r.aspirational_description ?? null,
+    image_url: r.image_url ?? null,
+    imageUrl: r.image_url ?? null,
+    category: r.category ?? null,
+    target_date: r.target_date ?? null,
+    targetDate: r.target_date ?? null,
+    target_amount: target,
+    targetAmount: target,
+    current_amount: current,
+    monthly_contribution: r.monthly_contribution ?? null,
+    monthlyContribution: r.monthly_contribution ?? null,
+    priority: (r.priority as GoalPriority) ?? "medium",
+    status: (r.status as any) ?? "active",
+    sort_order: r.sort_order ?? 100,
+    smartr: r.smartr_data ?? {},
     progress: { current, pct },
-    assignedAccountIds: [], // TODO: Fetch from account assignments table
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
-    // Internal fields
-    user_id: row.user_id,
-    current_amount: row.current_amount,
-    status: row.status || "active",
-    sort_order: row.sort_order || 999,
-    category: row.category,
-    target_date: row.target_date,
+    assignedAccountIds: [],
+    created_at: r.created_at,
+    createdAt: r.created_at,
+    updated_at: r.updated_at,
+    updatedAt: r.updated_at,
   };
 }
 
-export async function listActiveGoals(persona?: "aspiring" | "retiree" | "family" | "advisor") {
-  const { data, error } = await supabase
-    .from("user_goals")
-    .select("*")
-    .eq("status", "active")
-    .order("sort_order", { ascending: true });
-  if (error) throw error;
-  const goals = (data ?? []).map(mapDbToGoal);
+export async function listActiveGoals(persona?: "aspiring"|"retiree"|"family"|"advisor") {
+  const user = (await supabase.auth.getUser()).data.user;
+  if (!user) return [];
 
-  // Aggregated "family" shows ALL goals; else filter by persona
-  if (!persona || persona === "family") return goals;
-  return goals.filter(g => g.persona === persona);
+  let query = supabase
+    .from("user_goals")
+    .select("id,user_id,persona,name,description,aspirational_description,image_url,category,target_date,target_amount,current_amount,monthly_contribution,priority,status,sort_order,smartr_data,created_at,updated_at")
+    .eq("user_id", user.id)
+    .eq("status","active")
+    .order("sort_order",{ ascending:true });
+
+  if (persona && persona !== "family") {
+    query = query.eq("persona", persona);
+  }
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return (data ?? []).map(mapRow);
+}
+
+export async function getTopGoals(persona?: "aspiring"|"retiree"|"family"|"advisor", limit = 3) {
+  const rows = await listActiveGoals(persona);
+  const sorted = [...rows].sort((a,b) =>
+    (priorityOrder[a.priority || "medium"] - priorityOrder[b.priority || "medium"])
+  );
+  return sorted.slice(0, limit);
 }
 
 export async function createGoal(payload: Partial<Goal>) {
   const user = (await supabase.auth.getUser()).data.user;
   if (!user) throw new Error("Not authenticated");
 
-  const insertData: DbGoalInsert = {
+  const body: any = {
     user_id: user.id,
+    persona: payload.persona ?? "family",
     name: payload.title ?? "New goal",
-    category: (payload.category as any) ?? "other",
     description: payload.description ?? null,
-    target_date: payload.targetDate ?? null,
-    target_amount: payload.targetAmount ?? 0,
+    aspirational_description: payload.aspirational_description ?? null,
+    image_url: payload.image_url ?? null,
+    category: payload.category ?? null,
+    target_date: payload.target_date ?? null,
+    target_amount: payload.target_amount ?? null,
     current_amount: payload.current_amount ?? 0,
-    status: (payload.status as any) ?? "active",
+    monthly_contribution: payload.monthly_contribution ?? null,
+    priority: payload.priority ?? "medium",
+    status: payload.status ?? "active",
     sort_order: payload.sort_order ?? 100,
+    smartr_data: payload.smartr ?? {}
   };
-
-  // Add rich fields
-  if (payload.persona) {
-    (insertData as any).persona = payload.persona;
-  }
-  if (payload.imageUrl) {
-    (insertData as any).image_url = payload.imageUrl;
-  }
-  if (payload.monthlyContribution !== undefined) {
-    (insertData as any).monthly_contribution = payload.monthlyContribution;
-  }
-  if (payload.priority) {
-    (insertData as any).priority = payload.priority;
-  }
-  if (payload.smartr) {
-    (insertData as any).smartr_data = payload.smartr;
-  }
 
   const { data, error } = await supabase
     .from("user_goals")
-    .insert(insertData)
-    .select("*")
-    .single();
+    .insert(body)
+    .select("id,user_id,persona,name,description,aspirational_description,image_url,category,target_date,target_amount,current_amount,monthly_contribution,priority,status,sort_order,smartr_data,created_at,updated_at")
+    .maybeSingle();
 
   if (error) throw error;
-  return mapDbToGoal(data);
+  if (!data) throw new Error("Failed to create goal");
+  return mapRow(data as Row);
 }
 
-// Update goal progress (for quick +$100/250/500 buttons)
+export async function updateGoal(goalId: string, payload: Partial<Goal>) {
+  const update: any = {};
+  if (payload.title !== undefined) update.name = payload.title;
+  if (payload.description !== undefined) update.description = payload.description;
+  if (payload.aspirational_description !== undefined) update.aspirational_description = payload.aspirational_description;
+  if (payload.image_url !== undefined) update.image_url = payload.image_url;
+  if (payload.category !== undefined) update.category = payload.category;
+  if (payload.target_date !== undefined) update.target_date = payload.target_date;
+  if (payload.target_amount !== undefined) update.target_amount = payload.target_amount;
+  if (payload.current_amount !== undefined) update.current_amount = payload.current_amount;
+  if (payload.monthly_contribution !== undefined) update.monthly_contribution = payload.monthly_contribution;
+  if (payload.priority !== undefined) update.priority = payload.priority;
+  if (payload.status !== undefined) update.status = payload.status;
+  if (payload.sort_order !== undefined) update.sort_order = payload.sort_order;
+  if (payload.smartr !== undefined) update.smartr_data = payload.smartr;
+
+  const { data, error } = await supabase
+    .from("user_goals")
+    .update(update)
+    .eq("id", goalId)
+    .select("id,user_id,persona,name,description,aspirational_description,image_url,category,target_date,target_amount,current_amount,monthly_contribution,priority,status,sort_order,smartr_data,created_at,updated_at")
+    .maybeSingle();
+
+  if (error) throw error;
+  if (!data) throw new Error("Goal not found");
+  return mapRow(data as Row);
+}
+
 export async function updateGoalProgress(goalId: string, newAmount: number) {
   const { data, error } = await supabase
     .from("user_goals")
     .update({ current_amount: newAmount })
     .eq("id", goalId)
-    .select()
-    .single();
-  
-  if (error) throw error;
-  return mapDbToGoal(data);
-}
-
-// Update goal with rich fields
-export async function updateGoal(goalId: string, payload: Partial<Goal>) {
-  const updateData: any = {};
-  
-  if (payload.title) updateData.name = payload.title;
-  if (payload.description !== undefined) updateData.description = payload.description;
-  if (payload.imageUrl !== undefined) updateData.image_url = payload.imageUrl;
-  if (payload.priority !== undefined) updateData.priority = payload.priority;
-  if (payload.monthlyContribution !== undefined) updateData.monthly_contribution = payload.monthlyContribution;
-  if (payload.targetAmount !== undefined) updateData.target_amount = payload.targetAmount;
-  if (payload.current_amount !== undefined) updateData.current_amount = payload.current_amount;
-  if (payload.targetDate !== undefined) updateData.target_date = payload.targetDate;
-  if (payload.smartr !== undefined) updateData.smartr_data = payload.smartr;
-  if (payload.category !== undefined) updateData.category = payload.category;
-  if (payload.status !== undefined) updateData.status = payload.status;
-
-  const { data, error } = await supabase
-    .from("user_goals")
-    .update(updateData)
-    .eq("id", goalId)
-    .select()
-    .single();
+    .select("id,user_id,persona,name,description,aspirational_description,image_url,category,target_date,target_amount,current_amount,monthly_contribution,priority,status,sort_order,smartr_data,created_at,updated_at")
+    .maybeSingle();
 
   if (error) throw error;
-  return mapDbToGoal(data);
+  if (!data) throw new Error("Goal not found");
+  return mapRow(data as Row);
 }
 
-// Delete goal
 export async function deleteGoal(goalId: string) {
   const { error } = await supabase
     .from("user_goals")
     .delete()
     .eq("id", goalId);
-  
   if (error) throw error;
-}
-
-// Get top goals by priority/progress for widgets
-export async function getTopGoals(persona?: "aspiring" | "retiree" | "family" | "advisor", limit: number = 3): Promise<Goal[]> {
-  const goals = await listActiveGoals(persona);
-  
-  // Import priorityOrder from centralized location
-  const { priorityOrder } = await import('@/types/goals');
-  
-  // Sort by priority (top_aspiration > high > medium > low) then by progress percentage
-  const sorted = goals.sort((a, b) => {
-    const aPriority = priorityOrder[a.priority || "medium"] ?? 2;
-    const bPriority = priorityOrder[b.priority || "medium"] ?? 2;
-    
-    if (aPriority !== bPriority) {
-      return aPriority - bPriority;
-    }
-    
-    // Secondary sort by progress percentage
-    return b.progress.pct - a.progress.pct;
-  });
-  
-  return sorted.slice(0, limit);
 }

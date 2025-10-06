@@ -18,10 +18,12 @@ export async function getPersonaDefaults(persona: Persona): Promise<Partial<Goal
     }
 
     return (data || []).map((t: any) => ({
-      type: t.type as Goal["type"],
       title: t.title,
       description: t.description,
+      category: t.type,
+      target_amount: t.target_amount || undefined,
       targetAmount: t.target_amount || undefined,
+      monthly_contribution: t.monthly_contribution || undefined,
       monthlyContribution: t.monthly_contribution || undefined,
       smartr: t.smartr_data || undefined,
       persona,
