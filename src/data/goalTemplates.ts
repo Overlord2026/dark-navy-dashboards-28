@@ -1,35 +1,60 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { Persona } from "@/types/goal";
-import type { Goal } from "./goals";
 
-export async function getPersonaDefaults(persona: Persona): Promise<Partial<Goal>[]> {
-  try {
-    // Cast the table reference to bypass type inference issues
-    const table: any = supabase.from("goal_templates");
-    const { data, error } = await table
-      .select("id, persona, title, description, type, target_amount, monthly_contribution, smartr_data, sort_order, is_active")
-      .eq("persona", persona)
-      .eq("is_active", true)
-      .order("sort_order", { ascending: true });
+export type GoalTemplateRow = {
+  id: string;
+  persona: "aspiring" | "retiree" | "family";
+  type: string;
+  title: string;
+  description: string | null;
+  target_amount: number | null;
+  monthly_contribution: number | null;
+  smartr_data: any;              // JSONB
+  sort_order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};
 
-    if (error) {
-      console.error("Error fetching persona defaults:", error);
-      return [];
-    }
+export type PersonaTemplate = {
+  persona: "aspiring" | "retiree" | "family";
+  goals: Array<{
+    type: string;
+    title: string;
+    description?: string | null;
+    targetAmount?: number | null;
+    monthlyContribution?: number | null;
+    smartr?: any;
+    persona: "aspiring" | "retiree" | "family";
+  }>;
+};
 
-    return (data || []).map((t: any) => ({
-      title: t.title,
-      description: t.description,
-      category: t.type,
-      target_amount: t.target_amount || undefined,
-      targetAmount: t.target_amount || undefined,
-      monthly_contribution: t.monthly_contribution || undefined,
-      monthlyContribution: t.monthly_contribution || undefined,
-      smartr: t.smartr_data || undefined,
-      persona,
-    }));
-  } catch (error) {
-    console.error("Exception fetching persona defaults:", error);
-    return [];
+export async function getPersonaDefaults(persona: "aspiring" | "retiree"): Promise<PersonaTemplate | null> {
+  // Select explicit columns to avoid relying on outdated generated types
+  const { data, error } = await supabase
+    .from("goal_templates")
+    .select(
+      "id,persona,type,title,description,target_amount,monthly_contribution,smartr_data,sort_order,is_active,created_at,updated_at"
+    );
+
+  if (error) {
+    console.error("Failed to fetch goal templates:", error);
+    return null;
   }
+  const rows = (data ?? []) as unknown as GoalTemplateRow[];
+  const filtered = rows.filter(r => r.is_active && r.persona === persona);
+  if (filtered.length === 0) return null;
+
+  const goals = filtered
+    .sort((a,b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+    .map(r => ({
+      type: r.type,
+      title: r.title,
+      description: r.description,
+      targetAmount: r.target_amount,
+      monthlyContribution: r.monthly_contribution,
+      smartr: r.smartr_data,
+      persona: r.persona,
+    }));
+
+  return { persona, goals };
 }

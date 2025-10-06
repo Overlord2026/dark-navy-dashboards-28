@@ -73,11 +73,30 @@ export function usePersonaDefaults(persona?: Persona) {
       return;
     }
 
+    // Filter out advisor and family personas as getPersonaDefaults only supports aspiring/retiree
+    if (persona === "advisor" || persona === "family") {
+      setData([]);
+      return;
+    }
+
     (async () => {
       try {
         setLoading(true);
-        const templates = await getPersonaDefaults(persona);
-        setData(templates);
+        const template = await getPersonaDefaults(persona);
+        // Transform PersonaTemplate to Partial<Goal>[] for backward compatibility
+        if (template && template.goals) {
+          setData(template.goals.map(g => ({
+            title: g.title,
+            description: g.description,
+            category: g.type,
+            targetAmount: g.targetAmount,
+            monthlyContribution: g.monthlyContribution,
+            smartr: g.smartr,
+            persona: g.persona,
+          })));
+        } else {
+          setData([]);
+        }
       } catch (e) {
         console.error("Error fetching persona defaults:", e);
         setData([]);
