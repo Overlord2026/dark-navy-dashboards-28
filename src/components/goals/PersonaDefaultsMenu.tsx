@@ -107,7 +107,7 @@ export const PersonaDefaultsMenu: React.FC<PersonaDefaultsMenuProps> = ({
         <DropdownMenuSeparator />
         
         <div className="p-2 space-y-2">
-          {personaDefaults.goals.map((goalTemplate, index) => (
+          {personaDefaults.map((goalTemplate, index) => (
             <DropdownMenuItem
               key={index}
               className="p-0 cursor-pointer"
@@ -221,7 +221,7 @@ export const PersonaDefaultsCards: React.FC<PersonaDefaultsCardsProps> = ({
       <h3 className="text-lg font-semibold mb-2">
         {persona === 'aspiring' ? 'Aspiring Families' : 'Retiree'} Goal Templates
       </h3>
-      {personaDefaults.goals.map((goalTemplate, index) => (
+      {personaDefaults.map((goalTemplate, index) => (
         <Card 
           key={index} 
           className="cursor-pointer hover:shadow-md transition-all duration-200"

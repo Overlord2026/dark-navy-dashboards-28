@@ -92,7 +92,7 @@ function mapDbToGoal(row: DbGoal): Goal {
   };
 }
 
-export async function listActiveGoals(persona?: "aspiring" | "retiree" | "family") {
+export async function listActiveGoals(persona?: "aspiring" | "retiree" | "family" | "advisor") {
   const { data, error } = await supabase
     .from("user_goals")
     .select("*")
@@ -197,4 +197,31 @@ export async function deleteGoal(goalId: string) {
     .eq("id", goalId);
   
   if (error) throw error;
+}
+
+// Get top goals by priority/progress for widgets
+export async function getTopGoals(persona?: "aspiring" | "retiree" | "family" | "advisor", limit: number = 3): Promise<Goal[]> {
+  const goals = await listActiveGoals(persona);
+  
+  // Sort by priority (high > medium > low) then by progress percentage
+  const priorityOrder: Record<string, number> = { 
+    top_aspiration: 0, 
+    high: 1, 
+    medium: 2, 
+    low: 3 
+  };
+  
+  const sorted = goals.sort((a, b) => {
+    const aPriority = priorityOrder[a.priority || "medium"] ?? 2;
+    const bPriority = priorityOrder[b.priority || "medium"] ?? 2;
+    
+    if (aPriority !== bPriority) {
+      return aPriority - bPriority;
+    }
+    
+    // Secondary sort by progress percentage
+    return b.progress.pct - a.progress.pct;
+  });
+  
+  return sorted.slice(0, limit);
 }

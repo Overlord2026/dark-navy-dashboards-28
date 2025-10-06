@@ -200,14 +200,13 @@ export const GoalEditorDrawer: React.FC<GoalEditorDrawerProps> = ({
       let savedGoal: Goal;
 
       if (goal) {
-        // Update existing goal
-        savedGoal = await updateGoalMutation.mutateAsync({
-          ...goalData,
-          id: goal.id,
-        } as UpdateGoalRequest);
+        // Update existing goal - ensure priority is correct type
+        const updatePayload: any = { ...goalData, id: goal.id };
+        savedGoal = await updateGoalMutation.mutateAsync(updatePayload);
       } else {
-        // Create new goal
-        savedGoal = await createGoalMutation.mutateAsync(goalData as CreateGoalRequest);
+        // Create new goal - ensure priority is correct type
+        const createPayload: any = goalData;
+        savedGoal = await createGoalMutation.mutateAsync(createPayload);
       }
 
       // Update account assignments if changed
@@ -575,7 +574,7 @@ export const GoalEditorDrawer: React.FC<GoalEditorDrawerProps> = ({
                           </div>
                           <div className="text-right">
                             <p className="font-medium">
-                              ${account.balance.toLocaleString()}
+                              ${account.balance?.toLocaleString() || '0'}
                             </p>
                           </div>
                         </div>
